@@ -2,43 +2,43 @@
 <div class="container-fluid py-3">
   <div class="row mt-4">
     <div class="settingContainer">
-      <h3 class="mb-4">NasCore_vod 配置 btcfmw232hm4tu7e</h3>
+      <h3 class="mb-4">NasCore_vod 配置 </h3>
 
       <h5>缓存相关配置 <small class="form-text text-muted">[NascoreExt.vod.vod_cache]</small></h5>
       <div class="row">
         <div class="col">
           <label for="NascoreExtVodCacheDoubanExpire">DoubanExpire <span class="text-muted">豆瓣热门影片缓存过期时间(分钟)</span></label>
-          <input type="number" class="form-control" id="NascoreExtVodCacheDoubanExpire" data-bind="NascoreExt.vod.vod_cache.DoubanExpire">
+          <input type="number" class="form-control" id="NascoreExtVodCacheDoubanExpire" data-bind="NascoreExt.Vod.VodCache.DoubanExpire">
         </div>
         <div class="col">
           <label for="NascoreExtVodCacheDoubanMax">DoubanMax <span class="text-muted">豆瓣热门影视最多缓存记录数</span></label>
-          <input type="number" class="form-control" id="NascoreExtVodCacheDoubanMax" data-bind="NascoreExt.vod.vod_cache.DoubanMax">
+          <input type="number" class="form-control" id="NascoreExtVodCacheDoubanMax" data-bind="NascoreExt.Vod.VodCache.DoubanMax">
         </div>
         <div class="col">
           <label for="NascoreExtVodCacheOtherExpire">OtherExpire <span class="text-muted">其他缓存过期时间(分钟)</span></label>
-          <input type="number" class="form-control" id="NascoreExtVodCacheOtherExpire" data-bind="NascoreExt.vod.vod_cache.OtherExpire">
+          <input type="number" class="form-control" id="NascoreExtVodCacheOtherExpire" data-bind="NascoreExt.Vod.VodCache.OtherExpire">
         </div>
         <div class="col">
           <label for="NascoreExtVodCacheOtherMax">OtherMax <span class="text-muted">其他缓存最大缓存记录数</span></label>
-          <input type="number" class="form-control" id="NascoreExtVodCacheOtherMax" data-bind="NascoreExt.vod.vod_cache.OtherMax">
+          <input type="number" class="form-control" id="NascoreExtVodCacheOtherMax" data-bind="NascoreExt.Vod.VodCache.OtherMax">
         </div>
       </div>
       <div class="row mt-2">
         <div class="col">
           <label for="NascoreExtVodCacheVoddetailExpire">VoddetailExpire <span class="text-muted">视频详情缓存过期时间(分钟)</span></label>
-          <input type="number" class="form-control" id="NascoreExtVodCacheVoddetailExpire" data-bind="NascoreExt.vod.vod_cache.VoddetailExpire">
+          <input type="number" class="form-control" id="NascoreExtVodCacheVoddetailExpire" data-bind="NascoreExt.Vod.VodCache.VoddetailExpire">
         </div>
         <div class="col">
           <label for="NascoreExtVodCacheVoddetailMax">VoddetailMax <span class="text-muted">视频详情最大缓存记录数</span></label>
-          <input type="number" class="form-control" id="NascoreExtVodCacheVoddetailMax" data-bind="NascoreExt.vod.vod_cache.VoddetailMax">
+          <input type="number" class="form-control" id="NascoreExtVodCacheVoddetailMax" data-bind="NascoreExt.Vod.VodCache.VoddetailMax">
         </div>
         <div class="col">
           <label for="NascoreExtVodCacheVodlistExpire">VodlistExpire <span class="text-muted">资源站视频列表/搜索结果缓存过期时间(分钟)</span></label>
-          <input type="number" class="form-control" id="NascoreExtVodCacheVodlistExpire" data-bind="NascoreExt.vod.vod_cache.VodlistExpire">
+          <input type="number" class="form-control" id="NascoreExtVodCacheVodlistExpire" data-bind="NascoreExt.Vod.VodCache.VodlistExpire">
         </div>
         <div class="col">
           <label for="NascoreExtVodCacheVodlistMax">VodlistMax <span class="text-muted">资源站视频列表/搜索结果最大缓存记录数</span></label>
-          <input type="number" class="form-control" id="NascoreExtVodCacheVodlistMax" data-bind="NascoreExt.vod.vod_cache.VodlistMax">
+          <input type="number" class="form-control" id="NascoreExtVodCacheVodlistMax" data-bind="NascoreExt.Vod.VodCache.VodlistMax">
         </div>
       </div>
       <div class="mb-2 mt-2">
@@ -54,17 +54,17 @@
       <h5>订阅相关配置 <small class="form-text text-muted">[NascoreExt.vod.VodSubscription]</small></h5>
       <div class="mb-3">
         <label for="NascoreExtVodSubscriptionDefaultSelectedAPISite" class="form-label">DefaultSelectedAPISite <span class="text-muted">默认启用的资源站标识名（英文逗号分隔）</span></label>
-        <input type="text" class="form-control" id="NascoreExtVodSubscriptionDefaultSelectedAPISite" data-bind="NascoreExt.vod.vod_subscription.DefaultSelectedAPISite">
+        <input type="text" class="form-control" id="NascoreExtVodSubscriptionDefaultSelectedAPISite" data-bind="NascoreExt.Vod.VodSubscription.DefaultSelectedAPISite">
         <small class="form-text text-muted">如：tyyszy,bfzy,dyttzy,ruyi</small>
       </div>
       <div class="mb-3">
         <label for="NascoreExtVodSubscriptionIntervalHour" class="form-label">IntervalHour <span class="text-muted">订阅自动更新周期(小时)</span></label>
-        <input type="number" class="form-control" id="NascoreExtVodSubscriptionIntervalHour" data-bind="NascoreExt.vod.vod_subscription.IntervalHour">
+        <input type="number" class="form-control" id="NascoreExtVodSubscriptionIntervalHour" data-bind="NascoreExt.Vod.VodSubscription.IntervalHour">
         <small class="form-text text-muted">建议 6~48 小时，过短可能导致频繁请求。</small>
       </div>
       <div class="mb-3">
         <label for="NascoreExtVodSubscriptionUrls" class="form-label">Urls <span class="text-muted">资源站订阅地址（每行一个）</span></label>
-        <textarea class="form-control" id="NascoreExtVodSubscriptionUrls" rows="3" data-bind="NascoreExt.vod.vod_subscription.Urls"></textarea>
+        <textarea class="form-control" id="NascoreExtVodSubscriptionUrls" rows="3" data-bind="NascoreExt.Vod.VodSubscription.Urls"></textarea>
         <small class="form-text text-muted">如：<br>https://raw.githubusercontent.com/nas-core/nascore-website/refs/heads/main/docs/.vuepress/public/nascore_tv/subscription_example1.toml<br>https://raw.githubusercontent.com/nas-core/nascore-website/refs/heads/main/docs/.vuepress/public/nascore_tv/subscription_example2.toml</small>
       </div>
     </div>
