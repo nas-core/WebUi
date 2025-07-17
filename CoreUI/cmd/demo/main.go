@@ -21,7 +21,9 @@ func main() {
 	logger := zap.NewExample().Sugar()
 	var qpsCounter *uint64
 
-	http.HandleFunc("/", CoreUI.Webui_handler(nsCfg, logger, qpsCounter))
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		CoreUI.Webui_handler(w, r, nsCfg, logger, qpsCounter)
+	})
 	err = http.ListenAndServe(":9001", nil)
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)

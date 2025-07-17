@@ -3,7 +3,6 @@ package CoreUI
 import (
 	"bytes"
 	"net/http"
-	"os"
 	"path/filepath"
 	"strings"
 
@@ -17,86 +16,74 @@ import (
 
 var ServerUrl = ""
 
-func Webui_handler(nsCfg *system_config.SysCfg, logger *zap.SugaredLogger, qpsCounter *uint64) http.HandlerFunc {
+func Webui_handler(w http.ResponseWriter, r *http.Request, nsCfg *system_config.SysCfg, logger *zap.SugaredLogger, qpsCounter *uint64) {
 
-	return func(w http.ResponseWriter, r *http.Request) {
-		if !nsCfg.Server.WebuiAndApiEnable {
-			w.WriteHeader(http.StatusNotFound)
-			w.Write([]byte("Webui/api service is disabled"))
+	if !nsCfg.Server.WebuiAndApiEnable {
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte("Webui/api service is disabled"))
+		return
+	}
+
+	isMinifyEnabled := false
+	if isDevMode.IsDevMode() {
+		isMinifyEnabled = false
+	} else {
+		isMinifyEnabled = true
+
+	}
+	if isMinifyEnabled && webuiLib.MinifierInstance == nil {
+		webuiLib.InitMinifier()
+	}
+	var basePatch string
+	basePatch = "wwwroot/"
+	filePath := basePatch + strings.TrimPrefix(r.URL.Path, nsCfg.Server.WebUIPrefix)
+	// 检查路径是否为目录
+	if strings.HasSuffix(filePath, "/") || filepath.Ext(filePath) == "" {
+		http.Redirect(w, r, nsCfg.Server.WebUIPrefix+"/login.shtml", http.StatusFound)
+		return
+	}
+	if strings.HasSuffix(filePath, ".shtml") {
+		parsedContent, err := parseSSI(filePath, basePatch, logger)
+		if err != nil {
+			logger.Errorln("Error parsing SSI  ", " , err ", err)
+			http.Error(w, "Internal Server Error SSI", http.StatusInternalServerError)
 			return
 		}
-
-		isUseEmbeddedFS := false
-		isMinifyEnabled := false
-		if isDevMode.IsDevMode() {
-			isUseEmbeddedFS = false
-			isMinifyEnabled = false
+		w.Header().Set("Content-Type", "text/html")
+		parsedContent = webuiLib.ReplaceTemplatePlaceholders(parsedContent, nsCfg.WebUIPubLicCdn, &ServerUrl)
+		if !isMinifyEnabled {
+			w.Write([]byte(parsedContent))
 		} else {
-			isUseEmbeddedFS = true
-			isMinifyEnabled = true
-
-		}
-		if isMinifyEnabled && webuiLib.MinifierInstance == nil {
-			webuiLib.InitMinifier()
-		}
-		var basePatch string
-		if isDevMode.IsDevMode() {
-			basePatch = "../webui/wwwroot/"
-		} else {
-			basePatch = "wwwroot/"
-		}
-		filePath := basePatch + strings.TrimPrefix(r.URL.Path, nsCfg.Server.WebUIPrefix)
-		// 检查路径是否为目录
-		if strings.HasSuffix(filePath, "/") || filepath.Ext(filePath) == "" {
-			http.Redirect(w, r, nsCfg.Server.WebUIPrefix+"/login.shtml", http.StatusFound)
-			return
-		}
-		if strings.HasSuffix(filePath, ".shtml") {
-			parsedContent, err := parseSSI(filePath, basePatch, isUseEmbeddedFS, logger)
+			// logger.Info("压缩 shtml")
+			result := &bytes.Buffer{}
+			err := webuiLib.MinifierInstance.Minify("text/html", result, bytes.NewReader([]byte(parsedContent)))
 			if err != nil {
-				logger.Errorln("Error parsing SSI isUseEmbeddedFS ", isUseEmbeddedFS, " , err ", err)
-				http.Error(w, "Internal Server Error SSI", http.StatusInternalServerError)
-				return
-			}
-			w.Header().Set("Content-Type", "text/html")
-			parsedContent = webuiLib.ReplaceTemplatePlaceholders(parsedContent, nsCfg.WebUIPubLicCdn, &ServerUrl)
-			if !isMinifyEnabled {
+				logger.Errorln("Error minifying HTML content: ", err)
 				w.Write([]byte(parsedContent))
 			} else {
-				// logger.Info("压缩 shtml")
-				result := &bytes.Buffer{}
-				err := webuiLib.MinifierInstance.Minify("text/html", result, bytes.NewReader([]byte(parsedContent)))
-				if err != nil {
-					logger.Errorln("Error minifying HTML content: ", err)
-					w.Write([]byte(parsedContent))
-				} else {
-					w.Write(result.Bytes())
-				}
+				w.Write(result.Bytes())
 			}
-		} else {
-			fileExt := strings.ToLower(filepath.Ext(filePath)) // 全部小写判断
-			var content []byte
-			var err error
-			if isUseEmbeddedFS {
-				content, err = embeddedFS.ReadFile(filePath)
-			} else {
-				content, err = os.ReadFile(filePath)
-			}
+		}
+	} else {
+		fileExt := strings.ToLower(filepath.Ext(filePath)) // 全部小写判断
+		var content []byte
+		var err error
+		content, err = embeddedFS.ReadFile(filePath)
+
+		if err != nil {
+			logger.Errorln("Error reading file:", err)
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
+		if isMinifyEnabled && isMinifiable(fileExt) { // 仅对可压缩文件类型执行压缩
+			content, err = webuiLib.Exe_minify([]byte(webuiLib.ReplaceTemplatePlaceholders(string(content), nsCfg.WebUIPubLicCdn, &ServerUrl)), filePath, fileExt)
 			if err != nil {
-				logger.Errorln("Error reading file:", err)
+				logger.Errorln("Error minifying file:", err)
 				http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 				return
 			}
-			if isMinifyEnabled && isMinifiable(fileExt) { // 仅对可压缩文件类型执行压缩
-				content, err = webuiLib.Exe_minify([]byte(webuiLib.ReplaceTemplatePlaceholders(string(content), nsCfg.WebUIPubLicCdn, &ServerUrl)), filePath, fileExt)
-				if err != nil {
-					logger.Errorln("Error minifying file:", err)
-					http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-					return
-				}
-			}
-			handleFileContent(content, fileExt, nsCfg, w)
 		}
+		handleFileContent(content, fileExt, nsCfg, w)
 	}
 }
 
