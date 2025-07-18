@@ -3,7 +3,7 @@
 <header class="navbar navbar-expand-lg shadow-sm">
   <div class="container-fluid">
     <a href="nascore.shtml" class="navbar-brand">
-      <img src="images/logo.webp" alt="nascore logo" class="header_logo" />
+      <img src="/@public/login/logo.webp" alt="nascore logo" class="header_logo" />
       <span class="header_logo_text">NasCore</span>
     </a>
     <!-- 右侧功能按钮 -->
@@ -31,11 +31,61 @@
           <li>
             <hr class="dropdown-divider" />
           </li>
-          <li>
-            <a class="dropdown-item" href="javascript:void(0)" onclick="loginOut('login.shtml')"><i
-                class="bi bi-box-arrow-right me-2"></i>登出</a>
-          </li>
-          <script src="js/loginout.js"></script>
+          <script>
+            // 渲染全局导航菜单到用户下拉菜单
+            function renderGlobalNavMenuToUserDropdown() {
+              var navData = window.GlobalNavMenu || [];
+              var userMenu = document.getElementById('userMenu');
+              var dropdownMenu = userMenu && userMenu.nextElementSibling;
+              if (!dropdownMenu) return;
+
+              // 插入到“设置”前面
+              var insertBeforeNode = dropdownMenu.querySelector('a[href="setting.shtml"]')?.parentNode;
+
+              navData.forEach(function(item) {
+                if (item.onlyWhenLogin && !window.isLoggedIn()) return;
+                if (item.onlyWhenNotLogin && window.isLoggedIn()) return;
+
+                var li = document.createElement('li');
+                var a = document.createElement('a');
+                a.className = 'dropdown-item';
+                a.innerText = item.name;
+                if (item.key === 'logout') {
+                  a.href = 'javascript:void(0)';
+                  a.onclick = function() {
+                    if (typeof window.logoutAndRedirect === 'function') {
+                      window.logoutAndRedirect();
+                    } else {
+                      location.reload();
+                    }
+                  };
+                } else {
+                  a.href = item.url;
+                  if (item.key === 'login') {
+                    a.onclick = function() {
+                      window.location.href = item.url;
+                    };
+                  }
+                }
+                li.appendChild(a);
+
+                if (insertBeforeNode) {
+                  dropdownMenu.insertBefore(li, insertBeforeNode);
+                } else {
+                  dropdownMenu.appendChild(li);
+                }
+              });
+            }
+
+            // 等待 window.GlobalNavMenu 加载后渲染
+            (function waitForNavData() {
+              if (window.GlobalNavMenu && typeof window.isLoggedIn === 'function') {
+                renderGlobalNavMenuToUserDropdown();
+              } else {
+                setTimeout(waitForNavData, 50);
+              }
+            })();
+          </script>
         </ul>
       </div>
     </div>

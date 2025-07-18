@@ -356,12 +356,12 @@ class App {
     if (userInfo) {
       this.user = userInfo.username
       this.isAdmin = userInfo.isAdmin
-      this.isLoggedIn = true
+      this.isLoggedIn = typeof window.isLoggedIn === 'function' ? window.isLoggedIn() : true
       this.updateUserInfo()
       this.renderDropdownMenu() // 新增
       console.log('[links] 用户认证成功:', this.user, this.isAdmin ? '管理员' : '普通用户', 'token过期时间:', new Date(userInfo.exp * 1000))
     } else {
-      this.isLoggedIn = false
+      this.isLoggedIn = typeof window.isLoggedIn === 'function' ? window.isLoggedIn() : false
       this.updateUserInfo()
       this.renderDropdownMenu() // 新增
       console.log('[links] 用户未登录或token已过期')
@@ -433,7 +433,7 @@ class App {
       console.log('[links] 开始加载数据...')
 
       // 根据登录状态加载不同的数据
-      if (window.api.isLoggedIn()) {
+      if (typeof window.isLoggedIn === 'function' ? window.isLoggedIn() : window.api.isLoggedIn()) {
         // 已登录用户：加载所有数据
         const [categories, links] = await Promise.all([window.api.getCategories(), window.api.getLinks()])
         this.categories = Array.isArray(categories) ? categories : []
@@ -451,12 +451,12 @@ class App {
       console.log('[links] 数据加载完成', {
         categories: this.categories.length,
         links: this.links.length,
-        isLoggedIn: window.api.isLoggedIn(),
+        isLoggedIn: typeof window.isLoggedIn === 'function' ? window.isLoggedIn() : window.api.isLoggedIn(),
       })
     } catch (error) {
       console.error('[links] 加载数据失败:', error)
       this.showError('加载数据失败: ' + error.message)
-      if (window.api.isLoggedIn()) {
+      if (typeof window.isLoggedIn === 'function' ? window.isLoggedIn() : window.api.isLoggedIn()) {
         this.showLoginRequired()
       }
     } finally {
@@ -918,7 +918,7 @@ class App {
     if (!menu) return
     let html = '<div class="py-2">'
     // 登录后显示添加分类/链接
-    if (this.isLoggedIn) {
+    if (typeof window.isLoggedIn === 'function' ? window.isLoggedIn() : this.isLoggedIn) {
       html += `
         <button id="add-category-btn" class="w-full text-left px-4 py-2 hover:bg-gray-700 transition-colors flex items-center space-x-2">
           <span>添加分类</span>
@@ -931,8 +931,8 @@ class App {
     }
     // 渲染 GlobalNavMenu
     this.globalNavMenu.forEach(item => {
-      if (item.onlyWhenLogin && !this.isLoggedIn) return
-      if (item.onlyWhenNotLogin && this.isLoggedIn) return
+      if (item.onlyWhenLogin && !(typeof window.isLoggedIn === 'function' ? window.isLoggedIn() : this.isLoggedIn)) return
+      if (item.onlyWhenNotLogin && (typeof window.isLoggedIn === 'function' ? window.isLoggedIn() : this.isLoggedIn)) return
       html += `
         <button class="w-full text-left px-4 py-2 hover:bg-gray-700 transition-colors flex items-center space-x-2"
           data-nav-key="${item.key}">
@@ -943,7 +943,7 @@ class App {
     html += '</div>'
     menu.innerHTML = html
     // 重新绑定事件
-    if (this.isLoggedIn) {
+    if (typeof window.isLoggedIn === 'function' ? window.isLoggedIn() : this.isLoggedIn) {
       const addCategoryBtn = document.getElementById('add-category-btn')
       const addLinkBtn = document.getElementById('add-link-btn')
       addCategoryBtn?.addEventListener('click', () => {
@@ -957,8 +957,8 @@ class App {
     }
     // 绑定 GlobalNavMenu 按钮事件
     this.globalNavMenu.forEach(item => {
-      if (item.onlyWhenLogin && !this.isLoggedIn) return
-      if (item.onlyWhenNotLogin && this.isLoggedIn) return
+      if (item.onlyWhenLogin && !(typeof window.isLoggedIn === 'function' ? window.isLoggedIn() : this.isLoggedIn)) return
+      if (item.onlyWhenNotLogin && (typeof window.isLoggedIn === 'function' ? window.isLoggedIn() : this.isLoggedIn)) return
       const btn = menu.querySelector(`[data-nav-key="${item.key}"]`)
       if (!btn) return
       if (item.key === 'login') {

@@ -21,7 +21,7 @@ class API {
     const refreshToken = localStorage.getItem('nascore_jwt_refresh_token')
     if (!refreshToken) {
       console.log('[links] 没有refresh token')
-      this.clearToken()
+      // 退出相关方法全部交由 window.logoutAndRedirect() 统一管理，无需本地清理token或跳转。
       return null
     }
 
@@ -48,7 +48,7 @@ class API {
 
   // 检查是否已登录
   isLoggedIn() {
-    return this.getUserInfo() !== null
+    return typeof window.isLoggedIn === 'function' ? window.isLoggedIn() : false;
   }
 
   // 通用请求方法
@@ -76,7 +76,7 @@ class API {
       // 处理401未授权错误
       if (response.status === 401) {
         console.log('[links] 401未授权，重定向到登录页')
-        this.redirectToLogin()
+        // 退出相关方法全部交由 window.logoutAndRedirect() 统一管理，无需本地清理token或跳转。
         throw new Error('未登录或登录已过期')
       }
 
@@ -123,11 +123,7 @@ class API {
     window.location.href = loginUrl
   }
 
-  redirectToLoginOut() {
-    const currentUrl = window.location.pathname + window.location.search
-    const loginUrl = window.NASCORE_WEBUI_PREFIX + '/loginOut.shtml?redirect=' + encodeURIComponent(currentUrl)
-    window.location.href = loginUrl
-  }
+  // 退出相关方法全部交由 window.logoutAndRedirect() 统一管理，无需本地清理token或跳转。
 
   // ===== 分类相关API =====
 

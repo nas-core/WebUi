@@ -1,14 +1,5 @@
 // 渲染全局导航菜单按钮（弹出式子菜单）
 (function() {
-  // 判断是否登录（检查nascore_jwt_refresh_token_expires是否存在且未过期）
-  function isLoggedIn() {
-    var expires = localStorage.getItem('nascore_jwt_refresh_token_expires')
-    if (!expires) return false
-    var now = Math.floor(Date.now() / 1000)
-    if (parseInt(expires, 10) < now) return false
-    return true
-  }
-
   // 创建主菜单按钮（三条横线）
   function createMenuButton() {
     var btn = document.createElement('button')
@@ -45,8 +36,8 @@
     menu.style.gap = '0.25rem'
     menu.tabIndex = -1
     navData.forEach(function(item) {
-      if (item.onlyWhenLogin && !isLoggedIn()) return
-      if (item.onlyWhenNotLogin && isLoggedIn()) return
+      if (item.onlyWhenLogin && !window.isLoggedIn()) return
+      if (item.onlyWhenNotLogin && window.isLoggedIn()) return
       var btn = document.createElement('button')
       btn.className = 'w-full text-left px-4 py-2 hover:bg-gray-700 transition-colors flex items-center text-white text-sm bg-transparent border-0 outline-none'
       btn.style.background = 'none'

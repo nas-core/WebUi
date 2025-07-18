@@ -68,7 +68,7 @@
 <div class="login-container">
   <div class="login-form card shadow">
     <div class="login-logo">
-      <img src="images/logo.webp" />
+      <img src="/@public/login/logo.webp" />
       <h1 class=" mt-3">nascore</h1>
     </div>
 
