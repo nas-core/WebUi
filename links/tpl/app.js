@@ -10,7 +10,7 @@ class App {
     this.filteredLinks = []
     this.selectedCategoryId = 0
     this.searchQuery = ''
-
+    this.globalNavMenu = [] // 新增属性
     // DOM元素
     this.elements = {
       userInfo: null,
@@ -24,9 +24,11 @@ class App {
       editModeBtn: null,
       addCategoryBtn: null,
       addLinkBtn: null,
-      logoutBtn: null,
+      // this.elements.logoutBtn = document.getElementById('logout-btn') // 删除
+      // this.elements.loginBtn = document.getElementById('login-btn') // 删除
+      loggedInMenu: null, // 不再需要
+      notLoggedInMenu: null // 不再需要
     }
-
     // 拖拽相关
     this.dragState = {
       isDragging: false,
@@ -45,6 +47,7 @@ class App {
     try {
       this.initElements()
       this.initEventListeners()
+      await this.loadGlobalNavMenu() // 新增：加载全局菜单
       await this.checkAuth()
 
       // 无论是否登录，都尝试加载数据
@@ -83,12 +86,7 @@ class App {
     this.elements.editModeIndicator = document.getElementById('edit-mode-indicator')
     this.elements.enterEditModeBtn = document.getElementById('enter-edit-mode-btn')
     this.elements.exitEditModeBtn = document.getElementById('exit-edit-mode-btn')
-    this.elements.addCategoryBtn = document.getElementById('add-category-btn')
-    this.elements.addLinkBtn = document.getElementById('add-link-btn')
-    this.elements.logoutBtn = document.getElementById('logout-btn')
-    this.elements.loginBtn = document.getElementById('login-btn')
-    this.elements.loggedInMenu = document.getElementById('logged-in-menu')
-    this.elements.notLoggedInMenu = document.getElementById('not-logged-in-menu')
+    // 删除原有的addCategoryBtn、addLinkBtn、logoutBtn、loginBtn、loggedInMenu、notLoggedInMenu的获取
   }
 
   // 初始化事件监听器
@@ -117,30 +115,6 @@ class App {
 
     this.elements.exitEditModeBtn.addEventListener('click', () => {
       this.toggleEditMode()
-    })
-
-    this.elements.addCategoryBtn.addEventListener('click', () => {
-      this.showAddCategoryModal()
-      this.hideDropdownMenu()
-    })
-
-    this.elements.addLinkBtn.addEventListener('click', () => {
-      this.showAddLinkModal()
-      this.hideDropdownMenu()
-    })
-
-    this.elements.logoutBtn.addEventListener('click', () => {
-      window.api.redirectToLoginOut()
-    })
-
-    this.elements.loginBtn.addEventListener('click', () => {
-      window.api.redirectToLogin()
-      this.hideDropdownMenu()
-    })
-
-    // 阻止下拉菜单内部点击事件冒泡
-    this.elements.dropdownMenu.addEventListener('click', (e) => {
-      e.stopPropagation()
     })
 
     // 拖拽相关事件
@@ -384,10 +358,12 @@ class App {
       this.isAdmin = userInfo.isAdmin
       this.isLoggedIn = true
       this.updateUserInfo()
+      this.renderDropdownMenu() // 新增
       console.log('[links] 用户认证成功:', this.user, this.isAdmin ? '管理员' : '普通用户', 'token过期时间:', new Date(userInfo.exp * 1000))
     } else {
       this.isLoggedIn = false
       this.updateUserInfo()
+      this.renderDropdownMenu() // 新增
       console.log('[links] 用户未登录或token已过期')
     }
   }
@@ -723,25 +699,18 @@ class App {
     const editModeIndicator = this.elements.editModeIndicator
     const enterEditModeBtn = this.elements.enterEditModeBtn
     const exitEditModeBtn = this.elements.exitEditModeBtn
-
-    // 未登录用户不显示编辑模式按钮
     if (!this.isLoggedIn) {
       editModeIndicator.classList.add('hidden')
       enterEditModeBtn.classList.add('hidden')
       exitEditModeBtn.classList.add('hidden')
       body.classList.remove('edit-mode')
       this.isEditMode = false
-
-      // 显示未登录菜单
-      this.elements.loggedInMenu.classList.add('hidden')
-      this.elements.notLoggedInMenu.classList.remove('hidden')
+      this.renderDropdownMenu() // 新增
       return
     }
-
-    // 已登录用户显示登录后的菜单
-    this.elements.loggedInMenu.classList.remove('hidden')
-    this.elements.notLoggedInMenu.classList.add('hidden')
-
+    if (this.isLoggedIn) {
+      this.renderDropdownMenu() // 新增
+    }
     if (this.isEditMode) {
       body.classList.add('edit-mode')
       editModeIndicator.classList.remove('hidden')
@@ -926,6 +895,80 @@ class App {
         }, 300)
       }
     }, 5000)
+  }
+
+  // 加载全局导航菜单
+  async loadGlobalNavMenu() {
+    // 等待 window.GlobalNavMenu 加载
+    if (!window.GlobalNavMenu) {
+      await new Promise(resolve => {
+        const check = () => {
+          if (window.GlobalNavMenu) resolve()
+          else setTimeout(check, 50)
+        }
+        check()
+      })
+    }
+    this.globalNavMenu = window.GlobalNavMenu || []
+  }
+
+  // 渲染下拉菜单
+  renderDropdownMenu() {
+    const menu = this.elements.dropdownMenu
+    if (!menu) return
+    let html = '<div class="py-2">'
+    // 登录后显示添加分类/链接
+    if (this.isLoggedIn) {
+      html += `
+        <button id="add-category-btn" class="w-full text-left px-4 py-2 hover:bg-gray-700 transition-colors flex items-center space-x-2">
+          <span>添加分类</span>
+        </button>
+        <button id="add-link-btn" class="w-full text-left px-4 py-2 hover:bg-gray-700 transition-colors flex items-center space-x-2">
+          <span>添加链接</span>
+        </button>
+        <hr class="my-2 border-gray-700" />
+      `
+    }
+    // 渲染 GlobalNavMenu
+    this.globalNavMenu.forEach(item => {
+      if (item.onlyWhenLogin && !this.isLoggedIn) return
+      if (item.onlyWhenNotLogin && this.isLoggedIn) return
+      html += `
+        <button class="w-full text-left px-4 py-2 hover:bg-gray-700 transition-colors flex items-center space-x-2"
+          data-nav-key="${item.key}">
+          <span>${item.name}</span>
+        </button>
+      `
+    })
+    html += '</div>'
+    menu.innerHTML = html
+    // 重新绑定事件
+    if (this.isLoggedIn) {
+      const addCategoryBtn = document.getElementById('add-category-btn')
+      const addLinkBtn = document.getElementById('add-link-btn')
+      addCategoryBtn?.addEventListener('click', () => {
+        this.showAddCategoryModal()
+        this.hideDropdownMenu()
+      })
+      addLinkBtn?.addEventListener('click', () => {
+        this.showAddLinkModal()
+        this.hideDropdownMenu()
+      })
+    }
+    // 绑定 GlobalNavMenu 按钮事件
+    this.globalNavMenu.forEach(item => {
+      if (item.onlyWhenLogin && !this.isLoggedIn) return
+      if (item.onlyWhenNotLogin && this.isLoggedIn) return
+      const btn = menu.querySelector(`[data-nav-key="${item.key}"]`)
+      if (!btn) return
+      if (item.key === 'login') {
+        btn.addEventListener('click', () => window.api.redirectToLogin())
+      } else if (item.key === 'logout') {
+        btn.addEventListener('click', () => window.api.redirectToLoginOut())
+      } else {
+        btn.addEventListener('click', () => window.open(item.url, '_self'))
+      }
+    })
   }
 
   // 清理资源
