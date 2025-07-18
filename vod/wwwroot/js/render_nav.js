@@ -57,9 +57,13 @@
         e.stopPropagation()
         closeDropdownMenu()
         if (item.key === 'login') {
-          window.location.href = '/login'
+          window.location.href = item.url
         } else if (item.key === 'logout') {
-          window.location.href = '/logout'
+          if (typeof window.logoutAndRedirect === 'function') {
+            window.logoutAndRedirect()
+          } else {
+            window.location.reload()
+          }
         } else {
           window.open(item.url, '_self')
         }

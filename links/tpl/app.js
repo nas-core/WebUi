@@ -964,7 +964,13 @@ class App {
       if (item.key === 'login') {
         btn.addEventListener('click', () => window.api.redirectToLogin())
       } else if (item.key === 'logout') {
-        btn.addEventListener('click', () => window.api.redirectToLoginOut())
+        btn.addEventListener('click', () => {
+          if (typeof window.logoutAndRedirect === 'function') {
+            window.logoutAndRedirect()
+          } else {
+            window.location.reload()
+          }
+        })
       } else {
         btn.addEventListener('click', () => window.open(item.url, '_self'))
       }
@@ -974,11 +980,10 @@ class App {
   // 清理资源
   destroy() {
     // 清理事件监听器
-    Object.values(this.elements).forEach((element) => {
-      if (element && element.removeEventListener) {
-        element.removeEventListener()
-      }
-    })
+    // 这里只能移除全局事件监听器，不能盲目对所有元素调用 removeEventListener。
+    // 建议只移除在 initEventListeners 里添加的全局事件。
+    document.removeEventListener('click', this.hideDropdownMenu)
+    // 其它如菜单按钮、输入框等事件无需在 destroy 里移除（页面卸载时会自动清理）。
   }
 }
 
