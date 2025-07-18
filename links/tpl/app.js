@@ -380,7 +380,7 @@ class App {
         ${adminBadge}
       `
     } else {
-      this.elements.userInfo.innerHTML = '<span class="text-gray-400">浏览公开内容</span>'
+      this.elements.userInfo.innerHTML = '<span class="text-gray-400">登陆后可</span>'
     }
   }
 
