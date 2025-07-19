@@ -516,22 +516,13 @@ class App {
     sortedCategories.forEach((category) => {
       const isSelected = this.selectedCategoryId === category.id
       const categoryClass = isSelected ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-
       const editModeClass = this.isEditMode ? 'edit-mode ' : ''
       const publicBadge = category.is_public ? '<span class="ml-1 text-xs">🌍</span>' : '<span class="ml-1 text-xs">🔒</span>'
-
-      categoriesHTML += `
-        <button
-          class="category-tag ${categoryClass} ${editModeClass} px-3 py-1 rounded-full text-sm transition-colors relative"
-          data-category-id="${category.id}"
-          onclick="window.app.handleCategoryClick(${category.id})"
-        >
-          <div class="category-content">
-            ${category.name}${publicBadge}
-          </div>
-          ${this.isEditMode ? '<div class="edit-overlay"><button class="drag-btn mr-2 p-1 hover:bg-gray-600 rounded" data-drag-button="true"><svg class="w-3 h-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/></svg></button><span class="text-white text-xs">编辑</span></div>' : ''}
-        </button>
-      `
+      let editOverlayHTML = ''
+      if (this.isEditMode) {
+        editOverlayHTML = '<span class="edit-overlay flex items-center justify-center"><button class="drag-btn mr-2 p-1 hover:bg-gray-600 rounded flex items-center justify-center" data-drag-button="true"><svg class="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/></svg></button><span class="text-white text-sm">编辑</span></span>'
+      }
+      categoriesHTML += '<div class="category-tag ' + categoryClass + ' ' + editModeClass + 'px-3 py-1 rounded-full text-sm transition-colors relative" data-category-id="' + category.id + '" role="button" tabindex="0" onclick="window.app.handleCategoryClick(' + category.id + ')"><span class="category-content">' + category.name + publicBadge + '</span>' + editOverlayHTML + '</div>'
     })
 
     this.elements.categoriesContainer.innerHTML = categoriesHTML
