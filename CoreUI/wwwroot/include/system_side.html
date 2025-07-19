@@ -221,27 +221,3 @@
     });
   });
 </script>
-
-<!-- 拟态框 Modal -->
-<div class="modal fade" id="nascoreVodModal" tabindex="-1" aria-labelledby="nascoreVodModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="nascoreVodModalLabel">NasCore_vod 扩展配置</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="关闭"></button>
-      </div>
-      <div class="modal-body" style="height:80vh;">
-        <iframe id="nascoreVodIframe" src="/@nascore_vod/admin_setting.html" style="width:100%;height:100%;border:none;"></iframe>
-      </div>
-    </div>
-  </div>
-</div>
-<script>
-function showNascoreVodModal(e) {
-  e.preventDefault();
-  var modal = new bootstrap.Modal(document.getElementById('nascoreVodModal'));
-  // 可选：每次打开都刷新iframe内容
-  document.getElementById('nascoreVodIframe').src = '/@nascore_vod/admin_setting.html?ts=' + Date.now();
-  modal.show();
-}
-</script>

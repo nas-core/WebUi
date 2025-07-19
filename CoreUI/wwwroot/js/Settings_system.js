@@ -9,8 +9,10 @@ document.addEventListener('DOMContentLoaded', function () {
     if (target.dataset.bind) {
       const bindPath = target.dataset.bind
       let value = target.type === 'checkbox' ? target.checked : target.value
-      // 如果是数字类型，转换为整数
-      if (target.type === 'number' || target.dataset.type === 'number') {
+      // 特殊处理 NascoreExt.Vod.VodSubscription.Urls 字段（多行字符串转数组）
+      if (bindPath === 'NascoreExt.Vod.VodSubscription.Urls') {
+        value = value.split('\n').map(line => line.trim()).filter(line => line)
+      } else if (target.type === 'number' || target.dataset.type === 'number') {
         value = parseInt(value, 10) || 0 // 转换失败时默认为 0
       }
       // 更新全局数据
@@ -45,8 +47,10 @@ document.addEventListener('DOMContentLoaded', function () {
       const bindPath = element.dataset.bind
       const value = getNestedValue(data, bindPath)
 
-      // 特殊处理数组绑定，例如用户列表
-      if (Array.isArray(value) && element.dataset.bindHandler) {
+      // 特殊处理 NascoreExt.Vod.VodSubscription.Urls 字段（数组转多行字符串）
+      if (bindPath === 'NascoreExt.Vod.VodSubscription.Urls' && Array.isArray(value)) {
+        element.value = value.join('\n')
+      } else if (Array.isArray(value) && element.dataset.bindHandler) {
         const handler = window[element.dataset.bindHandler]
         if (typeof handler === 'function') {
           try {
