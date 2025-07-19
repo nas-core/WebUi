@@ -54,7 +54,7 @@ func Webui_handler(w http.ResponseWriter, r *http.Request, nsCfg *system_config.
 		if !isMinifyEnabled {
 			w.Write([]byte(parsedContent))
 		} else {
-			// logger.Info("压缩 shtml")
+			// logger.Debug("压缩 shtml")
 			result := &bytes.Buffer{}
 			err := webuiLib.MinifierInstance.Minify("text/html", result, bytes.NewReader([]byte(parsedContent)))
 			if err != nil {

@@ -28,7 +28,7 @@ func parseSSI(filePath string, basePatch string, logger *zap.SugaredLogger) (str
 	matches := re.FindAllStringSubmatch(html, -1)
 
 	if len(matches) == 0 {
-		logger.Info("No SSI directives found in", filePath)
+		logger.Debug("No SSI directives found in", filePath)
 	}
 	for _, match := range matches {
 		includePath := match[1]

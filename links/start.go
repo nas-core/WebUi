@@ -17,7 +17,7 @@ var embedFS embed.FS
 func FileServ(nsCfg *system_config.SysCfg, logger *zap.SugaredLogger, qpsCounter *uint64) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		path := r.URL.Path
-		//logger.Infoln("path", path)
+		//logger.Debug("path", path)
 		if path == "/@links/" || path == "/@links/index.html" || path == "" || path == "/" || path == "index.html" {
 			http.NotFound(w, r)
 			return
