@@ -34,12 +34,11 @@ func Webui_handler(w http.ResponseWriter, r *http.Request, nsCfg *system_config.
 	if isMinifyEnabled && webuiLib.MinifierInstance == nil {
 		webuiLib.InitMinifier()
 	}
-	var basePatch string
-	basePatch = "wwwroot/"
+	basePatch := "wwwroot/"
 	filePath := basePatch + strings.TrimPrefix(r.URL.Path, nsCfg.Server.WebUIPrefix)
 	// 检查路径是否为目录
 	if strings.HasSuffix(filePath, "/") || filepath.Ext(filePath) == "" {
-		http.Redirect(w, r, nsCfg.Server.WebUIPrefix+"/login.shtml", http.StatusFound)
+		http.Redirect(w, r, "/@public/login.shtml", http.StatusFound)
 		return
 	}
 	if strings.HasSuffix(filePath, ".shtml") {

@@ -72,8 +72,10 @@
       }
     }
     // 重定向到登录页面
-    window.location.href = 'login.shtml'
-  }
+    const currentUrl = window.location.pathname + window.location.search
+    const loginUrl =  '/@public/login/?redirect=' + encodeURIComponent(currentUrl)
+    window.location.href = loginUrl
+    }
 
   // 执行认证检查
   if (!checkAuth()) {

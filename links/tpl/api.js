@@ -119,7 +119,7 @@ class API {
   // 重定向到登录页面
   redirectToLogin() {
     const currentUrl = window.location.pathname + window.location.search
-    const loginUrl = window.NASCORE_WEBUI_PREFIX + '/login.shtml?redirect=' + encodeURIComponent(currentUrl)
+    const loginUrl =  '/@public/login/?redirect=' + encodeURIComponent(currentUrl)
     window.location.href = loginUrl
   }
 

@@ -20,10 +20,10 @@
         }
       } catch (e) {
         console.error('解析 JWT 失败:', e);
-        window.location.href = './login.shtml';
+        window.location.href = '/@public/login/';
       }
     } else {
-      window.location.href = './login.shtml';
+      window.location.href = '/@public/login/';
     }
   }
 </script>
