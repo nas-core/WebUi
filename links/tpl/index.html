@@ -140,6 +140,15 @@
           class="hidden px-3 py-1 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors text-xs">
           退出编辑
         </button>
+        <!-- 新增：编辑模式下显示添加分类和添加链接按钮 -->
+        <button id="add-category-icon-btn" style="display:none" title="添加分类"
+          class="ml-2 px-2 py-1 bg-green-600 text-white rounded-full hover:bg-green-700 transition-colors text-xs flex items-center">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+        </button>
+        <button id="add-link-icon-btn" style="display:none" title="添加链接"
+          class="ml-2 px-2 py-1 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors text-xs flex items-center">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+        </button>
         <button id="enter-edit-mode-btn"
           class="px-3 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-xs">
           编辑模式
@@ -159,42 +168,9 @@
             <div class="py-2">
               <!-- 已登录用户显示的管理功能 -->
               <div id="logged-in-menu" class="hidden">
-                <button id="add-category-btn"
-                  class="w-full text-left px-4 py-2 hover:bg-gray-700 transition-colors flex items-center space-x-2">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                  </svg>
-                  <span>添加分类</span>
-                </button>
-                <button id="add-link-btn"
-                  class="w-full text-left px-4 py-2 hover:bg-gray-700 transition-colors flex items-center space-x-2">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                  </svg>
-                  <span>添加链接</span>
-                </button>
-                <!-- 跳转到 webui -->
-                <button id="webui-btn" onclick="window.open(window.NASCORE_WEBUI_PREFIX+'nascore.shtml', '_blank')"
-                  class="w-full text-left px-4 py-2 hover:bg-gray-700 transition-colors flex items-center space-x-2">
-                  <svg class="w-4 h-4" fill="none" t="1752738116296" viewBox="0 0 1024 1024" version="1.1"
-                    xmlns="http://www.w3.org/2000/svg" p-id="3189">
-                    <path
-                      d="M779.008 244.992Q889.6 355.584 889.6 512.064a32 32 0 0 0 64 0q0-182.976-129.28-312.32Q694.848 70.4 512 70.4T199.744 199.744Q70.4 329.024 70.4 512q0 182.912 129.344 312.256Q329.024 953.6 512 953.6a32 32 0 0 0 0-64q-156.416 0-267.008-110.592Q134.4 668.416 134.4 512t110.592-267.008Q355.584 134.4 512 134.4t267.008 110.592z m95.104 629.12a32 32 0 0 1-45.248 0l-102.272-102.272-0.128-0.128-17.28-17.28-148.672-148.672 1.344 76.288a32 32 0 0 1-64 1.152l-2.56-145.664q-0.256-11.52 6.208-20.992 3.136-4.48 7.232-7.808 3.264-4.096 7.808-7.232 9.472-6.464 20.992-6.272l145.664 2.624a32 32 0 0 1-1.152 64l-76.288-1.344 112 112 156.352 156.352a32 32 0 0 1 0 45.248z"
-                      fill="#303133" p-id="3190"></path>
-                  </svg>
-                  <span>跳转到 webui</span>
-                </button>
+   
                 <hr class="my-2 border-gray-700" />
-                <button id="logout-btn"
-                  class="w-full text-left px-4 py-2 hover:bg-gray-700 transition-colors text-red-400 flex items-center space-x-2">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                  </svg>
-                  <span>退出登录</span>
-                </button>
+               
               </div>
               <!-- 未登录用户显示的登录按钮 -->
               <div id="not-logged-in-menu" class="hidden">

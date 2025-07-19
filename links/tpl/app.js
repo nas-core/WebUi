@@ -27,7 +27,9 @@ class App {
       // this.elements.logoutBtn = document.getElementById('logout-btn') // 删除
       // this.elements.loginBtn = document.getElementById('login-btn') // 删除
       loggedInMenu: null, // 不再需要
-      notLoggedInMenu: null // 不再需要
+      notLoggedInMenu: null, // 不再需要,
+      addCategoryIconBtn: null,
+      addLinkIconBtn: null,
     }
     // 拖拽相关
     this.dragState = {
@@ -86,6 +88,8 @@ class App {
     this.elements.editModeIndicator = document.getElementById('edit-mode-indicator')
     this.elements.enterEditModeBtn = document.getElementById('enter-edit-mode-btn')
     this.elements.exitEditModeBtn = document.getElementById('exit-edit-mode-btn')
+    this.elements.addCategoryIconBtn = document.getElementById('add-category-icon-btn')
+    this.elements.addLinkIconBtn = document.getElementById('add-link-icon-btn')
     // 删除原有的addCategoryBtn、addLinkBtn、logoutBtn、loginBtn、loggedInMenu、notLoggedInMenu的获取
   }
 
@@ -119,6 +123,17 @@ class App {
 
     // 拖拽相关事件
     this.initDragEvents()
+    // 新增：编辑模式下的添加分类/链接按钮
+    if (this.elements.addCategoryIconBtn) {
+      this.elements.addCategoryIconBtn.addEventListener('click', () => {
+        this.showAddCategoryModal()
+      })
+    }
+    if (this.elements.addLinkIconBtn) {
+      this.elements.addLinkIconBtn.addEventListener('click', () => {
+        this.showAddLinkModal()
+      })
+    }
   }
 
   // 初始化拖拽事件
@@ -722,6 +737,15 @@ class App {
       enterEditModeBtn.classList.remove('hidden')
       exitEditModeBtn.classList.add('hidden')
     }
+    const addCategoryIconBtn = this.elements.addCategoryIconBtn
+    const addLinkIconBtn = this.elements.addLinkIconBtn
+    if (this.isEditMode && this.isLoggedIn) {
+      if (addCategoryIconBtn) addCategoryIconBtn.style.display = 'inline-flex'
+      if (addLinkIconBtn) addLinkIconBtn.style.display = 'inline-flex'
+    } else {
+      if (addCategoryIconBtn) addCategoryIconBtn.style.display = 'none'
+      if (addLinkIconBtn) addLinkIconBtn.style.display = 'none'
+    }
   }
 
   // 显示添加分类模态框
@@ -917,18 +941,7 @@ class App {
     const menu = this.elements.dropdownMenu
     if (!menu) return
     let html = '<div class="py-2">'
-    // 登录后显示添加分类/链接
-    if (typeof window.isLoggedIn === 'function' ? window.isLoggedIn() : this.isLoggedIn) {
-      html += `
-        <button id="add-category-btn" class="w-full text-left px-4 py-2 hover:bg-gray-700 transition-colors flex items-center space-x-2">
-          <span>添加分类</span>
-        </button>
-        <button id="add-link-btn" class="w-full text-left px-4 py-2 hover:bg-gray-700 transition-colors flex items-center space-x-2">
-          <span>添加链接</span>
-        </button>
-        <hr class="my-2 border-gray-700" />
-      `
-    }
+    // 登录后不再显示添加分类/链接按钮
     // 渲染 GlobalNavMenu
     this.globalNavMenu.forEach(item => {
       if (item.onlyWhenLogin && !(typeof window.isLoggedIn === 'function' ? window.isLoggedIn() : this.isLoggedIn)) return
