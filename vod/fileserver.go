@@ -36,7 +36,7 @@ func FileServerEmbed(w http.ResponseWriter, r *http.Request, nsCfg *system_confi
 
 		return
 	}
-	// 如果请求的是html或shtml文件，需要动态替换{tailwindcss}为实际地址
+	// 如果请求的是html或shtml文件，需要动态替换 {tailwindcss} 为 {{.WebUICdnPrefix}}tailwindcss.min.js
 	if strings.HasSuffix(upath, ".html") || strings.HasSuffix(upath, ".shtml") {
 		f, err := subFS.Open(strings.TrimPrefix(upath, "/"))
 		if err != nil {
@@ -65,8 +65,8 @@ func FileServerEmbed(w http.ResponseWriter, r *http.Request, nsCfg *system_confi
 			return
 		}
 		content := string(buf)
-		// 这里替换{tailwindcss}为实际的cdn地址
-		content = strings.ReplaceAll(content, "{tailwindcss}", nsCfg.WebUIPubLicCdn.Tailwindcss)
+		// 这里替换 {tailwindcss} 为 {{.WebUICdnPrefix}}libs/tailwindcss.min.js
+		content = strings.ReplaceAll(content, "{tailwindcss}", nsCfg.WebUICdnPrefix+"libs/tailwindcss.min.js")
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		w.Write([]byte(content))
 		return
