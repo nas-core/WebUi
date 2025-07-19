@@ -70,7 +70,31 @@ async function loadFileList(path, shouldClear = true) {
   } catch (err) {
     console.error('ERROR: 加载文件列表失败:', err.message)
     if (shouldClear) {
-      fileListContainer.innerHTML = `<div class="text-danger p-4">加载失败：${err.message || '未知错误'}</div>`
+      // 优化错误提示
+      let friendlyMsg = ''
+      let icon = ''
+      let extra = ''
+      const msg = (err && err.message) ? err.message : ''
+      if (/Access denied/i.test(msg) || /outside user directory/i.test(msg)) {
+        icon = '<i class="bi bi-shield-lock-fill text-warning fs-1 mb-2"></i>'
+        friendlyMsg = '无权访问此目录，请返回上一级或联系管理员。'
+      } else if (/not found/i.test(msg) || /不存在/.test(msg)) {
+        icon = '<i class="bi bi-folder-x text-secondary fs-1 mb-2"></i>'
+        friendlyMsg = '目录不存在，可能已被删除或移动。'
+      } else {
+        icon = '<i class="bi bi-exclamation-triangle-fill text-danger fs-1 mb-2"></i>'
+        friendlyMsg = '加载失败，请稍后重试或联系管理员。'
+        extra = msg ? `<div class='small text-muted mt-2'>${escapeHtml(msg)}</div>` : ''
+      }
+      fileListContainer.innerHTML = `
+        <div class="d-flex flex-column align-items-center justify-content-center p-4">
+          ${icon}
+          <div class="alert alert-light border-0 text-center mt-2 mb-0" role="alert">
+            <div class="fw-bold">${friendlyMsg}</div>
+            ${extra}
+          </div>
+        </div>
+      `
     } else {
       window.showNotification(`加载失败：${err.message || '未知错误'}`, 'error')
     }

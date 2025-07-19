@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>nascore 登录</title>
+  <style>
+    :root[data-theme='light'] {
+      --bg-main: #f3f4f6;
+      --bg-card: #fff;
+      --text-main: #1f2937;
+      --text-secondary: #6b7280;
+      --border-main: #e5e7eb;
+      --input-bg: #f3f4f6;
+      --input-border: #e5e7eb;
+      --btn-main: #2563eb;
+      --btn-hover: #1d4ed8;
+    }
+    :root[data-theme='dark'] {
+      --bg-main: #23272f;
+      --bg-card: #18181b;
+      --text-main: #f3f4f6;
+      --text-secondary: #a1a1aa;
+      --border-main: #2d2d31;
+      --input-bg: #23272f;
+      --input-border: #2d2d31;
+      --btn-main: #2563eb;
+      --btn-hover: #1d4ed8;
+    }
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background: var(--bg-main);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif;
+      transition: background 0.2s;
+    }
+    .login-card {
+      background: var(--bg-card);
+      border-radius: 1.2rem;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.10);
+      padding: 2.5rem 2rem 2rem 2rem;
+      width: 100%;
+      max-width: 380px;
+      border: 1px solid var(--border-main);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: background 0.2s, border 0.2s;
+    }
+    .login-logo {
+      width: 90px;
+      height: 90px;
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .login-logo img{
+      width: 90px;
+    }
+    .login-title {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      color: var(--text-main);
+    }
+    .input-group {
+      width: 100%;
+      margin-bottom: 1.2rem;
+    }
+    .input-group label {
+      display: block;
+      margin-bottom: 0.4rem;
+      color: var(--text-main);
+      font-size: 1rem;
+    }
+    .input-wrapper {
+      display: flex;
+      align-items: center;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 0.5rem;
+      padding: 0 0.8rem;
+      transition: background 0.2s, border 0.2s;
+    }
+    .input-wrapper svg {
+      color: var(--text-secondary);
+      margin-right: 0.5rem;
+      flex-shrink: 0;
+    }
+    .input-group input {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text-main);
+      flex: 1;
+      padding: 0.9rem 0;
+      font-size: 1rem;
+    }
+    .input-group input::placeholder {
+      color: var(--text-secondary);
+    }
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      width: 100%;
+    }
+    .checkbox-group input[type="checkbox"] {
+      margin-right: 0.4rem;
+    }
+    .checkbox-group label {
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 0.98rem;
+    }
+    .login-btn {
+      width: 100%;
+      background: var(--btn-main);
+      color: #fff;
+      border: none;
+      border-radius: 0.5rem;
+      padding: 0.9rem 0;
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin-top: 0.8rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .login-btn:hover {
+      background: var(--btn-hover);
+    }
+    .theme-btn {
+      margin-top: 1.5rem;
+      width: 100%;
+      background: none;
+      border: 1px solid var(--border-main);
+      color: var(--text-secondary);
+      border-radius: 0.4rem;
+      padding: 0.5rem 0;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+    }
+    .theme-btn:hover {
+      background: var(--input-bg);
+    }
+    .hidden { display: none !important; }
+    @media (max-width: 480px) {
+      .login-card {
+        padding: 1.2rem 0.5rem 1.5rem 0.5rem;
+        max-width: 98vw;
+      }
+    }
+    .saved-accounts-list > div {
+      background: var(--input-bg);
+      border: 1.5px solid var(--border-main);
+      border-radius: 0.7rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      padding: 0.9rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: box-shadow 0.2s, border 0.2s;
+      margin-bottom: 0.7rem;
+    }
+    .saved-accounts-list > div:hover {
+      box-shadow: 0 4px 16px rgba(37,99,235,0.10);
+      border-color: var(--btn-main);
+    }
+    .saved-accounts-list .font-bold {
+      font-size: 1.08rem;
+      color: var(--text-main);
+    }
+    .saved-accounts-list .flex.gap-2 {
+      display: flex;
+      gap: 0.7rem;
+    }
+    .saved-accounts-list .bg-blue-600 {
+      background: var(--btn-main) !important;
+      color: #fff !important;
+      border: none;
+      border-radius: 0.4rem;
+      font-weight: 500;
+      font-size: 1rem;
+      box-shadow: 0 2px 8px rgba(37,99,235,0.10);
+      transition: background 0.2s, box-shadow 0.2s;
+      padding: 0.4rem 1.1rem;
+      display: flex;
+      align-items: center;
+    }
+    .saved-accounts-list .bg-blue-600:hover {
+      background: var(--btn-hover) !important;
+      box-shadow: 0 4px 16px rgba(37,99,235,0.18);
+    }
+    .saved-accounts-list .bg-red-100 {
+      background: transparent !important;
+      color: #ef4444 !important;
+      border: 1.5px solid #ef4444;
+      border-radius: 0.4rem;
+      font-weight: 500;
+      font-size: 1rem;
+      transition: background 0.2s, color 0.2s, border 0.2s;
+      padding: 0.4rem 1.1rem;
+      display: flex;
+      align-items: center;
+    }
+    .saved-accounts-list .bg-red-100:hover {
+      background: #fee2e2 !important;
+      color: #b91c1c !important;
+      border-color: #b91c1c;
+    }
+    /* 清理多余样式 */
+    .saved-accounts-list .mr-2, .saved-accounts-list .text-blue-600, .saved-accounts-list .text-red-600, .saved-accounts-list .text-sm {
+      margin: 0;
+      color: inherit;
+      font-size: inherit;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-card">
+    <div class="login-logo">
+      <img src="./logo.webp" alt="nascore-logo" />
+    </div>
+    <div class="login-title">nascore</div>
+    <!-- 已保存账号选择区 -->
+    <div id="saved-accounts-section" class="hidden" style="width:100%;margin-bottom:1.2rem;">
+      <div style="font-size:1.1rem;font-weight:bold;margin-bottom:0.8rem;text-align:center;">选择已保存账号登录</div>
+      <div class="saved-accounts-list" style="display:flex;flex-direction:column;gap:0.7rem;"></div>
+      <button id="backToSavedAccountsBtn" type="button" style="margin-top:1.2rem;width:100%;background:#f3f4f6;border:1px solid #e5e7eb;color:#2563eb;border-radius:0.4rem;padding:0.5rem 0;cursor:pointer;font-size:1rem;" onclick="switchToManualLogin()">返回手动登录</button>
+    </div>
+    <!-- 登录表单 -->
+    <form id="login-form" style="width:100%;">
+
+      <div class="input-group">
+        <label for="username">用户名</label>
+        <div class="input-wrapper">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M5.5 21a7.5 7.5 0 0 1 13 0"/></svg>
+          <input type="text" id="username" placeholder="请输入用户名" required />
+        </div>
+      </div>
+      <div class="input-group">
+        <label for="password">密码</label>
+        <div class="input-wrapper">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <input type="password" id="password" placeholder="请输入密码" required />
+        </div>
+      </div>
+      <div class="checkbox-group">
+        <input type="checkbox" id="remember-password" />
+        <label for="remember-password">记住密码</label>
+        <span id="remember-tip" style="color:#eab308;font-size:0.95em;margin-left:0.5em;display:none;">本地加密保存，仅本机有效</span>
+      </div>
+      <button type="submit" class="login-btn">登录</button>
+      <button id="showSavedAccountsBtn" type="button" style="width:100%;background:#f3f4f6;border:1px solid #e5e7eb;color:#2563eb;border-radius:0.4rem;padding:0.5rem 0;cursor:pointer;font-size:1rem;margin-top:0.8rem;display:none;">选择已保存用户</button>
+    </form>
+    <!-- 主题按钮 -->
+    <button class="theme-btn" type="button" data-action="open-theme-modal">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="7.5" cy="10.5" r="1.5"/><circle cx="16.5" cy="10.5" r="1.5"/><circle cx="12" cy="16.5" r="1.5"/></svg>
+      主题设置
+    </button>
+  </div>
+  <script>
+    // 密码加密工具
+const PasswordCrypto = {
+  encrypt(data, key) {
+    key = 'nascore' + key
+    let result = ''
+    for (let i = 0; i < data.length; i++) {
+      const keyChar = key.charCodeAt(i % key.length)
+      const dataChar = data.charCodeAt(i)
+      const encryptedChar = keyChar ^ dataChar
+      result += String.fromCharCode(encryptedChar)
+    }
+    return btoa(result)
+  },
+  decrypt(encryptedData, key) {
+    key = 'nascore' + key
+    const data = atob(encryptedData)
+    let result = ''
+    for (let i = 0; i < data.length; i++) {
+      const keyChar = key.charCodeAt(i % key.length)
+      const dataChar = data.charCodeAt(i)
+      const decryptedChar = keyChar ^ dataChar
+      result += String.fromCharCode(decryptedChar)
+    }
+    return result
+  },
+}
+
+const API = {
+  async request(url, data) {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    })
+    return await res.json()
+  },
+  TokenManager: {
+    setTokens(data) {
+      // 统一加 nascore_jwt_ 前缀
+      if (data.nascore_jwt_access_token) localStorage.setItem('nascore_jwt_access_token', data.nascore_jwt_access_token)
+      if (data.nascore_jwt_access_token_expires) localStorage.setItem('nascore_jwt_access_token_expires', data.nascore_jwt_access_token_expires)
+      if (data.nascore_jwt_refresh_token) localStorage.setItem('nascore_jwt_refresh_token', data.nascore_jwt_refresh_token)
+      if (data.nascore_jwt_refresh_token_expires) localStorage.setItem('nascore_jwt_refresh_token_expires', data.nascore_jwt_refresh_token_expires)
+      // 写入cookie
+        if (data.nascore_jwt_access_token && data.nascore_jwt_access_token_expires) {
+          // 过期时间是秒，需要转为毫秒
+          var expires = new Date(parseInt(data.nascore_jwt_access_token_expires, 10) * 1000);
+          document.cookie = "nascore_jwt_access_token=" + encodeURIComponent(data.nascore_jwt_access_token) + "; expires=" + expires.toUTCString() + "; path=/";
+        }
+    }
+  }
+}
+
+window.showNotification = function(msg, type) {
+  alert(msg)
+}
+
+// 优化弹窗显示/隐藏逻辑，适配暗黑/明亮模式
+
+document.addEventListener('DOMContentLoaded', () => {
+  const SAVED_ACCOUNTS_KEY = 'saved_accounts'
+  const loginForm = document.getElementById('login-form')
+  const usernameInput = document.getElementById('username')
+  const passwordInput = document.getElementById('password')
+  const rememberCheckbox = document.getElementById('remember-password')
+  const rememberTip = document.getElementById('remember-tip')
+  const savedAccountsSection = document.getElementById('saved-accounts-section')
+  const backToSavedAccountsBtn = document.getElementById('backToSavedAccountsBtn')
+  const showSavedAccountsBtn = document.getElementById('showSavedAccountsBtn')
+  let isRememberConfirmed = false
+
+  // 记住密码提示逻辑
+  rememberCheckbox.addEventListener('change', function (e) {
+    if (e.target.checked) {
+      rememberTip.style.display = 'inline';
+    } else {
+      rememberTip.style.display = 'none';
+    }
+  })
+
+  // 页面初始化逻辑
+  initPage()
+  function initPage() {
+    const savedAccounts = getSavedAccounts()
+    if (savedAccounts.length > 0) {
+      renderSavedAccounts(savedAccounts)
+      savedAccountsSection.classList.remove('hidden')
+      loginForm.classList.add('hidden')
+      if (backToSavedAccountsBtn) backToSavedAccountsBtn.style.display = ''
+      if (showSavedAccountsBtn) showSavedAccountsBtn.style.display = 'none'
+    } else {
+      savedAccountsSection.classList.add('hidden')
+      loginForm.classList.remove('hidden')
+      if (backToSavedAccountsBtn) backToSavedAccountsBtn.style.display = 'none'
+      if (showSavedAccountsBtn) showSavedAccountsBtn.style.display = 'none'
+    }
+  }
+  function getSavedAccounts() {
+    const accounts = localStorage.getItem(SAVED_ACCOUNTS_KEY)
+    return accounts ? JSON.parse(accounts) : []
+  }
+  function saveAccount(username, password) {
+    try {
+      const encryptedPassword = PasswordCrypto.encrypt(password, username)
+      const accounts = getSavedAccounts()
+      const existingIndex = accounts.findIndex((acc) => acc.username === username)
+      if (existingIndex >= 0) {
+        accounts[existingIndex] = { username, password: encryptedPassword }
+      } else {
+        accounts.push({ username, password: encryptedPassword })
+      }
+      localStorage.setItem(SAVED_ACCOUNTS_KEY, JSON.stringify(accounts))
+    } catch (error) {
+      alert('保存账号失败')
+    }
+  }
+  function renderSavedAccounts(accounts) {
+    let html = ''
+    accounts.forEach(function(account) {
+      html += "<div class='flex items-center justify-between bg-gray-50 border rounded px-3 py-2' data-username='" + account.username + "' style='opacity:1'>" +
+        "<div class='flex items-center'>" +
+          "<span class='mr-2 text-blue-600'>" +
+            "<svg width='18' height='18' fill='none' stroke='currentColor' stroke-width='2' viewBox='0 0 24 24'><circle cx='12' cy='7' r='4'/><path d='M5.5 21a7.5 7.5 0 0 1 13 0'/></svg>" +
+          "</span>" +
+          "<span class='font-bold'>" + account.username + "</span>" +
+        "</div>" +
+        "<div class='flex gap-2'>" +
+          "<button class='px-2 py-1 bg-blue-600 text-white rounded text-sm' onclick=\"quickLogin('" + account.username + "', '" + account.password + "')\">" +
+            "<span class='mr-1'><svg width='16' height='16' fill='none' stroke='currentColor' stroke-width='2' viewBox='0 0 24 24'><path d='M10 17l5-5-5-5M15 12H3'/></svg></span>登录" +
+          "</button>" +
+          "<button class='px-2 py-1 bg-red-100 text-red-600 rounded text-sm' onclick=\"deleteAccount('" + account.username + "')\">" +
+            "<span class='mr-1'><svg width='16' height='16' fill='none' stroke='currentColor' stroke-width='2' viewBox='0 0 24 24'><path d='M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6z'/></svg></span>删除" +
+          "</button>" +
+        "</div>" +
+      "</div>"
+    })
+    document.querySelector('.saved-accounts-list').innerHTML = html
+  }
+  window.deleteAccount = function(username) {
+    const accounts = getSavedAccounts().filter((acc) => acc.username !== username)
+    localStorage.setItem(SAVED_ACCOUNTS_KEY, JSON.stringify(accounts))
+    const accountElement = document.querySelector(`[data-username='${username}']`)
+    if (accountElement) {
+      accountElement.style.transition = 'opacity 0.3s'
+      accountElement.style.opacity = '0'
+      setTimeout(() => {
+        if (accounts.length === 0) {
+          savedAccountsSection.classList.add('hidden')
+          loginForm.classList.remove('hidden')
+          if (backToSavedAccountsBtn) backToSavedAccountsBtn.style.display = 'none'
+          if (showSavedAccountsBtn) showSavedAccountsBtn.style.display = 'none'
+        } else {
+          accountElement.remove()
+        }
+      }, 300)
+    }
+  }
+  window.switchToManualLogin = function() {
+    savedAccountsSection.classList.add('hidden')
+    loginForm.classList.remove('hidden')
+    if (showSavedAccountsBtn) showSavedAccountsBtn.style.display = getSavedAccounts().length > 0 ? '' : 'none'
+    if (backToSavedAccountsBtn) backToSavedAccountsBtn.style.display = 'none'
+  }
+  function switchToSavedAccounts() {
+    const savedAccounts = getSavedAccounts()
+    if (savedAccounts.length > 0) {
+      renderSavedAccounts(savedAccounts)
+      savedAccountsSection.classList.remove('hidden')
+      loginForm.classList.add('hidden')
+      if (backToSavedAccountsBtn) backToSavedAccountsBtn.style.display = ''
+      if (showSavedAccountsBtn) showSavedAccountsBtn.style.display = 'none'
+    }
+  }
+  window.quickLogin = async function(username, encryptedPassword) {
+    try {
+      const password = PasswordCrypto.decrypt(encryptedPassword, username)
+      const response = await API.request('/@api/user/login', { username, password })
+      if (response.data) {
+        localStorage.removeItem('clipboard')
+        API.TokenManager.setTokens(response.data)
+        // 跳转前等待一帧，确保localStorage写入完成
+        setTimeout(() => {
+          const redirectUrl = getQueryParam('redirect') || '/@webui/nascore.shtml';
+          window.location.href = redirectUrl;
+        }, 0)
+      } else {
+        window.showNotification('登录失败：' + (response.message || '未知错误'), 'error')
+      }
+    } catch (error) {
+      window.showNotification('登录失败：' + (error.message || '未知错误'), 'error')
+    }
+  }
+  if (backToSavedAccountsBtn) {
+    backToSavedAccountsBtn.addEventListener('click', window.switchToManualLogin)
+  }
+  if (showSavedAccountsBtn) {
+    showSavedAccountsBtn.addEventListener('click', switchToSavedAccounts)
+  }
+  async function handleLogin(event) {
+    event.preventDefault()
+    const username = usernameInput.value.trim()
+    const password = passwordInput.value.trim()
+    if (!username || !password) {
+      window.showNotification('请输入用户名和密码', 'warning')
+      return
+    }
+    try {
+      const response = await API.request('/@api/user/login', { username, password })
+      if (response.data) {
+        if (rememberCheckbox.checked) {
+          saveAccount(username, password)
+        }
+        API.TokenManager.setTokens(response.data)
+        // 跳转前等待一帧，确保localStorage写入完成
+        setTimeout(() => {
+          const redirectUrl = getQueryParam('redirect') || '/@webui/nascore.shtml';
+          window.location.href = redirectUrl;
+        }, 0)
+      } else {
+        window.showNotification('登录失败：密码错误', 'error')
+      }
+    } catch (error) {
+      window.showNotification('登录失败：可能是密码错误', 'error')
+    }
+  }
+  loginForm.addEventListener('submit', handleLogin)
+  document.addEventListener('keypress', (event) => {
+    if (event.key === 'Enter' && loginForm.classList.contains('hidden') === false) {
+      loginForm.dispatchEvent(new Event('submit'))
+    }
+  })
+  // 初始化时判断是否显示“选择已保存用户”按钮
+  if (showSavedAccountsBtn) {
+    showSavedAccountsBtn.style.display = getSavedAccounts().length > 0 ? '' : 'none'
+  }
+  // 绑定“手动输入账号”按钮事件
+  const switchToManualBtn = document.getElementById('switchToManualBtn')
+  if (switchToManualBtn) {
+    switchToManualBtn.addEventListener('click', window.switchToManualLogin)
+  }
+})
+function getQueryParam(name) {
+  const url = new URL(window.location.href);
+  return url.searchParams.get(name);
+}
+// 登录态自动跳转
+function isTokenExpired(expiresTimestamp) {
+  // expiresTimestamp 是秒为单位，now 是毫秒
+  if (!expiresTimestamp) return true
+  const now = Date.now()
+  // 转为字符串去除空格再转数字
+  var expires = parseInt(String(expiresTimestamp).trim(), 10)
+  if (isNaN(expires)) return true // 非法值直接判为过期
+  return expires * 1000 < now
+}
+function checkAuthStatus() {
+  // 统一用 nascore_jwt_ 前缀
+  const refreshToken = localStorage.getItem('nascore_jwt_refresh_token');
+  const refreshTokenExpires = localStorage.getItem('nascore_jwt_refresh_token_expires');
+  if (!refreshToken) return false;
+  if (isTokenExpired(refreshTokenExpires)) return false;
+  return true;
+}
+if (checkAuthStatus()) {
+  const redirectUrl = getQueryParam('redirect') || '/@webui/nascore.shtml';
+  window.location.href = redirectUrl;
+} 
+  </script>
+  <script src="./theme.js"></script>
+</body>
+</html> 
