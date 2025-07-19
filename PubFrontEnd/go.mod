@@ -1,4 +1,4 @@
-module github.com/nas-core/WebUi/login_reg_navJs
+module github.com/nas-core/WebUi/PubFrontEnd
 
 go 1.24.5
 

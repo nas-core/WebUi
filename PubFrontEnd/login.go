@@ -1,4 +1,4 @@
-package login_reg_navJs
+package PubFrontEnd
 
 import (
 	"embed"
