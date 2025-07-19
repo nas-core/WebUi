@@ -571,15 +571,7 @@ class App {
         const editModeClass = this.isEditMode ? 'edit-mode ' : ''
         const publicBadge = link.is_public ? '' : '<span class="text-gray-400 text-xs">🔒</span>'
 
-        // 创建简单的favicon占位符
-        const favicon = `
-        <div class="w-8 h-8 bg-gray-600 rounded flex items-center justify-center flex-shrink-0">
-          <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
-          </svg>
-        </div>
-      `
-
+        // 精简：不再显示favicon
         return `
         <div
           class="link-card ${editModeClass} bg-gray-800 border border-gray-700 rounded-lg p-4 hover:bg-gray-750 transition-colors  relative"
@@ -587,17 +579,14 @@ class App {
           onclick="window.app.handleLinkClick(${link.id})"
         >
           <div class="link-content">
-            <div class="flex items-start space-x-3">
-              ${favicon}
-              <div class="flex-1 min-w-0">
+            <div class="flex flex-col">
+              <div class="flex items-center space-x-2 flex-shrink-0 mb-1">
                 <h3 class="text-gray-100 font-medium truncate">${link.title}</h3>
-                <p class="text-gray-400 text-sm truncate mt-1">${link.url}</p>
-                ${link.description ? `<p class="text-gray-500 text-xs mt-2 line-clamp-2">${link.description}</p>` : ''}
-              </div>
-              <div class="flex items-center space-x-2 flex-shrink-0">
                 ${publicBadge}
                 ${this.isEditMode ? '<svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>' : ''}
               </div>
+              <p class="text-gray-400 text-sm truncate">${link.url}</p>
+              ${link.description ? `<p class="text-gray-500 text-xs mt-2 line-clamp-2">${link.description}</p>` : ''}
             </div>
           </div>
           ${this.isEditMode ? '<div class="edit-overlay"><button class="drag-btn mr-2 p-1 hover:bg-gray-600 rounded" data-drag-button="true"><svg class="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/></svg></button><span class="text-white text-sm">编辑</span></div>' : ''}
