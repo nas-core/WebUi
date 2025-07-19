@@ -49,7 +49,20 @@
         <label for="WebUIPrefix" class="form-label">WebUI 前缀</label>
         <input type="text" class="form-control" id="WebUIPrefix" data-bind="Server.WebUIPrefix">
       </div>
-
+      <div class="mb-3">
+        <label for="WebUICdnPrefix" class="form-label">CDN前缀</label>
+        <div class="btn-group mb-2 flex-wrap" role="group" aria-label="CDN选择" style="gap:0.5rem;flex-wrap:wrap;">
+          <button type="button" class="btn btn-outline-primary btn-sm" onclick="setCdnPrefix('https://cdn.jsdmirror.com/gh/nas-core/nascore_static@main/');">jsdmirror</button>
+          <button type="button" class="btn btn-outline-primary btn-sm" onclick="setCdnPrefix('https://gcore.jsdelivr.net/gh/nas-core/nascore_static@main/');">gcore.jsdelivr</button>
+          <button type="button" class="btn btn-outline-primary btn-sm" onclick="setCdnPrefix('https://testingcf.jsdelivr.net/gh/nas-core/nascore_static@main/');">testingcf.jsdelivr</button>
+          <button type="button" class="btn btn-outline-primary btn-sm" onclick="setCdnPrefix('https://fastly.jsdelivr.net/gh/nas-core/nascore_static@main/');">fastly.jsdelivr</button>
+          <button type="button" class="btn btn-outline-primary btn-sm" onclick="setCdnPrefix('https://quantil.jsdelivr.net/gh/nas-core/nascore_static@main/');">quantil.jsdelivr</button>
+          <button type="button" class="btn btn-outline-primary btn-sm" onclick="setCdnPrefix('https://raw.githubusercontent.com/nas-core/nascore_static/refs/heads/main/');">raw.github</button>
+          <button type="button" class="btn btn-outline-primary btn-sm" onclick="WebUICdnPrefixAutoSet1();">github镜像</button>
+          <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#githubMirrorModal">设置 GitHub Mirror</button>
+        </div>
+        <input type="text" class="form-control" id="WebUICdnPrefix" data-bind="WebUICdnPrefix">
+      </div>
       <div class="mb-3">
         <div class="form-check form-switch">
           <input class="form-check-input" type="checkbox" id="WebDavEnable" data-bind="Server.WebDavEnable">
@@ -77,9 +90,8 @@
       </div>
       <div class="mb-3">
         <label for="DefaultStaticFileServiceDownloadUrl" class="form-label">静态文件Github下载地址 (.zip)
-          <button type="button" class="btn  btn-link btn-sm" data-bs-toggle="modal" data-bs-target="#githubMirrorModal">
-            设置 GitHub Mirror
-          </button>
+          <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#githubMirrorModal">设置 GitHub Mirror</button>
+
         </label>
         <input type="text" class="form-control" id="DefaultStaticFileServiceDownloadUrl"
           data-bind="Server.DefaultStaticFileServiceDownloadUrl">
@@ -90,3 +102,16 @@
     </div>
   </div>
 </div>
+
+<script>
+  function setCdnPrefix(prefix) {
+    document.getElementById('WebUICdnPrefix').value = prefix;
+    const event = new Event('input', {bubbles: true});
+    document.getElementById('WebUICdnPrefix').dispatchEvent(event);
+  }
+  function WebUICdnPrefixAutoSet1() {
+    var mirror = document.getElementById("ThirdPartyExtGitHubDownloadMirror");
+    var prefix = (mirror && mirror.value ? mirror.value : "https://github.akams.cn/") + 'https://raw.githubusercontent.com/nas-core/nascore_static/refs/heads/main/';
+    setCdnPrefix(prefix);
+  }
+</script>

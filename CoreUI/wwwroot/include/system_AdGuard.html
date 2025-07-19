@@ -26,10 +26,9 @@
 
       <div class="mb-3">
         <label for="ThirdPartyExtAdGuardUpstream_dns_fileUpdateUrl" class="form-label">Upstream_dns_file
-          github更新地址 <button type="button" class="btn  btn-link btn-sm" data-bs-toggle="modal"
-            data-bs-target="#githubMirrorModal">
-            设置 GitHub Mirror
-          </button></label>
+          github更新地址<button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal"
+            data-bs-target="#githubMirrorModal">设置 GitHub Mirror</button>
+          ></label>
         <input type="text" class="form-control" id="ThirdPartyExtAdGuardUpstream_dns_fileUpdateUrl"
           data-bind="ThirdPartyExt.AdGuard.Upstream_dns_fileUpdateUrl">
       </div>
@@ -85,22 +84,22 @@
     const ThirdPartyExtGitHubDownloadMirror = document.getElementById('ThirdPartyExtGitHubDownloadMirror').value
     const Savepath = document.getElementById('ThirdPartyExtAdGuardUpstream_dns_file').value
 
-    showNotification('DDNS-Go 正在下载，请不要离开页面', 'info')
+    showNotification('adg 正在下载，请不要离开页面', 'info')
 
     try {
       const response = await API.request(
         `{{.ServerUrl}}/@api/admin/get_adguard_rules?DownLoadlink=${encodeURIComponent(DownLoadlink)}&GitHubDownloadMirror=${encodeURIComponent(ThirdPartyExtGitHubDownloadMirror)}&savepath=${encodeURIComponent(Savepath)}`,
         {},
-        {needToken: true}
+        { needToken: true }
       )
 
       if (response.code < 10) {
-        showNotification('DDNS-Go 下载成功', 'success')
+        showNotification('adg 下载成功', 'success')
       } else {
-        showNotification('DDNS-Go 下载失败: ' + response.message, 'danger')
+        showNotification('adg 下载失败: ' + response.message, 'danger')
       }
     } catch (error) {
-      showNotification('DDNS-Go 下载出错: ' + error.message, 'danger')
+      showNotification('adg 下载出错: ' + error.message, 'danger')
     }
   }
 </script>

@@ -41,7 +41,6 @@
       <!--#include file="include/system_jwt.html" -->
       <!--#include file="include/system_secret.html" -->
       <!--#include file="include/system_limit.html" -->
-      <!--#include file="include/system_webuiCDN.html" -->
 
 
       <!--#include file="include/system_UserManager.html" -->

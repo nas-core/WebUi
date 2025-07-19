@@ -6,6 +6,10 @@ github.com/joyanhui/golang-pkgs/pkgs/exePath v0.0.0-20250712102146-8780ed189b72 
 github.com/joyanhui/golang-pkgs/pkgs/exePath v0.0.0-20250712102146-8780ed189b72/go.mod h1:ieGUZE1HKscKvp2BSdEP7MVp8eQh7RZ8gGny6mHb6uk=
 github.com/nas-core/nascore/nascore_util v0.0.0-20250719174030-d73c31d7d77e h1:WVRrWunua8rjM0RFrqn+SsBt3RCvOszVO2eUSi4i2vE=
 github.com/nas-core/nascore/nascore_util v0.0.0-20250719174030-d73c31d7d77e/go.mod h1:wfMacCrLVp4uky9xjpMw9ZcrpCLZQNbPmBn8+ICyD3g=
+github.com/nas-core/nascore/nascore_util v0.0.0-20250719193338-76846af5b4fc h1:jMGkObAIEkKyZFGzPN19uovKcNhH3AI6UUC/drRmT6A=
+github.com/nas-core/nascore/nascore_util v0.0.0-20250719193338-76846af5b4fc/go.mod h1:wfMacCrLVp4uky9xjpMw9ZcrpCLZQNbPmBn8+ICyD3g=
+github.com/nas-core/nascore/nascore_util v0.0.0-20250719194637-4a5ece1b3587 h1:cp656nHXACit97CO6NloJltDrJruJe8/DPL+rW/gN8o=
+github.com/nas-core/nascore/nascore_util v0.0.0-20250719194637-4a5ece1b3587/go.mod h1:wfMacCrLVp4uky9xjpMw9ZcrpCLZQNbPmBn8+ICyD3g=
 github.com/pelletier/go-toml/v2 v2.2.3 h1:YmeHyLY8mFWbdkNWwpr+qIL2bEqT0o95WSdkNHvL12M=
 github.com/pelletier/go-toml/v2 v2.2.3/go.mod h1:MfCQTFTvCcUyyvvwm1+G6H/jORL20Xlb6rzQu9GuUkc=
 github.com/sagikazarmark/locafero v0.7.0 h1:5MqpDsTGNDhY8sGp0Aowyf0qKsPrhewaLSsFaodPcyo=

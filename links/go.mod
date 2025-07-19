@@ -6,7 +6,7 @@ require (
 	github.com/fsnotify/fsnotify v1.8.0 // indirect
 	github.com/go-viper/mapstructure/v2 v2.2.1 // indirect
 	github.com/joyanhui/golang-pkgs/pkgs/exePath v0.0.0-20250712102146-8780ed189b72 // indirect
-	github.com/nas-core/nascore/nascore_util v0.0.0-20250717192019-b278ccb5b050 // indirect
+	github.com/nas-core/nascore/nascore_util v0.0.0-20250719193338-76846af5b4fc // indirect
 	github.com/pelletier/go-toml/v2 v2.2.3 // indirect
 	github.com/sagikazarmark/locafero v0.7.0 // indirect
 	github.com/sourcegraph/conc v0.3.0 // indirect

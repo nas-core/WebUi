@@ -46,7 +46,7 @@ func IndexPage(nsCfg *system_config.SysCfg, logger *zap.SugaredLogger, qpsCounte
 		html := string(content)
 		inject := "<script>window.NASCORE_WEBUI_PREFIX = '" + prefix + "';</script>"
 		html = strings.ReplaceAll(html, "{inject}", inject)
-		html = strings.ReplaceAll(html, "{tailwindcss}", nsCfg.WebUIPubLicCdn.Tailwindcss)
+		html = strings.ReplaceAll(html, "{tailwindcss}", "<script src='"+nsCfg.WebUICdnPrefix+"libs/tailwindcss.min.js'></script>")
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		w.Write([]byte(html))
 	}
