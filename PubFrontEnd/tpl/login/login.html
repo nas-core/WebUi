@@ -15,7 +15,7 @@
     <div class="mb-5 flex flex-col items-center">
       <img src="./logo.webp" alt="nascore-logo" class="w-24 h-24 mb-3" />
       <div class="text-3xl font-bold mb-6 text-center text-gray-900 dark:text-gray-100">nascore</div>
-    </div><script src="https://cdn.tailwindcss.com"></script>
+    </div>
     <!-- 已保存账号选择区 -->
     <div id="saved-accounts-section" class="hidden w-full mb-5">
       <div class="text-lg font-bold mb-3 text-center text-gray-900 dark:text-gray-100">选择已保存账号登录</div>
@@ -319,8 +319,8 @@ function checkAuthStatus() {
 if (checkAuthStatus()) {
   const redirectUrl = getQueryParam('redirect') || '/@webui/nascore.shtml';
   window.location.href = redirectUrl;
-} 
+}
   </script>
-  <script src="./theme.js"></script>
+  <script src="../theme.js"></script>
 </body>
-</html> 
+</html>
