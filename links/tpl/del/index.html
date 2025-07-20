@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>网址导航 - NasCore</title>
+  <link rel="stylesheet" href="main.css" />
+  <script src="../theme/theme.js"></script>
+</head>
+<body>
+  <header class="header">
+    <div class="header-title">网址导航</div>
+    <div style="display:flex;align-items:center;gap:1rem;">
+      <span id="user-info"></span>
+      <button class="theme-btn" data-action="open-theme-modal" title="切换主题">🌓</button>
+      <button id="menu-btn" class="theme-btn" title="菜单">☰</button>
+    </div>
+    <div id="dropdown-menu" class="dropdown-menu" style="display:none;"></div>
+  </header>
+  <main class="main-content">
+    <section class="section">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input id="search-input" class="search-input" type="text" placeholder="搜索网址、标题或描述..." />
+      </div>
+    </section>
+    <section class="section">
+      <div class="section-title">分类</div>
+      <div id="categories-container" class="category-list"></div>
+    </section>
+    <section class="section">
+      <div class="section-title">链接</div>
+      <div id="links-container" class="link-list"></div>
+    </section>
+    <div id="empty-state" class="empty-state" style="display:none;">
+      还没有任何链接，点击右上角菜单添加。
+    </div>
+  </main>
+  <!-- Modal 容器由 JS 动态生成 -->
+  <div id="toast-container" class="toast-container"></div>
+  <div id="loading-overlay" style="display:none;position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,0.3);align-items:center;justify-content:center;display:flex;">
+    <div style="background:var(--color-card);color:var(--color-text-main);padding:1.5rem 2rem;border-radius:1rem;box-shadow:var(--shadow);font-size:1.1rem;">加载中...</div>
+  </div>
+  <script src="api.js"></script>
+  <script src="modal.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

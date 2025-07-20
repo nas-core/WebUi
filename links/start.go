@@ -27,12 +27,11 @@ func FileServ(nsCfg *system_config.SysCfg, logger *zap.SugaredLogger, qpsCounter
 		http.FileServer(http.FS(tplFS)).ServeHTTP(w, r)
 	}
 }
-
 func IndexPage(nsCfg *system_config.SysCfg, logger *zap.SugaredLogger, qpsCounter *uint64) http.HandlerFunc {
 	prefix := nsCfg.Server.WebUIPrefix
 
 	return func(w http.ResponseWriter, r *http.Request) {
-		f, err := embedFS.Open("tpl/index.html")
+		f, err := embedFS.Open("tpl/links-standalone.html")
 		if err != nil {
 			http.Error(w, "index.html not found", http.StatusNotFound)
 			return
@@ -46,7 +45,7 @@ func IndexPage(nsCfg *system_config.SysCfg, logger *zap.SugaredLogger, qpsCounte
 		html := string(content)
 		inject := "<script>window.NASCORE_WEBUI_PREFIX = '" + prefix + "';</script>"
 		html = strings.ReplaceAll(html, "{inject}", inject)
-		html = strings.ReplaceAll(html, "{tailwindcss}", "<script src='"+nsCfg.WebUICdnPrefix+"libs/tailwindcss.min.js'></script>")
+		html = strings.ReplaceAll(html, "{public}", system_config.PrefixPublicFun)
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		w.Write([]byte(html))
 	}

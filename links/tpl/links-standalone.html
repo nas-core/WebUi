@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+  <title>Links 管理</title>
+  <script src="/@public/theme.js"></script>
+  <style>
+    :root {
+      --main-bg: #f7f7f7;
+      --main-fg: #222;
+      --accent: #0078ff;
+      --border: #e0e0e0;
+      --card-bg: #fff;
+      --card-fg: #222;
+      --shadow: 0 2px 8px rgba(0,0,0,0.04);
+      --radius: 0.7rem;
+      --input-bg: #f5f5f5;
+      --input-fg: #222;
+      --input-border: #ccc;
+      --danger: #e74c3c;
+      --success: #27ae60;
+    }
+    [data-theme="dark"] {
+      --main-bg: #181a1b;
+      --main-fg: #eee;
+      --accent: #4fa3ff;
+      --border: #333;
+      --card-bg: #23272a;
+      --card-fg: #eee;
+      --shadow: 0 2px 8px rgba(0,0,0,0.18);
+      --input-bg: #23272a;
+      --input-fg: #eee;
+      --input-border: #444;
+    }
+    html, body {
+      margin: 0; padding: 0; height: 100%;
+      background: var(--main-bg); color: var(--main-fg);
+      font-family: system-ui, sans-serif;
+      min-height: 100vh;
+    }
+    .container {
+      display: flex; flex-direction: row; height: 100vh; max-width: 100vw;
+      gap: 0.5rem;
+      padding: 0.5rem;
+      box-sizing: border-box;
+    }
+    @media (max-width: 800px) {
+      .container { flex-direction: column; height: auto; }
+      .categories, .links { min-width: 0; }
+    }
+    .categories {
+      min-width: 16rem; max-width: 22rem; flex: 0 0 18rem;
+      background: var(--card-bg); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 1rem; display: flex; flex-direction: column;
+      gap: 1rem; border: 1px solid var(--border);
+    }
+    .links {
+      flex: 1 1 0; background: var(--card-bg); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 1rem; display: flex; flex-direction: column;
+      gap: 1rem; border: 1px solid var(--border);
+      min-width: 0;
+    }
+    .header {
+      display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .search {
+      flex: 1 1 0; min-width: 8rem;
+      background: var(--input-bg); color: var(--input-fg);
+      border: 1px solid var(--input-border); border-radius: var(--radius);
+      padding: 0.5rem 1rem; font-size: 1rem;
+      outline: none;
+    }
+    .theme-btn {
+      background: none; border: none; color: var(--accent); font-size: 1.3rem;
+      cursor: pointer; margin-left: 0.5rem;
+    }
+    .cat-list, .link-list {
+      list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.3rem;
+    }
+    .cat-item, .link-item {
+      background: var(--input-bg); color: var(--input-fg);
+      border-radius: var(--radius); padding: 0.5rem 0.7rem;
+      display: flex; align-items: center; gap: 0.5rem;
+      border: 1px solid var(--input-border);
+      cursor: grab; user-select: none;
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+    .cat-item.selected { background: var(--accent); color: #fff; }
+    .cat-item .cat-actions, .link-item .link-actions {
+      margin-left: auto; display: flex; gap: 0.2rem;
+    }
+    .cat-item .cat-actions button, .link-item .link-actions button {
+      background: none; border: none; color: var(--main-fg); font-size: 1.1rem;
+      cursor: pointer; border-radius: 0.3rem; padding: 0.1rem 0.4rem;
+      transition: background 0.15s;
+    }
+    .cat-item .cat-actions button:hover, .link-item .link-actions button:hover {
+      background: var(--border);
+    }
+    .add-btn {
+      background: var(--accent); color: #fff; border: none;
+      border-radius: var(--radius); padding: 0.4rem 1.2rem; font-size: 1rem;
+      cursor: pointer; margin-top: 0.5rem;
+      transition: background 0.2s;
+    }
+    .add-btn:hover { background: #005bb5; }
+    .link-list {
+      gap: 0.5rem;
+    }
+    .link-item {
+      flex-direction: column; align-items: flex-start; cursor: grab;
+      border-left: 4px solid var(--accent);
+      padding-left: 0.8rem;
+    }
+    .link-title-row {
+      display: flex; align-items: center; width: 100%; gap: 0.5rem;
+    }
+    .link-title {
+      font-weight: bold; font-size: 1.1rem; flex: 1 1 0;
+      word-break: break-all;
+    }
+    .link-url {
+      color: var(--accent); font-size: 0.97rem; text-decoration: underline;
+      word-break: break-all;
+    }
+    .link-desc {
+      color: #888; font-size: 0.95rem; margin-top: 0.1rem;
+      word-break: break-all;
+    }
+    .link-item .link-actions { margin-left: 0; }
+    .drag-over { box-shadow: 0 0 0 2px var(--accent) inset; }
+    /* 弹窗 */
+    .modal {
+      position: fixed; left: 0; top: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.18); display: flex; align-items: center; justify-content: center;
+      z-index: 1000;
+    }
+    .modal-content {
+      background: var(--card-bg); color: var(--card-fg); border-radius: var(--radius);
+      min-width: 18rem; max-width: 95vw; padding: 1.2rem 1.5rem; box-shadow: var(--shadow);
+      display: flex; flex-direction: column; gap: 1rem;
+    }
+    .modal-content label { font-size: 1rem; margin-bottom: 0.2rem; }
+    .modal-content input, .modal-content textarea {
+      width: 100%; padding: 0.5rem; border-radius: var(--radius);
+      border: 1px solid var(--input-border); background: var(--input-bg); color: var(--input-fg);
+      font-size: 1rem; margin-bottom: 0.5rem;
+    }
+    .modal-content textarea { min-height: 3.5rem; resize: vertical; }
+    .modal-actions { display: flex; gap: 1rem; justify-content: flex-end; }
+    .modal-actions button {
+      padding: 0.4rem 1.2rem; border-radius: var(--radius); border: none;
+      font-size: 1rem; cursor: pointer;
+    }
+    .modal-actions .danger { background: var(--danger); color: #fff; }
+    .modal-actions .primary { background: var(--accent); color: #fff; }
+    .modal-actions .cancel { background: #888; color: #fff; }
+    @media (max-width: 600px) {
+      .container { padding: 0.1rem; }
+      .categories, .links { padding: 0.5rem; }
+      .modal-content { padding: 0.7rem 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <input class="search" id="searchInput" type="search" placeholder="搜索链接/描述..." autocomplete="off">
+    <button class="theme-btn" id="themeBtn" title="切换主题">🌓</button>
+  </div>
+  <div class="container">
+    <section class="categories">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <span style="font-weight:bold;font-size:1.1rem;">分类</span>
+        <button class="add-btn" id="addCatBtn" title="新增分类">＋</button>
+      </div>
+      <ul class="cat-list" id="catList"></ul>
+    </section>
+    <section class="links">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <span id="linksTitle" style="font-weight:bold;font-size:1.1rem;">链接</span>
+        <button class="add-btn" id="addLinkBtn" title="新增链接">＋</button>
+      </div>
+      <ul class="link-list" id="linkList"></ul>
+    </section>
+  </div>
+  <div id="modal" style="display:none;"></div>
+  <script>
+// ========== 工具函数 ==========
+const $ = sel => document.querySelector(sel);
+const $$ = sel => Array.from(document.querySelectorAll(sel));
+const apiBase = '/@links/api/';
+function fetchJSON(url, opts) {
+  return fetch(url, opts).then(r => {
+    if (!r.ok) throw new Error('网络错误');
+    return r.json();
+  });
+}
+function showModal(html, onClose) {
+  const modal = $('#modal');
+  modal.innerHTML = `<div class='modal'><div class='modal-content'>${html}</div></div>`;
+  modal.style.display = '';
+  modal.onclick = e => {
+    if (e.target === modal.firstChild) { hideModal(); if(onClose)onClose(); }
+  };
+}
+function hideModal() {
+  const modal = $('#modal');
+  modal.innerHTML = '';
+  modal.style.display = 'none';
+}
+function toast(msg, sec=1.5) {
+  let t = document.createElement('div');
+  t.textContent = msg;
+  t.style = 'position:fixed;top:20%;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;padding:0.7rem 1.5rem;border-radius:1rem;z-index:2000;font-size:1.1rem;box-shadow:var(--shadow);';
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(), sec*1000);
+}
+function confirmModal(msg, cb) {
+  showModal(`<div>${msg}</div><div class='modal-actions'><button class='primary'>确定</button><button class='cancel'>取消</button></div>`);
+  $$('.modal-actions button')[0].onclick = ()=>{ hideModal(); cb(true); };
+  $$('.modal-actions button')[1].onclick = ()=>{ hideModal(); cb(false); };
+}
+// ========== 状态 ==========
+let categories = [];
+let links = [];
+let selectedCat = null;
+let searchText = '';
+// ========== 分类相关 ==========
+function loadCategories() {
+  fetchJSON(apiBase+'categories').then(data => {
+    categories = data;
+    if (!selectedCat && categories.length) selectedCat = categories[0].id;
+    renderCategories();
+    renderLinks();
+  });
+}
+function renderCategories() {
+  const ul = $('#catList');
+  ul.innerHTML = '';
+  categories.forEach(cat => {
+    const li = document.createElement('li');
+    li.className = 'cat-item' + (cat.id===selectedCat?' selected':'');
+    li.draggable = true;
+    li.innerHTML = `<span>${cat.name}</span>
+      <div class='cat-actions'>
+        <button title='编辑'>✏️</button>
+        <button title='删除'>🗑️</button>
+      </div>`;
+    li.onclick = e => {
+      if (e.target.closest('.cat-actions')) return;
+      selectedCat = cat.id; renderCategories(); renderLinks();
+    };
+    li.querySelector('button[title="编辑"]').onclick = e => {
+      e.stopPropagation();
+      showCatModal(cat);
+    };
+    li.querySelector('button[title="删除"]').onclick = e => {
+      e.stopPropagation();
+      confirmModal('确定删除该分类？', ok => {
+        if (!ok) return;
+        fetch(apiBase+`categories?id=${cat.id}`, {method:'DELETE'}).then(()=>{
+          toast('已删除'); loadCategories();
+        });
+      });
+    };
+    // 拖拽
+    li.ondragstart = ev => { ev.dataTransfer.setData('cat', cat.id); };
+    li.ondragover = ev => { ev.preventDefault(); li.classList.add('drag-over'); };
+    li.ondragleave = ev => { li.classList.remove('drag-over'); };
+    li.ondrop = ev => {
+      ev.preventDefault(); li.classList.remove('drag-over');
+      const fromId = +ev.dataTransfer.getData('cat');
+      const toId = cat.id;
+      if (fromId === toId) return;
+      const fromIdx = categories.findIndex(c=>c.id===fromId);
+      const toIdx = categories.findIndex(c=>c.id===toId);
+      if (fromIdx<0||toIdx<0) return;
+      // 交换sort_num
+      [categories[fromIdx].sort_num, categories[toIdx].sort_num] = [categories[toIdx].sort_num, categories[fromIdx].sort_num];
+      // 提交
+      fetch(apiBase+'categories/sort', {
+        method:'PATCH', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(categories.map(c=>({id:c.id,sort_num:c.sort_num})))
+      }).then(()=>{ loadCategories(); });
+    };
+    ul.appendChild(li);
+  });
+}
+$('#addCatBtn').onclick = ()=> showCatModal();
+function showCatModal(cat={}) {
+  showModal(`
+    <label>分类名称</label>
+    <input id='catName' value='${cat.name||''}' maxlength='30' required>
+    <div class='modal-actions'>
+      <button class='primary'>保存</button>
+      <button class='cancel'>取消</button>
+    </div>
+  `);
+  $$('.modal-actions button')[0].onclick = ()=>{
+    const name = $('#catName').value.trim();
+    if (!name) return toast('名称不能为空');
+    const data = {name, sort_num:cat.sort_num||0, is_public:cat.is_public||false};
+    if (cat.id) { data.id=cat.id; data.owner_id=cat.owner_id; }
+    fetch(apiBase+'categories', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(data)
+    }).then(()=>{ hideModal(); loadCategories(); });
+  };
+  $$('.modal-actions button')[1].onclick = hideModal;
+}
+// ========== 链接相关 ==========
+function loadLinks() {
+  if (!selectedCat) { $('#linkList').innerHTML = ''; return; }
+  fetchJSON(apiBase+`links?category_id=${selectedCat}`).then(data => {
+    links = data;
+    renderLinks();
+  });
+}
+function renderLinks() {
+  if (!selectedCat) { $('#linkList').innerHTML = ''; return; }
+  fetchJSON(apiBase+`links?category_id=${selectedCat}`).then(data => {
+    links = data;
+    let filtered = links.filter(l => {
+      if (!searchText) return true;
+      const t = searchText.toLowerCase();
+      return l.title.toLowerCase().includes(t) || (l.description||'').toLowerCase().includes(t);
+    });
+    const ul = $('#linkList');
+    ul.innerHTML = '';
+    filtered.forEach(link => {
+      const li = document.createElement('li');
+      li.className = 'link-item';
+      li.draggable = true;
+      li.innerHTML = `
+        <div class='link-title-row'>
+          <span class='link-title'>${link.title}</span>
+          <div class='link-actions'>
+            <button title='编辑'>✏️</button>
+            <button title='删除'>🗑️</button>
+          </div>
+        </div>
+        <a class='link-url' href='${link.url}' target='_blank'>${link.url}</a>
+        <div class='link-desc'>${link.description||''}</div>
+      `;
+      li.querySelector('button[title="编辑"]').onclick = e => {
+        e.stopPropagation();
+        showLinkModal(link);
+      };
+      li.querySelector('button[title="删除"]').onclick = e => {
+        e.stopPropagation();
+        confirmModal('确定删除该链接？', ok => {
+          if (!ok) return;
+          fetch(apiBase+`link?id=${link.id}`, {method:'DELETE'}).then(()=>{
+            toast('已删除'); loadLinks();
+          });
+        });
+      };
+      // 拖拽
+      li.ondragstart = ev => { ev.dataTransfer.setData('link', link.id); };
+      li.ondragover = ev => { ev.preventDefault(); li.classList.add('drag-over'); };
+      li.ondragleave = ev => { li.classList.remove('drag-over'); };
+      li.ondrop = ev => {
+        ev.preventDefault(); li.classList.remove('drag-over');
+        const fromId = +ev.dataTransfer.getData('link');
+        const toId = link.id;
+        if (fromId === toId) return;
+        const fromIdx = links.findIndex(l=>l.id===fromId);
+        const toIdx = links.findIndex(l=>l.id===toId);
+        if (fromIdx<0||toIdx<0) return;
+        [links[fromIdx].sort_num, links[toIdx].sort_num] = [links[toIdx].sort_num, links[fromIdx].sort_num];
+        fetch(apiBase+'links/sort', {
+          method:'PATCH', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify(links.map(l=>({id:l.id,sort_num:l.sort_num})))
+        }).then(()=>{ loadLinks(); });
+      };
+      $('#linkList').appendChild(li);
+    });
+  });
+}
+$('#addLinkBtn').onclick = ()=> showLinkModal();
+function showLinkModal(link={}) {
+  showModal(`
+    <label>标题</label>
+    <input id='linkTitle' value='${link.title||''}' maxlength='60' required>
+    <label>URL</label>
+    <input id='linkUrl' value='${link.url||''}' maxlength='1024' required>
+    <label>描述</label>
+    <textarea id='linkDesc' maxlength='200'>${link.description||''}</textarea>
+    <div class='modal-actions'>
+      <button class='primary'>保存</button>
+      <button class='cancel'>取消</button>
+    </div>
+  `);
+  $$('.modal-actions button')[0].onclick = ()=>{
+    const title = $('#linkTitle').value.trim();
+    const url = $('#linkUrl').value.trim();
+    if (!title || !url) return toast('标题和URL必填');
+    const data = {
+      title, url,
+      description: $('#linkDesc').value.trim(),
+      category_id: selectedCat,
+      sort_num: link.sort_num||0,
+      is_public: link.is_public||false
+    };
+    if (link.id) { data.id=link.id; data.owner_id=link.owner_id; }
+    fetch(apiBase+'link', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(data)
+    }).then(()=>{ hideModal(); loadLinks(); });
+  };
+  $$('.modal-actions button')[1].onclick = hideModal;
+}
+// ========== 搜索 ==========
+$('#searchInput').oninput = e => {
+  searchText = e.target.value.trim();
+  renderLinks();
+};
+// ========== 主题切换 ==========
+$('#themeBtn').onclick = () => {
+  if (document.documentElement.getAttribute('data-theme') === 'dark') {
+    document.documentElement.setAttribute('data-theme', '');
+    localStorage.setItem('theme', 'light');
+  } else {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    localStorage.setItem('theme', 'dark');
+  }
+};
+(function initTheme() {
+  let t = localStorage.getItem('theme');
+  if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : '';
+  if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+})();
+// ========== 初始化 ==========
+window.onload = () => {
+  loadCategories();
+  $('#searchInput').value = '';
+};
+// 分类切换时自动加载链接
+const origRenderCategories = renderCategories;
+renderCategories = function() { origRenderCategories.apply(this, arguments); loadLinks(); };
+  </script>
+</body>
+</html>

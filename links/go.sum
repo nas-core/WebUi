@@ -8,6 +8,8 @@ github.com/nas-core/nascore/nascore_util v0.0.0-20250717192019-b278ccb5b050 h1:Y
 github.com/nas-core/nascore/nascore_util v0.0.0-20250717192019-b278ccb5b050/go.mod h1:VXPXm7lOLADx3xInPs0tLmjL2PYVQpwX8+PJhEh3cec=
 github.com/nas-core/nascore/nascore_util v0.0.0-20250719193338-76846af5b4fc h1:jMGkObAIEkKyZFGzPN19uovKcNhH3AI6UUC/drRmT6A=
 github.com/nas-core/nascore/nascore_util v0.0.0-20250719193338-76846af5b4fc/go.mod h1:wfMacCrLVp4uky9xjpMw9ZcrpCLZQNbPmBn8+ICyD3g=
+github.com/nas-core/nascore/nascore_util v0.0.0-20250720154043-fac8467d4621 h1:vYdxNj+CZXnfsBsHjmRW2CApU9DApSg3BxkKdIJ0GS0=
+github.com/nas-core/nascore/nascore_util v0.0.0-20250720154043-fac8467d4621/go.mod h1:wfMacCrLVp4uky9xjpMw9ZcrpCLZQNbPmBn8+ICyD3g=
 github.com/pelletier/go-toml/v2 v2.2.3 h1:YmeHyLY8mFWbdkNWwpr+qIL2bEqT0o95WSdkNHvL12M=
 github.com/pelletier/go-toml/v2 v2.2.3/go.mod h1:MfCQTFTvCcUyyvvwm1+G6H/jORL20Xlb6rzQu9GuUkc=
 github.com/sagikazarmark/locafero v0.7.0 h1:5MqpDsTGNDhY8sGp0Aowyf0qKsPrhewaLSsFaodPcyo=
