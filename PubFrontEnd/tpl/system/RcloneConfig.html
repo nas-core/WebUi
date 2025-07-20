@@ -1,0 +1,42 @@
+<section id="rclone" class="bg-white rounded-lg shadow p-6">
+  <h2 class="text-xl font-semibold mb-4 text-blue-700">Rclone 云存储配置</h2>
+  <form class="space-y-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="flex items-center space-x-2">
+        <input type="checkbox" id="RcloneAutoMountEnable" class="mr-2" data-bind="ThirdPartyExt.Rclone.AutoMountEnable">
+        <label for="RcloneAutoMountEnable" class="block text-sm font-medium text-gray-700">启用 Rclone自动挂载</label>
+      </div>
+      <div>
+        <label for="ThirdPartyExtRcloneDownLoadlink" class="block text-sm font-medium text-gray-700">rclone github下载地址</label>
+        <input type="text" id="ThirdPartyExtRcloneDownLoadlink" class="mt-1 block w-full rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500" data-bind="ThirdPartyExt.Rclone.DownLoadlink">
+      </div>
+      <div>
+        <label for="ThirdPartyExtRcloneVersion" class="block text-sm font-medium text-gray-700">Version</label>
+        <input type="text" id="ThirdPartyExtRcloneVersion" class="mt-1 block w-full rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500" data-bind="ThirdPartyExt.Rclone.Version">
+      </div>
+      <div>
+        <label for="RcloneBinPath" class="block text-sm font-medium text-gray-700">Rclone 路径</label>
+        <div class="flex gap-2">
+          <input type="text" id="RcloneBinPath" class="mt-1 block w-full rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500" data-bind="ThirdPartyExt.Rclone.BinPath">
+          <button type="button" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" onclick="downloadRclone()">下载</button>
+        </div>
+      </div>
+      <div class="col-span-2">
+        <label for="ThirdPartyExtRcloneAutoMountCommand" class="block text-sm font-medium text-gray-700">rclone自动挂载命令</label>
+        <div class="flex gap-2">
+          <textarea id="ThirdPartyExtRcloneAutoMountCommand" rows="2" class="mt-1 block w-full rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500" data-bind="ThirdPartyExt.Rclone.AutoMountCommand"></textarea>
+          <button type="button" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" onclick="copyRcloneMountCommand()">复制命令</button>
+        </div>
+        <span class="text-xs text-gray-500">（ 如果命令最后结束 是字符 &nascore ，那么会作为后台命令执行）</span>
+      </div>
+      <div class="col-span-2">
+        <label for="ThirdPartyExtRcloneAutoUnMountCommand" class="block text-sm font-medium text-gray-700">rclone自动卸载命令</label>
+        <textarea id="ThirdPartyExtRcloneAutoUnMountCommand" rows="2" class="mt-1 block w-full rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500" data-bind="ThirdPartyExt.Rclone.AutoUnMountCommand"></textarea>
+      </div>
+    </div>
+    <div class="mt-2 text-xs text-gray-500">
+      rclone的目录挂载 在linux 依赖 fuse,频繁挂载卸载可能会出错。请务必测试命令正常后再托管到nascore的跟随启动启动挂载。<br />
+      nascore在挂载之前会先执行 卸载命令，nascore退出的时候也会执行卸载命令。
+    </div>
+  </form>
+</section> 

@@ -1,0 +1,70 @@
+<section id="server" class="bg-[var(--bg-card)] rounded-lg shadow p-6 border border-[var(--border-main)]">
+  <h2 class="text-xl font-semibold mb-4 text-blue-700">服务器设置</h2>
+  <form id="serverConfigForm" class="space-y-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label for="HttpPort" class="block text-sm font-medium text-[var(--text-main)]">HTTP 端口</label>
+        <input type="number" id="HttpPort" class="mt-1 block w-full rounded border-[var(--border-main)] bg-[var(--input-bg)] text-[var(--text-main)] focus:ring-blue-500 focus:border-blue-500" data-bind="Server.HttpPort">
+      </div>
+      <div>
+        <label for="HttpsEnable" class="block text-sm font-medium text-[var(--text-main)]">启用 HTTPS</label>
+        <input type="checkbox" id="HttpsEnable" class="mt-2 align-middle" data-bind="Server.HttpsEnable">
+        <span class="ml-2 text-xs text-[var(--text-secondary)]">建议配合lego证书管理或反向代理功能</span>
+      </div>
+      <div>
+        <label for="HttpsPort" class="block text-sm font-medium text-[var(--text-main)]">HTTPS 端口</label>
+        <input type="number" id="HttpsPort" class="mt-1 block w-full rounded border-[var(--border-main)] bg-[var(--input-bg)] text-[var(--text-main)] focus:ring-blue-500 focus:border-blue-500" data-bind="Server.HttpsPort">
+      </div>
+      <div>
+        <label for="TlsCert" class="block text-sm font-medium text-[var(--text-main)]">TLS 证书路径</label>
+        <input type="text" id="TlsCert" class="mt-1 block w-full rounded border-[var(--border-main)] bg-[var(--input-bg)] text-[var(--text-main)] focus:ring-blue-500 focus:border-blue-500" data-bind="Server.TlsCert">
+      </div>
+      <div>
+        <label for="TlsKey" class="block text-sm font-medium text-[var(--text-main)]">TLS 私钥路径</label>
+        <input type="text" id="TlsKey" class="mt-1 block w-full rounded border-[var(--border-main)] bg-[var(--input-bg)] text-[var(--text-main)] focus:ring-blue-500 focus:border-blue-500" data-bind="Server.TlsKey">
+      </div>
+      <div>
+        <label for="IsRunInServerLess" class="block text-sm font-medium text-[var(--text-main)]">ServerLess/Stateless 模式</label>
+        <input type="checkbox" id="IsRunInServerLess" class="mt-2 align-middle" data-bind="Server.IsRunInServerLess">
+        <span class="ml-2 text-xs text-[var(--text-secondary)]">启用后将以顺序执行方式执行后台任务</span>
+      </div>
+      <div>
+        <label for="WebuiAndApiEnable" class="block text-sm font-medium text-[var(--text-main)]">启用 WebUI和api</label>
+        <input type="checkbox" id="WebuiAndApiEnable" class="mt-2 align-middle" data-bind="Server.WebuiAndApiEnable">
+        <span class="ml-2 text-xs text-[var(--text-secondary)]">关闭后后台也无法访问，只能手动修改配置文件</span>
+      </div>
+      <div>
+        <label for="WebUIPrefix" class="block text-sm font-medium text-[var(--text-main)]">WebUI 前缀</label>
+        <input type="text" id="WebUIPrefix" class="mt-1 block w-full rounded border-[var(--border-main)] bg-[var(--input-bg)] text-[var(--text-main)] focus:ring-blue-500 focus:border-blue-500" data-bind="Server.WebUIPrefix">
+      </div>
+      <div>
+        <label for="WebUICdnPrefix" class="block text-sm font-medium text-[var(--text-main)]">CDN前缀</label>
+        <input type="text" id="WebUICdnPrefix" class="mt-1 block w-full rounded border-[var(--border-main)] bg-[var(--input-bg)] text-[var(--text-main)] focus:ring-blue-500 focus:border-blue-500" data-bind="WebUICdnPrefix">
+      </div>
+      <div>
+        <label for="WebDavEnable" class="block text-sm font-medium text-[var(--text-main)]">启用 WebDAV</label>
+        <input type="checkbox" id="WebDavEnable" class="mt-2 align-middle" data-bind="Server.WebDavEnable">
+        <span class="ml-2 text-xs text-[var(--text-secondary)]">路径是 /</span>
+      </div>
+      <div>
+        <label for="DefaultStaticFileServiceEnable" class="block text-sm font-medium text-[var(--text-main)]">启用静态文件服务</label>
+        <input type="checkbox" id="DefaultStaticFileServiceEnable" class="mt-2 align-middle" data-bind="Server.DefaultStaticFileServiceEnable">
+      </div>
+      <div>
+        <label for="DefaultStaticFileServicePrefix" class="block text-sm font-medium text-[var(--text-main)]">静态文件服务前缀</label>
+        <input type="text" id="DefaultStaticFileServicePrefix" class="mt-1 block w-full rounded border-[var(--border-main)] bg-[var(--input-bg)] text-[var(--text-main)] focus:ring-blue-500 focus:border-blue-500" data-bind="Server.DefaultStaticFileServicePrefix">
+      </div>
+      <div>
+        <label for="DefaultStaticFileServiceRoot" class="block text-sm font-medium text-[var(--text-main)]">静态文件服务根目录</label>
+        <input type="text" id="DefaultStaticFileServiceRoot" class="mt-1 block w-full rounded border-[var(--border-main)] bg-[var(--input-bg)] text-[var(--text-main)] focus:ring-blue-500 focus:border-blue-500" data-bind="Server.DefaultStaticFileServiceRoot">
+      </div>
+      <div>
+        <label for="DefaultStaticFileServiceDownloadUrl" class="block text-sm font-medium text-[var(--text-main)]">静态文件Github下载地址 (.zip)</label>
+        <input type="text" id="DefaultStaticFileServiceDownloadUrl" class="mt-1 block w-full rounded border-[var(--border-main)] bg-[var(--input-bg)] text-[var(--text-main)] focus:ring-blue-500 focus:border-blue-500" data-bind="Server.DefaultStaticFileServiceDownloadUrl">
+      </div>
+    </div>
+    <div class="mt-6 flex justify-end">
+      <button type="button" class="bg-[var(--btn-main)] text-white px-6 py-2 rounded hover:bg-[var(--btn-hover)] transition" onclick="saveGlobalSetting()">保存设置</button>
+    </div>
+  </form>
+</section> 

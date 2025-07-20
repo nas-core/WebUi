@@ -4,272 +4,50 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>nascore 登录</title>
-  <style>
-    :root[data-theme='light'] {
-      --bg-main: #f3f4f6;
-      --bg-card: #fff;
-      --text-main: #1f2937;
-      --text-secondary: #6b7280;
-      --border-main: #e5e7eb;
-      --input-bg: #f3f4f6;
-      --input-border: #e5e7eb;
-      --btn-main: #2563eb;
-      --btn-hover: #1d4ed8;
-    }
-    :root[data-theme='dark'] {
-      --bg-main: #23272f;
-      --bg-card: #18181b;
-      --text-main: #f3f4f6;
-      --text-secondary: #a1a1aa;
-      --border-main: #2d2d31;
-      --input-bg: #23272f;
-      --input-border: #2d2d31;
-      --btn-main: #2563eb;
-      --btn-hover: #1d4ed8;
-    }
-    html, body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-    }
-    body {
-      background: var(--bg-main);
-      color: var(--text-main);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif;
-      transition: background 0.2s;
-    }
-    .login-card {
-      background: var(--bg-card);
-      border-radius: 1.2rem;
-      box-shadow: 0 4px 32px rgba(0,0,0,0.10);
-      padding: 2.5rem 2rem 2rem 2rem;
-      width: 100%;
-      max-width: 380px;
-      border: 1px solid var(--border-main);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      transition: background 0.2s, border 0.2s;
-    }
-    .login-logo {
-      width: 90px;
-      height: 90px;
-      margin-bottom: 1.2rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .login-logo img{
-      width: 90px;
-    }
-    .login-title {
-      font-size: 2rem;
-      font-weight: bold;
-      margin-bottom: 1.5rem;
-      text-align: center;
-      color: var(--text-main);
-    }
-    .input-group {
-      width: 100%;
-      margin-bottom: 1.2rem;
-    }
-    .input-group label {
-      display: block;
-      margin-bottom: 0.4rem;
-      color: var(--text-main);
-      font-size: 1rem;
-    }
-    .input-wrapper {
-      display: flex;
-      align-items: center;
-      background: var(--input-bg);
-      border: 1px solid var(--input-border);
-      border-radius: 0.5rem;
-      padding: 0 0.8rem;
-      transition: background 0.2s, border 0.2s;
-    }
-    .input-wrapper svg {
-      color: var(--text-secondary);
-      margin-right: 0.5rem;
-      flex-shrink: 0;
-    }
-    .input-group input {
-      background: transparent;
-      border: none;
-      outline: none;
-      color: var(--text-main);
-      flex: 1;
-      padding: 0.9rem 0;
-      font-size: 1rem;
-    }
-    .input-group input::placeholder {
-      color: var(--text-secondary);
-    }
-    .checkbox-group {
-      display: flex;
-      align-items: center;
-      margin-bottom: 0.5rem;
-      width: 100%;
-    }
-    .checkbox-group input[type="checkbox"] {
-      margin-right: 0.4rem;
-    }
-    .checkbox-group label {
-      color: var(--text-secondary);
-      cursor: pointer;
-      font-size: 0.98rem;
-    }
-    .login-btn {
-      width: 100%;
-      background: var(--btn-main);
-      color: #fff;
-      border: none;
-      border-radius: 0.5rem;
-      padding: 0.9rem 0;
-      font-size: 1.1rem;
-      font-weight: bold;
-      margin-top: 0.8rem;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .login-btn:hover {
-      background: var(--btn-hover);
-    }
-    .theme-btn {
-      margin-top: 1.5rem;
-      width: 100%;
-      background: none;
-      border: 1px solid var(--border-main);
-      color: var(--text-secondary);
-      border-radius: 0.4rem;
-      padding: 0.5rem 0;
-      cursor: pointer;
-      transition: background 0.2s;
-      font-size: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.4rem;
-    }
-    .theme-btn:hover {
-      background: var(--input-bg);
-    }
-    .hidden { display: none !important; }
-    @media (max-width: 480px) {
-      .login-card {
-        padding: 1.2rem 0.5rem 1.5rem 0.5rem;
-        max-width: 98vw;
-      }
-    }
-    .saved-accounts-list > div {
-      background: var(--input-bg);
-      border: 1.5px solid var(--border-main);
-      border-radius: 0.7rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-      padding: 0.9rem 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      transition: box-shadow 0.2s, border 0.2s;
-      margin-bottom: 0.7rem;
-    }
-    .saved-accounts-list > div:hover {
-      box-shadow: 0 4px 16px rgba(37,99,235,0.10);
-      border-color: var(--btn-main);
-    }
-    .saved-accounts-list .font-bold {
-      font-size: 1.08rem;
-      color: var(--text-main);
-    }
-    .saved-accounts-list .flex.gap-2 {
-      display: flex;
-      gap: 0.7rem;
-    }
-    .saved-accounts-list .bg-blue-600 {
-      background: var(--btn-main) !important;
-      color: #fff !important;
-      border: none;
-      border-radius: 0.4rem;
-      font-weight: 500;
-      font-size: 1rem;
-      box-shadow: 0 2px 8px rgba(37,99,235,0.10);
-      transition: background 0.2s, box-shadow 0.2s;
-      padding: 0.4rem 1.1rem;
-      display: flex;
-      align-items: center;
-    }
-    .saved-accounts-list .bg-blue-600:hover {
-      background: var(--btn-hover) !important;
-      box-shadow: 0 4px 16px rgba(37,99,235,0.18);
-    }
-    .saved-accounts-list .bg-red-100 {
-      background: transparent !important;
-      color: #ef4444 !important;
-      border: 1.5px solid #ef4444;
-      border-radius: 0.4rem;
-      font-weight: 500;
-      font-size: 1rem;
-      transition: background 0.2s, color 0.2s, border 0.2s;
-      padding: 0.4rem 1.1rem;
-      display: flex;
-      align-items: center;
-    }
-    .saved-accounts-list .bg-red-100:hover {
-      background: #fee2e2 !important;
-      color: #b91c1c !important;
-      border-color: #b91c1c;
-    }
-    /* 清理多余样式 */
-    .saved-accounts-list .mr-2, .saved-accounts-list .text-blue-600, .saved-accounts-list .text-red-600, .saved-accounts-list .text-sm {
-      margin: 0;
-      color: inherit;
-      font-size: inherit;
-    }
-  </style>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    window.tailwind = window.tailwind || {};
+    window.tailwind.config = { darkMode: 'class' };
+  </script>
 </head>
-<body>
-  <div class="login-card">
-    <div class="login-logo">
-      <img src="./logo.webp" alt="nascore-logo" />
-    </div>
-    <div class="login-title">nascore</div>
+<body class="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-zinc-900">
+  <div class="bg-white dark:bg-zinc-900 rounded-2xl shadow-lg p-8 w-full max-w-md border border-gray-200 dark:border-zinc-700 flex flex-col items-center">
+    <div class="mb-5 flex flex-col items-center">
+      <img src="./logo.webp" alt="nascore-logo" class="w-24 h-24 mb-3" />
+      <div class="text-3xl font-bold mb-6 text-center text-gray-900 dark:text-gray-100">nascore</div>
+    </div><script src="https://cdn.tailwindcss.com"></script>
     <!-- 已保存账号选择区 -->
-    <div id="saved-accounts-section" class="hidden" style="width:100%;margin-bottom:1.2rem;">
-      <div style="font-size:1.1rem;font-weight:bold;margin-bottom:0.8rem;text-align:center;">选择已保存账号登录</div>
-      <div class="saved-accounts-list" style="display:flex;flex-direction:column;gap:0.7rem;"></div>
-      <button id="backToSavedAccountsBtn" type="button" style="margin-top:1.2rem;width:100%;background:#f3f4f6;border:1px solid #e5e7eb;color:#2563eb;border-radius:0.4rem;padding:0.5rem 0;cursor:pointer;font-size:1rem;" onclick="switchToManualLogin()">返回手动登录</button>
+    <div id="saved-accounts-section" class="hidden w-full mb-5">
+      <div class="text-lg font-bold mb-3 text-center text-gray-900 dark:text-gray-100">选择已保存账号登录</div>
+      <div class="saved-accounts-list flex flex-col gap-3"></div>
+      <button id="backToSavedAccountsBtn" type="button" class="mt-4 w-full bg-gray-100 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 text-blue-600 dark:text-blue-400 rounded-lg py-2 cursor-pointer text-base" onclick="switchToManualLogin()">返回手动登录</button>
     </div>
     <!-- 登录表单 -->
-    <form id="login-form" style="width:100%;">
-
-      <div class="input-group">
-        <label for="username">用户名</label>
-        <div class="input-wrapper">
+    <form id="login-form" class="w-full">
+      <div class="w-full mb-5">
+        <label for="username" class="block mb-1 text-gray-900 dark:text-gray-100 text-base">用户名</label>
+        <div class="flex items-center bg-gray-100 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg px-3 transition">
           <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M5.5 21a7.5 7.5 0 0 1 13 0"/></svg>
-          <input type="text" id="username" placeholder="请输入用户名" required />
+          <input type="text" id="username" placeholder="请输入用户名" required class="bg-transparent border-none outline-none text-gray-900 dark:text-gray-100 flex-1 py-3 text-base" />
         </div>
       </div>
-      <div class="input-group">
-        <label for="password">密码</label>
-        <div class="input-wrapper">
+      <div class="w-full mb-5">
+        <label for="password" class="block mb-1 text-gray-900 dark:text-gray-100 text-base">密码</label>
+        <div class="flex items-center bg-gray-100 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg px-3 transition">
           <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          <input type="password" id="password" placeholder="请输入密码" required />
+          <input type="password" id="password" placeholder="请输入密码" required class="bg-transparent border-none outline-none text-gray-900 dark:text-gray-100 flex-1 py-3 text-base" />
         </div>
       </div>
-      <div class="checkbox-group">
-        <input type="checkbox" id="remember-password" />
-        <label for="remember-password">记住密码</label>
-        <span id="remember-tip" style="color:#eab308;font-size:0.95em;margin-left:0.5em;display:none;">本地加密保存，仅本机有效</span>
+      <div class="flex items-center mb-2 w-full">
+        <input type="checkbox" id="remember-password" class="mr-2" />
+        <label for="remember-password" class="text-gray-500 dark:text-gray-400 cursor-pointer text-base">记住密码</label>
+        <span id="remember-tip" class="text-yellow-500 dark:text-yellow-300 text-sm ml-2 hidden">本地加密保存，仅本机有效</span>
       </div>
-      <button type="submit" class="login-btn">登录</button>
-      <button id="showSavedAccountsBtn" type="button" style="width:100%;background:#f3f4f6;border:1px solid #e5e7eb;color:#2563eb;border-radius:0.4rem;padding:0.5rem 0;cursor:pointer;font-size:1rem;margin-top:0.8rem;display:none;">选择已保存用户</button>
+      <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white rounded-lg py-3 text-lg font-bold mt-3 transition">登录</button>
+      <button id="showSavedAccountsBtn" type="button" class="w-full bg-gray-100 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 text-blue-600 dark:text-blue-400 rounded-lg py-2 cursor-pointer text-base mt-2 hidden">选择已保存用户</button>
     </form>
     <!-- 主题按钮 -->
-    <button class="theme-btn" type="button" data-action="open-theme-modal">
+    <button type="button" class="mt-6 w-full border border-gray-200 dark:border-zinc-700 text-gray-500 dark:text-gray-300 rounded-lg py-2 flex items-center justify-center gap-2 hover:bg-gray-100 dark:hover:bg-zinc-800 transition" onclick="openThemeModal()">
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="7.5" cy="10.5" r="1.5"/><circle cx="16.5" cy="10.5" r="1.5"/><circle cx="12" cy="16.5" r="1.5"/></svg>
       主题设置
     </button>
@@ -349,9 +127,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // 记住密码提示逻辑
   rememberCheckbox.addEventListener('change', function (e) {
     if (e.target.checked) {
-      rememberTip.style.display = 'inline';
+      rememberTip.classList.remove('hidden');
     } else {
-      rememberTip.style.display = 'none';
+      rememberTip.classList.add('hidden');
     }
   })
 
@@ -363,13 +141,13 @@ document.addEventListener('DOMContentLoaded', () => {
       renderSavedAccounts(savedAccounts)
       savedAccountsSection.classList.remove('hidden')
       loginForm.classList.add('hidden')
-      if (backToSavedAccountsBtn) backToSavedAccountsBtn.style.display = ''
-      if (showSavedAccountsBtn) showSavedAccountsBtn.style.display = 'none'
+      if (backToSavedAccountsBtn) backToSavedAccountsBtn.classList.remove('hidden')
+      if (showSavedAccountsBtn) showSavedAccountsBtn.classList.remove('hidden')
     } else {
       savedAccountsSection.classList.add('hidden')
       loginForm.classList.remove('hidden')
-      if (backToSavedAccountsBtn) backToSavedAccountsBtn.style.display = 'none'
-      if (showSavedAccountsBtn) showSavedAccountsBtn.style.display = 'none'
+      if (backToSavedAccountsBtn) backToSavedAccountsBtn.classList.add('hidden')
+      if (showSavedAccountsBtn) showSavedAccountsBtn.classList.add('hidden')
     }
   }
   function getSavedAccounts() {
@@ -394,7 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderSavedAccounts(accounts) {
     let html = ''
     accounts.forEach(function(account) {
-      html += "<div class='flex items-center justify-between bg-gray-50 border rounded px-3 py-2' data-username='" + account.username + "' style='opacity:1'>" +
+      html += "<div class='flex items-center justify-between bg-gray-50 dark:bg-zinc-800 border rounded px-3 py-2' data-username='" + account.username + "' style='opacity:1'>" +
         "<div class='flex items-center'>" +
           "<span class='mr-2 text-blue-600'>" +
             "<svg width='18' height='18' fill='none' stroke='currentColor' stroke-width='2' viewBox='0 0 24 24'><circle cx='12' cy='7' r='4'/><path d='M5.5 21a7.5 7.5 0 0 1 13 0'/></svg>" +
@@ -424,8 +202,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (accounts.length === 0) {
           savedAccountsSection.classList.add('hidden')
           loginForm.classList.remove('hidden')
-          if (backToSavedAccountsBtn) backToSavedAccountsBtn.style.display = 'none'
-          if (showSavedAccountsBtn) showSavedAccountsBtn.style.display = 'none'
+          if (backToSavedAccountsBtn) backToSavedAccountsBtn.classList.add('hidden')
+          if (showSavedAccountsBtn) showSavedAccountsBtn.classList.add('hidden')
         } else {
           accountElement.remove()
         }
@@ -435,8 +213,8 @@ document.addEventListener('DOMContentLoaded', () => {
   window.switchToManualLogin = function() {
     savedAccountsSection.classList.add('hidden')
     loginForm.classList.remove('hidden')
-    if (showSavedAccountsBtn) showSavedAccountsBtn.style.display = getSavedAccounts().length > 0 ? '' : 'none'
-    if (backToSavedAccountsBtn) backToSavedAccountsBtn.style.display = 'none'
+    if (showSavedAccountsBtn) showSavedAccountsBtn.classList.remove('hidden')
+    if (backToSavedAccountsBtn) backToSavedAccountsBtn.classList.add('hidden')
   }
   function switchToSavedAccounts() {
     const savedAccounts = getSavedAccounts()
@@ -444,8 +222,8 @@ document.addEventListener('DOMContentLoaded', () => {
       renderSavedAccounts(savedAccounts)
       savedAccountsSection.classList.remove('hidden')
       loginForm.classList.add('hidden')
-      if (backToSavedAccountsBtn) backToSavedAccountsBtn.style.display = ''
-      if (showSavedAccountsBtn) showSavedAccountsBtn.style.display = 'none'
+      if (backToSavedAccountsBtn) backToSavedAccountsBtn.classList.remove('hidden')
+      if (showSavedAccountsBtn) showSavedAccountsBtn.classList.add('hidden')
     }
   }
   window.quickLogin = async function(username, encryptedPassword) {
@@ -508,7 +286,7 @@ document.addEventListener('DOMContentLoaded', () => {
   })
   // 初始化时判断是否显示“选择已保存用户”按钮
   if (showSavedAccountsBtn) {
-    showSavedAccountsBtn.style.display = getSavedAccounts().length > 0 ? '' : 'none'
+    showSavedAccountsBtn.classList.remove('hidden')
   }
   // 绑定“手动输入账号”按钮事件
   const switchToManualBtn = document.getElementById('switchToManualBtn')

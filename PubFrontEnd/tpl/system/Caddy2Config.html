@@ -1,0 +1,38 @@
+<section id="caddy2" class="bg-white rounded-lg shadow p-6">
+  <h2 class="text-xl font-semibold mb-4 text-blue-700">Caddy2 服务配置</h2>
+  <form class="space-y-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label for="ThirdPartyExtCaddy2DownLoadlink" class="block text-sm font-medium text-gray-700">Caddy2 github下载地址</label>
+        <input type="text" id="ThirdPartyExtCaddy2DownLoadlink" class="mt-1 block w-full rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500" data-bind="ThirdPartyExt.Caddy2.DownLoadlink">
+      </div>
+      <div>
+        <label for="ThirdPartyExtCaddy2Version" class="block text-sm font-medium text-gray-700">Version</label>
+        <input type="text" id="ThirdPartyExtCaddy2Version" class="mt-1 block w-full rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500" data-bind="ThirdPartyExt.Caddy2.Version">
+      </div>
+      <div class="flex items-center space-x-2">
+        <input type="checkbox" id="Caddy2AutoStartEnable" class="mr-2" data-bind="ThirdPartyExt.Caddy2.AutoStartEnable">
+        <label for="Caddy2AutoStartEnable" class="block text-sm font-medium text-gray-700">启用 Caddy2 跟随启动</label>
+      </div>
+      <div>
+        <label for="Caddy2BinPath" class="block text-sm font-medium text-gray-700">Caddy2 路径</label>
+        <div class="flex gap-2">
+          <input type="text" id="Caddy2BinPath" class="mt-1 block w-full rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500" data-bind="ThirdPartyExt.Caddy2.BinPath">
+          <button type="button" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" onclick="downloadCaddy2()">下载</button>
+        </div>
+      </div>
+      <div>
+        <label for="ThirdPartyExtCaddy2ConfigPath" class="block text-sm font-medium text-gray-700">配置文件</label>
+        <input type="text" id="ThirdPartyExtCaddy2ConfigPath" class="mt-1 block w-full rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500" data-bind="ThirdPartyExt.Caddy2.ConfigPath">
+      </div>
+    </div>
+    <div class="mt-4 flex gap-2">
+      <button type="button" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600" onclick="EditCaddy()">编辑网站配置</button>
+    </div>
+    <div class="mt-2 text-xs text-gray-500">
+      Caddy2 可以下载到和nascore 同目录下，并尝试解压，你也可以用其他方式自行下载安装。<br>
+      如果自行安装的caddy2 记得修改路径，或者自行安装成服务模式。<br>
+      编辑功能 目前仅仅支持Caddyfile格式的配置文件。
+    </div>
+  </form>
+</section> 

@@ -1,0 +1,78 @@
+<section id="vod" class="bg-white rounded-lg shadow p-6">
+  <h2 class="text-xl font-semibold mb-4 text-blue-700">NasCore_vod 配置</h2>
+  <form class="space-y-4">
+    <div class="mb-4">
+      <label class="flex items-center">
+        <input type="checkbox" id="NascoreExtVodVodEnable" class="mr-2" data-bind="NascoreExt.Vod.VodEnable">
+        启用
+      </label>
+    </div>
+    <h3 class="text-lg font-semibold mb-2 text-blue-600">缓存相关配置</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div>
+        <label for="NascoreExtVodCacheDoubanExpire" class="block text-sm font-medium text-gray-700">豆瓣热门影片缓存过期时间(分钟)</label>
+        <input type="number" id="NascoreExtVodCacheDoubanExpire" class="mt-1 block w-full rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500" data-bind="NascoreExt.Vod.VodCache.DoubanExpire">
+      </div>
+      <div>
+        <label for="NascoreExtVodCacheDoubanMax" class="block text-sm font-medium text-gray-700">豆瓣热门影视最多缓存记录数</label>
+        <input type="number" id="NascoreExtVodCacheDoubanMax" class="mt-1 block w-full rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500" data-bind="NascoreExt.Vod.VodCache.DoubanMax">
+      </div>
+      <div>
+        <label for="NascoreExtVodCacheOtherExpire" class="block text-sm font-medium text-gray-700">其他缓存过期时间(分钟)</label>
+        <input type="number" id="NascoreExtVodCacheOtherExpire" class="mt-1 block w-full rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500" data-bind="NascoreExt.Vod.VodCache.OtherExpire">
+      </div>
+      <div>
+        <label for="NascoreExtVodCacheOtherMax" class="block text-sm font-medium text-gray-700">其他缓存最大缓存记录数</label>
+        <input type="number" id="NascoreExtVodCacheOtherMax" class="mt-1 block w-full rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500" data-bind="NascoreExt.Vod.VodCache.OtherMax">
+      </div>
+      <div>
+        <label for="NascoreExtVodCacheVoddetailExpire" class="block text-sm font-medium text-gray-700">视频详情缓存过期时间(分钟)</label>
+        <input type="number" id="NascoreExtVodCacheVoddetailExpire" class="mt-1 block w-full rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500" data-bind="NascoreExt.Vod.VodCache.VoddetailExpire">
+      </div>
+      <div>
+        <label for="NascoreExtVodCacheVoddetailMax" class="block text-sm font-medium text-gray-700">视频详情最大缓存记录数</label>
+        <input type="number" id="NascoreExtVodCacheVoddetailMax" class="mt-1 block w-full rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500" data-bind="NascoreExt.Vod.VodCache.VoddetailMax">
+      </div>
+      <div>
+        <label for="NascoreExtVodCacheVodlistExpire" class="block text-sm font-medium text-gray-700">资源站视频列表过期时间(分钟)</label>
+        <input type="number" id="NascoreExtVodCacheVodlistExpire" class="mt-1 block w-full rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500" data-bind="NascoreExt.Vod.VodCache.VodlistExpire">
+      </div>
+      <div>
+        <label for="NascoreExtVodCacheVodlistMax" class="block text-sm font-medium text-gray-700">资源站视频列表最大缓存记录数</label>
+        <input type="number" id="NascoreExtVodCacheVodlistMax" class="mt-1 block w-full rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500" data-bind="NascoreExt.Vod.VodCache.VodlistMax">
+      </div>
+    </div>
+    <div class="mt-2 text-xs text-gray-500">
+      <ul class="list-disc pl-5">
+        <li>豆瓣相关缓存建议设置为 50~200 条，过期时间 60~300 分钟。</li>
+        <li>视频详情/列表缓存数量和过期时间可根据设备内存调整。</li>
+        <li>如设备内存较低可适当降低缓存数量。</li>
+      </ul>
+    </div>
+    <hr class="my-4">
+    <h3 class="text-lg font-semibold mb-2 text-blue-600">订阅相关配置</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label for="NascoreExtVodSubscriptionDefaultSelectedAPISite" class="block text-sm font-medium text-gray-700">默认启用的资源站标识名（英文逗号分隔）</label>
+        <input type="text" id="NascoreExtVodSubscriptionDefaultSelectedAPISite" class="mt-1 block w-full rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500" data-bind="NascoreExt.Vod.VodSubscription.DefaultSelectedAPISite">
+        <span class="text-xs text-gray-500">如：tyyszy,bfzy,dyttzy,ruyi</span>
+      </div>
+      <div>
+        <label for="NascoreExtVodSubscriptionIntervalHour" class="block text-sm font-medium text-gray-700">订阅自动更新周期(小时)</label>
+        <input type="number" id="NascoreExtVodSubscriptionIntervalHour" class="mt-1 block w-full rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500" data-bind="NascoreExt.Vod.VodSubscription.IntervalHour">
+        <span class="text-xs text-gray-500">建议 6~48 小时，过短可能导致频繁请求。</span>
+      </div>
+      <div class="col-span-2">
+        <label for="NascoreExtVodSubscriptionUrls" class="block text-sm font-medium text-gray-700">资源站订阅地址（每行一个）</label>
+        <textarea id="NascoreExtVodSubscriptionUrls" rows="3" class="mt-1 block w-full rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500" data-bind="NascoreExt.Vod.VodSubscription.Urls"></textarea>
+        <span class="text-xs text-gray-500">如：<br>https://raw.githubusercontent.com/nas-core/nascore-website/refs/heads/main/docs/.vuepress/public/nascore_tv/subscription_example1.toml<br>https://raw.githubusercontent.com/nas-core/nascore-website/refs/heads/main/docs/.vuepress/public/nascore_tv/subscription_example2.toml</span>
+      </div>
+    </div>
+    <div class="mb-3 mt-3">
+      <label class="flex items-center">
+        <input type="checkbox" id="NascoreExtVodIsNeedLoginUse" class="mr-2" data-bind="NascoreExt.Vod.IsNeedLoginUse">
+        需要登陆才播放
+      </label>
+    </div>
+  </form>
+</section> 

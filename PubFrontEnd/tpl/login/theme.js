@@ -1,4 +1,4 @@
-// 主题切换和主题设置模态框逻辑
+// 主题切换和主题设置模态框逻辑  采用用原生css 和js 切换主题兼容 bootstarp和tailwind
 // 存储主题的 key
 const THEME_KEY = 'nascore-theme';
 
@@ -126,14 +126,26 @@ const THEME_KEY = 'nascore-theme';
   document.head.appendChild(style);
 })();
 
-// 应用主题
+// 应用主题（兼容 data-theme 和 Tailwind dark class）
 function applyTheme(theme) {
-  let useDarkTheme = theme === 'dark';
-  if (theme === 'auto') {
-    useDarkTheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  }
-  document.documentElement.setAttribute('data-theme', useDarkTheme ? 'dark' : 'light');
+  // 1. 记住用户选择
   localStorage.setItem(THEME_KEY, theme);
+  // 2. 兼容 tailwind/原生/Bootstrap
+  if (theme === 'dark') {
+    document.documentElement.classList.add('dark');
+    document.documentElement.setAttribute('data-theme', 'dark');
+  } else if (theme === 'light') {
+    document.documentElement.classList.remove('dark');
+    document.documentElement.setAttribute('data-theme', 'light');
+  } else if (theme === 'auto') {
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.documentElement.classList.add('dark');
+      document.documentElement.setAttribute('data-theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+  }
 }
 
 // 获取当前主题
@@ -227,17 +239,21 @@ function bindThemeButton() {
 
 // 初始化主题
 (function() {
-  const theme = getCurrentTheme();
+  let theme = getCurrentTheme();
+  if (!localStorage.getItem(THEME_KEY) && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    theme = 'auto';
+  }
   applyTheme(theme);
   updateThemeText(theme);
   bindThemeButton();
 })();
 
-// 支持原生暗色模式
+// 监听系统主题变化，auto 模式下同步切换
 if (window.matchMedia) {
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function() {
     if (getCurrentTheme() === 'auto') {
       applyTheme('auto');
     }
   });
-} 
+}
+window.openThemeModal = openThemeModal; 

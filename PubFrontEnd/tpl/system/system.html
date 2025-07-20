@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>系统配置 - NasCore</title>
+  <!-- Tailwind CSS CDN --> {tailwindcss}
+  <script src="../login/theme.js"></script>
+  <style>
+    html, body { background: var(--bg-main); color: var(--text-main); }
+  </style>
+</head>
+<body class="min-h-screen bg-[var(--bg-main)] text-[var(--text-main)]">
+  <div class="flex min-h-screen">
+    <!-- 侧边栏 -->
+    <aside class="w-64 flex flex-col bg-[var(--bg-card)] shadow-lg border-r border-[var(--border-main)]">
+      <div class="p-6 text-2xl font-bold text-blue-600 border-b border-[var(--border-main)]">NasCore 系统设置</div>
+      <nav class="flex-1 p-4 space-y-2">
+        <a href="#server" data-section="ServerConfig.html" class="block px-4 py-2 rounded hover:bg-[var(--bg-main)]">服务器设置</a>
+        <a href="#jwt" data-section="JWTConfig.html" class="block px-4 py-2 rounded hover:bg-[var(--bg-main)]">JWT设置</a>
+        <a href="#secret" data-section="SecretConfig.html" class="block px-4 py-2 rounded hover:bg-[var(--bg-main)]">密钥配置</a>
+        <a href="#limit" data-section="LimitConfig.html" class="block px-4 py-2 rounded hover:bg-[var(--bg-main)]">限制配置</a>
+        <a href="#user" data-section="UserManager.html" class="block px-4 py-2 rounded hover:bg-[var(--bg-main)]">用户管理</a>
+        <a href="#nascoreext" data-section="NascoreExt.html" class="block px-4 py-2 rounded hover:bg-[var(--bg-main)]">NasCore扩展</a>
+        <a href="#vod" data-section="NascoreVod.html" class="block px-4 py-2 rounded hover:bg-[var(--bg-main)]">NasCore_vod</a>
+        <div class="pt-4 border-t border-[var(--border-main)] text-xs text-[var(--text-secondary)]">第三方扩展</div>
+        <a href="#rclone" data-section="RcloneConfig.html" class="block px-4 py-2 rounded hover:bg-[var(--bg-main)]">Rclone云存储</a>
+        <a href="#ddnsgo" data-section="DDNSGoConfig.html" class="block px-4 py-2 rounded hover:bg-[var(--bg-main)]">DDNS-GO</a>
+        <a href="#adguard" data-section="AdGuardConfig.html" class="block px-4 py-2 rounded hover:bg-[var(--bg-main)]">AdGuard DNS</a>
+        <a href="#lego" data-section="LegoConfig.html" class="block px-4 py-2 rounded hover:bg-[var(--bg-main)]">Lego证书</a>
+        <a href="#openlist" data-section="OpenListConfig.html" class="block px-4 py-2 rounded hover:bg-[var(--bg-main)]">OpenList云盘</a>
+        <a href="#caddy2" data-section="Caddy2Config.html" class="block px-4 py-2 rounded hover:bg-[var(--bg-main)]">Caddy2服务</a>
+        <a href="#staticfile" data-section="StaticFileConfig.html" class="block px-4 py-2 rounded hover:bg-[var(--bg-main)]">静态文件服务</a>
+      </nav>
+      <div class="p-4 border-t border-[var(--border-main)] text-center flex flex-col gap-2">
+        <a href="/" class="text-blue-500 hover:underline">返回首页</a>
+        <button class="theme-btn w-full mt-2 border border-[var(--border-main)] text-[var(--text-secondary)] rounded px-3 py-2 flex items-center justify-center gap-2 bg-[var(--bg-card)] hover:bg-[var(--bg-main)]" data-action="open-theme-modal">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m8.66-13.66l-.71.71M4.05 19.07l-.71.71M21 12h-1M4 12H3m16.66 5.66l-.71-.71M4.05 4.93l-.71-.71" /></svg>
+          <span id="currentThemeText">跟随系统</span>
+        </button>
+      </div>
+    </aside>
+    <!-- 主内容区 -->
+    <main class="flex-1 p-8 overflow-y-auto bg-[var(--bg-main)] text-[var(--text-main)]">
+      <div id="content-area">
+        <h1 class="text-3xl font-bold mb-6">系统配置中心</h1>
+        <div class="grid grid-cols-1 gap-8" id="system-sections">
+          <div id="welcome-info" class="text-center py-16">
+            <h2 class="text-2xl font-bold mb-4">欢迎使用系统配置中心</h2>
+            <p class="text-[var(--text-secondary)]">请选择左侧的功能进行系统配置管理。</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="Settings_system.js"></script>
+</body>
+</html> 

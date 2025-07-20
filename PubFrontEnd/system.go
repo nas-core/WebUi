@@ -1,7 +1,6 @@
 package PubFrontEnd
 
 import (
-	"embed"
 	"net/http"
 	"path"
 	"strings"
@@ -10,18 +9,15 @@ import (
 	"go.uber.org/zap"
 )
 
-//go:embed tpl/*
-var loginFS embed.FS
-
-func HandlerLoginPage(nsCfg *system_config.SysCfg, logger *zap.SugaredLogger, qpsCounter *uint64) http.HandlerFunc {
+func SystemConfigLoginPage(nsCfg *system_config.SysCfg, logger *zap.SugaredLogger, qpsCounter *uint64) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		reqPath := r.URL.Path
 		var file string
 		if r.URL.Path == "" {
-			file = "tpl/login/login.html"
+			file = "tpl/system/system.html"
 
 		} else {
-			file = "tpl/login/" + reqPath
+			file = "tpl/system/" + reqPath
 
 		}
 

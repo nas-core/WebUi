@@ -65,8 +65,7 @@ func FileServerEmbed(w http.ResponseWriter, r *http.Request, nsCfg *system_confi
 			return
 		}
 		content := string(buf)
-		// 这里替换 {tailwindcss} 为 {{.WebUICdnPrefix}}libs/tailwindcss.min.js
-		content = strings.ReplaceAll(content, "{tailwindcss}", nsCfg.WebUICdnPrefix+"libs/tailwindcss.min.js")
+		content = strings.ReplaceAll(content, "{tailwindcss}", "<script src='"+nsCfg.WebUICdnPrefix+"libs/tailwindcss.min.js'></script>")
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		w.Write([]byte(content))
 		return

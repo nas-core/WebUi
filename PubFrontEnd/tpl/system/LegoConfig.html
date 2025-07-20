@@ -1,0 +1,45 @@
+<section id="lego" class="bg-white rounded-lg shadow p-6">
+  <h2 class="text-xl font-semibold mb-4 text-blue-700">LEGO 配置</h2>
+  <form class="space-y-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="flex items-center space-x-2">
+        <input type="checkbox" id="IsLegoAutoRenew" class="mr-2" data-bind="ThirdPartyExt.AcmeLego.IsLegoAutoRenew">
+        <label for="IsLegoAutoRenew" class="block text-sm font-medium text-gray-700">启用 LEGO 自动续订证书</label>
+      </div>
+      <div>
+        <label for="AutoUpdateCheckInterval" class="block text-sm font-medium text-gray-700">自动更新检查间隔 (小时)</label>
+        <input type="number" id="AutoUpdateCheckInterval" class="mt-1 block w-full rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500" data-bind="ThirdPartyExt.AcmeLego.AutoUpdateCheckInterval">
+      </div>
+      <div class="col-span-2">
+        <label for="AcmeLegoCommand" class="block text-sm font-medium text-gray-700">运行命令 (Command)</label>
+        <div class="flex gap-2">
+          <textarea id="AcmeLegoCommand" rows="4" class="mt-1 block w-full rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500" data-bind="ThirdPartyExt.AcmeLego.Command"></textarea>
+          <button type="button" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" onclick="copyLegoCommand()">复制命令</button>
+        </div>
+        <span class="text-xs text-gray-500">此命令是续签证书的时候要用的，${BinPath} 和 ${LEGO_PATH} 会自动替换。更多命令和说明请参考nascore docs lego。</span>
+      </div>
+      <div>
+        <label for="AcmeLegoPath" class="block text-sm font-medium text-gray-700">LEGO 工作目录/证书储存目录 (LEGO_PATH)</label>
+        <input type="text" id="AcmeLegoPath" class="mt-1 block w-full rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500" data-bind="ThirdPartyExt.AcmeLego.LEGO_PATH">
+      </div>
+      <div>
+        <label for="AcmeLegoDownLoadlink" class="block text-sm font-medium text-gray-700">LEGO GitHub下载地址</label>
+        <input type="text" id="AcmeLegoDownLoadlink" class="mt-1 block w-full rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500" data-bind="ThirdPartyExt.AcmeLego.DownLoadlink">
+      </div>
+      <div>
+        <label for="AcmeLegoVersion" class="block text-sm font-medium text-gray-700">版本 (Version)</label>
+        <input type="text" id="AcmeLegoVersion" class="mt-1 block w-full rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500" data-bind="ThirdPartyExt.AcmeLego.Version">
+      </div>
+      <div>
+        <label for="AcmeLegoBinPath" class="block text-sm font-medium text-gray-700">LEGO 路径</label>
+        <div class="flex gap-2">
+          <input type="text" id="AcmeLegoBinPath" class="mt-1 block w-full rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500" data-bind="ThirdPartyExt.AcmeLego.BinPath">
+          <button type="button" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" onclick="downloadLego()">下载</button>
+        </div>
+      </div>
+    </div>
+    <div class="mt-2 text-xs text-gray-500">
+      LEGO 可以下载到和 NasCore 同目录下，并尝试解压。你也可以用其他方式自行下载安装。 如果自行安装的 LEGO 记得二进制路径。
+    </div>
+  </form>
+</section> 
