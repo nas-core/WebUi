@@ -78,45 +78,66 @@ const TokenManager = {
 }
 
 /**
- * 统一的POST请求函数
+ * 统一的请求函数，支持 GET/POST/PUT/DELETE，兼容老用法
  * @param {string} url - 请求地址
  * @param {Object} data - 请求数据
  * @param {Object} [options] - 可选配置
  * @param {Object} [options.basicAuth] - Basic认证信息 {username: '', password: ''}
  * @param {boolean} [options.needToken=false] - 是否需要携带JWT token
+ * @param {string} [options.method] - 请求方法，GET/POST/PUT/DELETE，默认POST
  * @returns {Promise}
  */
 async function request(url, data = {}, options = {}) {
-  const config = {}
+  const config = {};
 
   // 处理Basic Auth
   if (options.basicAuth) {
-    const { username, password } = options.basicAuth
-    const basicAuth = btoa(`${username}:${password}`)
+    const { username, password } = options.basicAuth;
+    const basicAuth = btoa(`${username}:${password}`);
     config.headers = {
       Authorization: `Basic ${basicAuth}`,
-    }
+    };
   }
 
   // 处理JWT token
   if (options.needToken) {
-    const token = TokenManager.getAccessToken()
+    const token = TokenManager.getAccessToken();
     if (token) {
       config.headers = {
         ...config.headers,
         Authorization: `Bearer ${token}`,
-      }
+      };
     }
   }
 
+  // method 默认为 POST，兼容老用法
+  const method = (options.method || 'POST').toUpperCase();
+
   try {
-    return await baseRequest.post(url, data, config)
+    if (method === 'GET') {
+      // GET 请求参数要放到 params，兼容老用法 data 为空对象时也能正常
+      if (data && Object.keys(data).length > 0) {
+        config.params = data;
+      }
+      return await baseRequest.get(url, config);
+    } else if (method === 'DELETE') {
+      // axios delete 第二参数是 config，data 要放 config.data
+      if (data && Object.keys(data).length > 0) {
+        config.data = data;
+      }
+      return await baseRequest.delete(url, config);
+    } else if (method === 'PUT') {
+      return await baseRequest.put(url, data, config);
+    } else {
+      // 默认 POST
+      return await baseRequest.post(url, data, config);
+    }
   } catch (error) {
     return Promise.reject({
       code: error.code || -1,
       message: error.message || '请求失败',
       data: null,
-    })
+    });
   }
 }
 

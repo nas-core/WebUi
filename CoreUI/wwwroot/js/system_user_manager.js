@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const username = document.getElementById('addUsername').value.trim();
     const passwd = document.getElementById('addPasswd').value;
     const home = document.getElementById('addHome').value.trim();
+    const is_admin = document.getElementById('addIsAdmin').checked;
     if (!username || !passwd) {
       showNotification('用户名和密码不能为空', 'danger');
       return;
@@ -17,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
     try {
       const res = await API.request(
         '{{.ServerUrl}}/@api/admin/users',
-        { username, passwd, home_dir: home, is_admin: false },
+        { username, passwd, home_dir: home, is_admin },
         { needToken: true, method: 'POST' }
       );
       if (res.id) {
@@ -63,12 +64,12 @@ document.addEventListener('DOMContentLoaded', function () {
 // 加载用户列表
 async function loadUsers() {
   try {
-    const users = await API.request(
+    const res = await API.request(
       '{{.ServerUrl}}/@api/admin/users',
-      {},
+      null, // 这里不要传 {}，避免GET带body
       { needToken: true, method: 'GET' }
     );
-    renderUsersTable(users);
+    renderUsersTable(res.data); // 只传 data 字段，确保为数组
   } catch (e) {
     showNotification('获取用户列表失败: ' + e.message, 'danger');
   }
@@ -114,7 +115,7 @@ window.deleteUser = async function (id, username) {
       {},
       { needToken: true, method: 'DELETE' }
     );
-    if (res.success) {
+    if (typeof res.code !== 'undefined' && res.code < 10) {
       showNotification('删除用户成功', 'success');
       loadUsers();
     } else {
