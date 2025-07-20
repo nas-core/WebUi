@@ -1,8 +1,43 @@
 // 用户管理前端逻辑
 // 依赖：api.js, public.js (用于showNotification)
 
+// 分页和检索状态
+let currentPage = 1;
+let pageSize = 20;
+let totalUsers = 0;
+let searchUsername = '';
+let searchHomeDir = '';
+
+// 绑定分页、检索控件
+function bindUserManagerControls() {
+  document.getElementById('pageSizeSelect').addEventListener('change', function () {
+    pageSize = parseInt(this.value, 10);
+    currentPage = 1;
+    loadUsers();
+  });
+  document.getElementById('prevPageBtn').addEventListener('click', function () {
+    if (currentPage > 1) {
+      currentPage--;
+      loadUsers();
+    }
+  });
+  document.getElementById('nextPageBtn').addEventListener('click', function () {
+    if (currentPage * pageSize < totalUsers) {
+      currentPage++;
+      loadUsers();
+    }
+  });
+  document.getElementById('searchBtn').addEventListener('click', function () {
+    searchUsername = document.getElementById('searchUsername').value.trim();
+    searchHomeDir = document.getElementById('searchHomeDir').value.trim();
+    currentPage = 1;
+    loadUsers();
+  });
+}
+
 document.addEventListener('DOMContentLoaded', function () {
   if (!document.getElementById('container_UserManager')) return;
+  bindUserManagerControls();
   loadUsers();
 
   // 添加用户
@@ -61,27 +96,39 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 
-// 加载用户列表
+// 加载用户列表，支持分页和检索
 async function loadUsers() {
   try {
+    const params = {
+      page: currentPage,
+      page_size: pageSize,
+    };
+    if (searchUsername) params.username = searchUsername;
+    if (searchHomeDir) params.home_dir = searchHomeDir;
+    const query = Object.entries(params).map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');
     const res = await API.request(
-      '{{.ServerUrl}}/@api/admin/users',
-      null, // 这里不要传 {}，避免GET带body
+      `{{.ServerUrl}}/@api/admin/users?${query}`,
+      null,
       { needToken: true, method: 'GET' }
     );
-    renderUsersTable(res.data); // 只传 data 字段，确保为数组
+    // 适配SendJSON双层结构
+    const d = res.data || {};
+    totalUsers = d.total || 0;
+    renderUsersTable(d.data || []);
+    updatePageInfo();
   } catch (e) {
     showNotification('获取用户列表失败: ' + e.message, 'danger');
   }
 }
 
-// 渲染用户表格
+// 渲染用户表格，增加用户ID列
 function renderUsersTable(users) {
   const tbody = document.getElementById('usersTableBody');
   tbody.innerHTML = '';
   (users || []).forEach(u => {
     const tr = document.createElement('tr');
     tr.innerHTML = `
+      <td>${u.id}</td>
       <td>${u.username}</td>
       <td>******</td>
       <td>${u.home_dir || ''}</td>
@@ -93,6 +140,13 @@ function renderUsersTable(users) {
     `;
     tbody.appendChild(tr);
   });
+}
+
+// 更新分页信息
+function updatePageInfo() {
+  document.getElementById('pageInfo').textContent = `第 ${currentPage} 页`;
+  document.getElementById('totalInfo').textContent = `共 ${totalUsers} 条`;
+  document.getElementById('pageSizeSelect').value = pageSize;
 }
 
 // 编辑用户弹窗
