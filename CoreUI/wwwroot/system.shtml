@@ -75,8 +75,6 @@
         }
       </style>
     </form>
-    <!-- 添加和修改用户的对话框 ，里面有form 所以要放到末尾 -->
-    <!--#include file="include/system_UserManager_box_incloud_end.html" -->
 
     <!--#include file="include/footer.html" -->
 
@@ -84,13 +82,13 @@
 </div>
 
 <script src="js/Settings_system.js"></script>
-<script src="js/setting_usermanager.js"></script>
 <script src="js/system_get_ddns_go.js"></script>
 <script src="js/system_get_rclone_and_helper.js"></script>
 <script src="js/system_get_StaticFile.js"></script>
 <script src="js/system_get_lego_and_helper.js"></script>
 <script src="js/system_get_caddy2.js"></script>
 <script src="js/system_get_openlist.js"></script>
+<script src="js/system_user_manager.js"></script>
 
 <!--#include file="include/caddyfile_edit.html" -->
 
