@@ -180,7 +180,28 @@ window.deleteUser = async function (id, username) {
     );
     if (typeof res.code !== 'undefined' && res.code < 10) {
       showNotification('删除用户成功', 'success');
-      loadUsers();
+      // 动态删除表格中的该行
+      const tbody = document.getElementById('usersTableBody');
+      const rows = Array.from(tbody.getElementsByTagName('tr'));
+      let removed = false;
+      for (const tr of rows) {
+        if (tr.firstElementChild && tr.firstElementChild.textContent == id) {
+          tbody.removeChild(tr);
+          removed = true;
+          break;
+        }
+      }
+      if (removed) {
+        totalUsers = Math.max(0, totalUsers - 1);
+        updatePageInfo();
+        // 如果当前页已无数据，仅显示空表格，不刷新
+        if (tbody.children.length === 0) {
+          // 可选：可在表格中插入一行“暂无数据”提示
+          const emptyTr = document.createElement('tr');
+          emptyTr.innerHTML = `<td colspan="6" class="text-center text-muted">暂无数据</td>`;
+          tbody.appendChild(emptyTr);
+        }
+      }
     } else {
       showNotification('删除用户失败: ' + (res.message || JSON.stringify(res)), 'danger');
     }
