@@ -24,11 +24,14 @@ func HandlerNavJS(nsCfg *system_config.SysCfg, logger *zap.SugaredLogger, qpsCou
 		menu := []NavMenuItem{
 			{Name: "导航页", URL: "/", Key: "links"},
 			{Name: "文件管理", URL: nsCfg.Server.WebUIPrefix + "nascore.shtml", Key: "webui"},
-			{Name: "视频订阅", URL: system_config.PrefixNasCoreTv, Key: "vod"},
-			{Name: "登录", URL: system_config.PrefixPublicFun + "/login/?redirect=${location}", Key: "login", OnlyWhenNotLogin: true},
-			{Name: "退出", URL: "javascript:logoutAndRedirect()", Key: "logout", OnlyWhenLogin: true},
 		}
-
+		if nsCfg.NascoreExt.Vod.VodEnable {
+			menu = append(menu, NavMenuItem{Name: "视频订阅", URL: system_config.PrefixNasCoreTv, Key: "vod"})
+		}
+		menu = append(menu,
+			NavMenuItem{Name: "登录", URL: system_config.PrefixPublicFun + "/login/?redirect=${location}", Key: "login", OnlyWhenNotLogin: true},
+			NavMenuItem{Name: "退出", URL: "javascript:logoutAndRedirect()", Key: "logout", OnlyWhenLogin: true},
+		)
 		menuJson, _ := json.Marshal(menu)
 
 		fmt.Fprintf(w, `window.GlobalNavMenu = %s;

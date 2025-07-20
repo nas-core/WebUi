@@ -3,7 +3,13 @@
   <div class="row mt-4">
     <div class="settingContainer">
       <h3 class="mb-4">NasCore_vod 配置 </h3>
-
+      <div class="mb-3">
+        <div class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" id="NascoreExtVodVodEnable"
+            data-bind="NascoreExt.Vod.VodEnable">
+          <label class="form-check-label" for="NascoreExtVodVodEnable">启用</label>
+        </div>
+      </div>
       <h5>缓存相关配置 <small class="form-text text-muted">[NascoreExt.vod.vod_cache]</small></h5>
       <div class="row">
         <div class="col">
