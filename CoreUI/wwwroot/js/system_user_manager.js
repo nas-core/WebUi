@@ -40,6 +40,14 @@ document.addEventListener('DOMContentLoaded', function () {
   bindUserManagerControls();
   loadUsers();
 
+  // 打开添加用户模态框时重置表单
+  document.getElementById('addUserBtn').addEventListener('click', function () {
+    document.getElementById('addUsername').value = '';
+    document.getElementById('addPasswd').value = '';
+    document.getElementById('addHome').value = '';
+    document.getElementById('addIsAdmin').checked = false;
+  });
+
   // 添加用户
   document.getElementById('saveUserBtn').addEventListener('click', async function () {
     const username = document.getElementById('addUsername').value.trim();
@@ -56,7 +64,8 @@ document.addEventListener('DOMContentLoaded', function () {
         { username, passwd, home_dir: home, is_admin },
         { needToken: true, method: 'POST' }
       );
-      if (res.id) {
+      // 适配SendJSON双层结构，判断res.code < 10 即为成功
+      if (typeof res.code !== 'undefined' && res.code < 10) {
         showNotification('添加用户成功', 'success');
         document.getElementById('addUserModal').querySelector('.btn-close').click();
         loadUsers();
