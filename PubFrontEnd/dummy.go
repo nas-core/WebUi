@@ -20,10 +20,14 @@ type NavMenuItem struct {
 func HandlerNavJS(nsCfg *system_config.SysCfg, logger *zap.SugaredLogger, qpsCounter *uint64) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/javascript; charset=utf-8")
-
-		menu := []NavMenuItem{
-			{Name: "导航页", URL: "/", Key: "links"},
-			{Name: "文件管理", URL: nsCfg.Server.WebUIPrefix + "nascore.shtml", Key: "webui"},
+		menu := []NavMenuItem{}
+		if nsCfg.NascoreExt.Links.LinksEnable {
+			menu = append(menu, NavMenuItem{Name: "导航页", URL: "/", Key: "links"})
+		}
+		if nsCfg.Server.WebuiAndApiEnable {
+			menu = append(menu,
+				NavMenuItem{Name: "文件管理", URL: nsCfg.Server.WebUIPrefix + "nascore.shtml", Key: "webui"},
+			)
 		}
 		if nsCfg.NascoreExt.Vod.VodEnable {
 			menu = append(menu, NavMenuItem{Name: "视频订阅", URL: system_config.PrefixNasCoreTv, Key: "vod"})
