@@ -1004,19 +1004,20 @@
           button.classList.add('active');
         }
         button.addEventListener('click', (e) => {
-          if (!editMode) {
-            selectCategory(id, isPublic);
-          } else {
+          if (editMode) {
+            e.preventDefault();
             e.stopPropagation();
-            if (id === 0) {
-              alert("所有链接不能被编辑。");
+
+            if (id === 0 || id === -1) {
+              alert("这个分类不能被编辑。");
               return;
             }
-            if (id === -1) {
-              alert("公开链接不能被编辑。");
-              return;
+            const fullCategoryData = categories.find(cat => cat.id === id);
+            if (fullCategoryData) {
+              openCategoryModal(fullCategoryData);
             }
-            openCategoryModal({id: id, name: name.replace(' (公开)', ''), is_public: isPublic});
+          } else {
+            selectCategory(id, isPublic);
           }
         });
         return button;
@@ -1375,6 +1376,17 @@
         linksGrid.appendChild(card);
 
         // --- 事件绑定 ---
+        card.addEventListener('click', (e) => {
+          if (editMode) {
+            e.preventDefault(); // 阻止 <a> 标签跳转
+            const fullLinkData = links.find(l => l.id === link.id);
+            if (fullLinkData) {
+              openLinkModal(fullLinkData);
+            }
+          }
+          // 非编辑模式下，<a> 标签的默认行为会执行
+        });
+
         if (!editMode) {
           // 非编辑模式：点击或悬停显示描述浮层
           let hideTooltipTimer = null;
