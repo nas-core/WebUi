@@ -93,10 +93,21 @@
       /* 距离顶部1.25rem */
     }
 
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      /* Space out title and button */
+      margin-bottom: 0.5rem;
+    }
+
     .sidebar h3 {
       font-size: 1.125rem;
-      margin-bottom: 0.5rem;
       color: var(--text-main);
+      margin-bottom: 0;
+      /* Reset margin */
+      flex-grow: 1;
+      /* Allow title to take space */
     }
 
     .sidebar ul {
@@ -106,23 +117,39 @@
     }
 
     .sidebar li {
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.15rem;
+      /* Even tighter spacing */
+      display: flex;
+      /* Make it a flex container */
+      align-items: center;
+      position: relative;
+      /* For icon positioning */
     }
 
     .sidebar a,
-    .sidebar button {
+    .sidebar button.category-btn {
+      /* Target category buttons specifically */
       display: block;
-      width: 100%;
-      padding: 0.5rem 0.75rem;
+      flex-grow: 1;
+      /* Allow it to take available space */
+      padding: 0.3rem 0.5rem;
+      /* Even smaller padding */
       border-radius: 0.375rem;
       color: var(--text-main);
       text-decoration: none;
       background-color: transparent;
       border: 1px solid transparent;
+      /* Keep for active state */
       text-align: left;
       cursor: pointer;
       transition: background-color 0.2s, border-color 0.2s;
-      font-size: 0.9375rem;
+      font-size: 0.85rem;
+      /* Even smaller font */
+      white-space: nowrap;
+      /* Prevent wrap */
+      overflow: hidden;
+      text-overflow: ellipsis;
+      /* Add ellipsis */
     }
 
     .sidebar a:hover,
@@ -150,36 +177,30 @@
       margin-bottom: 0.5rem;
     }
 
-    .sidebar .add-category-btn {
-      background-color: var(--success-color);
-      color: #fff;
-      border: none;
-      padding: 0.5rem 0.75rem;
-      border-radius: 0.375rem;
-      cursor: pointer;
-      width: 100%;
-      font-size: 0.9375rem;
-      transition: background-color 0.2s;
-    }
-
-    .sidebar .add-category-btn:hover {
-      background-color: #218838;
-    }
+    /* .add-category-btn removed, replaced by .add-icon-btn */
 
     .sidebar .category-actions {
-      display: flex;
-      gap: 0.5rem;
-      margin-top: 0.25rem;
+      display: none;
+      /* Permanently hide these buttons */
+      gap: 0.25rem;
+      /* Smaller gap */
+      margin-left: auto;
+      /* Push to the right */
+      flex-shrink: 0;
     }
 
     .sidebar .category-actions button {
       flex-grow: 1;
-      font-size: 0.875rem;
-      padding: 0.3rem 0.5rem;
+      font-size: 0.75rem;
+      /* Smaller font for buttons */
+      padding: 0.2rem 0.4rem;
+      /* Smaller padding */
       border: none;
       border-radius: 0.25rem;
       cursor: pointer;
       color: #fff;
+      width: auto;
+      /* Allow buttons to size naturally */
     }
 
     .sidebar .category-actions .edit-btn {
@@ -224,6 +245,57 @@
       gap: 1.25rem;
     }
 
+    /* New styles for sidebar edit mode */
+    .sidebar.edit-mode .category-actions {
+      display: none;
+      /* Hide in edit mode as well, moving to modal */
+    }
+
+    .sidebar .category-action-icon {
+      width: 1.25rem;
+      /* Smaller icon */
+      height: 1.25rem;
+      /* Smaller icon */
+      display: none;
+      /* Hidden by default */
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      margin-left: 0.25rem;
+      /* Smaller margin */
+      flex-shrink: 0;
+      color: var(--text-secondary);
+      border-radius: 50%;
+      transition: background-color 0.2s, color 0.2s;
+      font-weight: bold;
+      font-size: 0.8rem;
+      /* Smaller font for icon text */
+    }
+
+    .sidebar .category-action-icon:hover {
+      background-color: var(--bg-body);
+      color: var(--primary-color);
+    }
+
+    .sidebar.edit-mode .category-action-icon {
+      display: flex;
+      /* Show in edit mode */
+      cursor: grab;
+      border: 1px solid var(--border-color);
+    }
+
+    .sidebar.edit-mode button.category-btn {
+      cursor: default;
+      /* No longer directly clickable for navigation */
+      text-decoration: none;
+      /* Remove underline */
+    }
+
+    .sidebar.edit-mode button.category-btn:hover {
+      background-color: transparent;
+      /* No hover effect in edit mode */
+    }
+
     .header-actions {
       background-color: var(--bg-card);
       padding: 1rem;
@@ -255,9 +327,32 @@
       transition: background-color 0.2s;
     }
 
-    .header-actions .add-link-btn {
+    .add-icon-btn {
       background-color: var(--primary-color);
       color: #fff;
+      border: none;
+      padding: 0.3rem 0.6rem;
+      /* Make it smaller */
+      border-radius: 0.375rem;
+      cursor: pointer;
+      font-size: 1rem;
+      /* Adjust font size for '+' */
+      font-weight: bold;
+      transition: background-color 0.2s;
+      width: 2rem;
+      /* Fixed width for icon */
+      height: 2rem;
+      /* Fixed height for icon */
+      display: flex;
+      /* For centering the '+' */
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      /* Prevent shrinking in flex container */
+    }
+
+    .add-icon-btn:hover {
+      background-color: var(--primary-hover-color);
     }
 
     .header-actions .add-link-btn:hover {
@@ -369,16 +464,21 @@
 
     .link-card {
       background-color: var(--bg-card);
-      padding: 1rem;
+      padding: 0.5rem 0.75rem;
+      /* Smaller padding */
       border-radius: 0.5rem;
       box-shadow: 0 0.125rem 0.25rem var(--shadow-light);
       display: flex;
-      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      /* Gap between elements */
       border: 1px solid var(--border-color);
       position: relative;
       transition: transform 0.2s, box-shadow 0.2s;
       cursor: grab;
       /* Indicate draggable */
+      overflow: hidden;
+      /* Hide overflow for long text */
     }
 
     .link-card:active {
@@ -395,26 +495,39 @@
     }
 
     .link-card h4 {
-      font-size: 1.125rem;
-      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+      /* Slightly smaller font */
+      margin-bottom: 0;
       color: var(--primary-color);
+      flex-grow: 1;
+      /* Take available space */
+      white-space: nowrap;
+      /* Prevent text wrap */
+      overflow: hidden;
+      text-overflow: ellipsis;
+      /* Add ellipsis for overflow */
+      cursor: pointer;
+      /* Indicate clickable */
     }
 
-    .link-card p {
-      font-size: 0.9375rem;
-      color: var(--text-secondary);
-      margin-bottom: 0.75rem;
-      flex-grow: 1;
-      /* Pushes button to bottom */
-    }
+    /* .link-card p will be used for tooltip later, no direct style needed on card anymore */
+    /* Keeping it here for context but it will be moved/repurposed in JS */
 
     .link-card .link-url {
-      display: block;
+      display: flex;
+      /* Make it flex to align icon */
+      align-items: center;
+      flex-grow: 1;
+      /* Take all available space */
       color: var(--primary-color);
       text-decoration: none;
-      word-break: break-all;
-      margin-bottom: 0.75rem;
-      font-size: 0.9375rem;
+      font-size: 0.95rem;
+      /* Match h4 for main text */
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      /* padding-right: 0.5rem; Will be handled by the icon margin */
+      cursor: pointer;
     }
 
     .link-card .link-url:hover {
@@ -422,9 +535,13 @@
     }
 
     .link-card .actions {
-      display: flex;
+      display: none;
+      /* Permanently hide these buttons on the card itself */
       gap: 0.5rem;
-      margin-top: 0.75rem;
+      margin-left: auto;
+      /* Push to the right */
+      flex-shrink: 0;
+      /* Prevent shrinking */
     }
 
     .link-card .actions button {
@@ -451,6 +568,92 @@
 
     .link-card .actions .delete-btn:hover {
       background-color: #c82333;
+    }
+
+    /* New styles for edit mode */
+    .link-card.edit-mode .link-url {
+      cursor: default;
+      /* Not clickable for navigation in edit mode */
+      text-decoration: none;
+    }
+
+    .link-card.edit-mode .link-url:hover {
+      text-decoration: none;
+      /* No underline on hover in edit mode */
+    }
+
+    .link-card.edit-mode .actions {
+      display: none;
+      /* Hide in edit mode as well, moving to modal */
+    }
+
+    /* Action icon (for description/drag handle) */
+    .link-card .action-icon {
+      width: 1.25rem;
+      /* Smaller icon */
+      height: 1.25rem;
+      /* Smaller icon */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      /* For clicking to show description */
+      margin-left: 0.25rem;
+      /* Smaller margin */
+      flex-shrink: 0;
+      color: var(--text-secondary);
+      border-radius: 50%;
+      transition: background-color 0.2s, color 0.2s;
+      font-weight: bold;
+      /* Make the icon more prominent */
+      font-size: 0.8rem;
+      /* Smaller font for icon text */
+    }
+
+    .link-card .action-icon:hover {
+      background-color: var(--bg-body);
+      color: var(--primary-color);
+    }
+
+    .link-card.edit-mode .action-icon {
+      cursor: grab;
+      /* Change cursor in edit mode for drag */
+      border: 1px solid var(--border-color);
+    }
+
+    /* Tooltip for description */
+    .link-card .description-tooltip {
+      position: absolute;
+      bottom: 100%;
+      /* Position above the card */
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: var(--text-main);
+      /* Invert colors for tooltip */
+      color: var(--bg-card);
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+      white-space: normal;
+      word-break: break-word;
+      max-width: 15rem;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.2s, visibility 0.2s;
+      z-index: 50;
+      pointer-events: none;
+      /* Allow clicks to pass through */
+      text-align: left;
+    }
+
+    [data-theme='dark'] .link-card .description-tooltip {
+      background-color: #fff;
+      color: #333;
+    }
+
+    .link-card .description-tooltip.show {
+      opacity: 1;
+      visibility: visible;
     }
 
     /* 模态框样式 */
@@ -577,6 +780,15 @@
       background-color: #666666;
     }
 
+    .danger-btn-modal {
+      background-color: var(--danger-color);
+      color: #fff;
+    }
+
+    .danger-btn-modal:hover {
+      background-color: #c82333;
+    }
+
     /* 底部导航或信息 */
     .footer {
       margin-top: 2rem;
@@ -605,6 +817,8 @@
         /* Adjust header actions to accommodate hamburger menu better on small screens */
         flex-wrap: wrap;
         justify-content: space-between;
+        gap: 0.5rem;
+        /* Smaller gap on mobile */
       }
 
       .header-actions .search-input {
@@ -617,17 +831,33 @@
         margin-bottom: 0.5rem;
         text-align: center;
         margin-bottom: 1rem;
+        flex-basis: 100%;
+        /* Take full width for title */
       }
 
       .header-actions button {
-        width: 100%;
+        flex-grow: 1;
+        /* Allow buttons to grow */
+        width: auto;
+        /* Override 100% width if flex-grow is used */
       }
+
+      /* Ensure toggleEditModeBtn and theme button are next to each other */
+      #addLinkBtn,
+      #toggleEditModeBtn,
+      .theme-toggle-btn {
+        flex-basis: calc(50% - 0.25rem);
+        /* Two buttons per row, with gap */
+      }
+
 
       .hamburger-menu-container {
         order: 3;
         /* Hamburger menu last */
         margin-left: auto;
         /* Push to right */
+        flex-shrink: 0;
+        /* Prevent shrinking */
       }
 
       .dropdown-menu {
@@ -640,6 +870,16 @@
         grid-template-columns: 1fr;
         /* Single column on mobile */
       }
+
+      .link-card {
+        flex-direction: row;
+        /* Ensure row direction for compact display */
+        align-items: center;
+      }
+
+      .link-card h4 {
+        margin-bottom: 0;
+      }
     }
   </style>
 </head>
@@ -651,15 +891,14 @@
   <div class="container">
     <!-- 侧边栏 - 分类列表 -->
     <aside class="sidebar">
-      <h3>链接分类</h3>
-      <input type="text" id="categorySearchInput" class="search-input" placeholder="搜索分类...">
+      <div class="sidebar-header">
+        <h3>链接分类</h3>
+        <button id="addCategoryBtn" class="add-icon-btn" style="display: none;">+</button>
+      </div>
       <ul id="categoryList" class="category-list">
         <!-- 分类项将通过JS动态加载 -->
       </ul>
-      <div class="add-category-section">
-        <input type="text" id="newCategoryName" class="add-category-input" placeholder="新分类名称">
-        <button id="addCategoryBtn" class="add-category-btn">添加分类</button>
-      </div>
+      <!-- Old add-category-section is removed -->
     </aside>
 
     <!-- 主内容区域 - 链接列表 -->
@@ -667,7 +906,8 @@
       <div class="header-actions">
         <h2 id="currentCategoryTitle" class="current-category-title">所有链接</h2>
         <input type="text" id="linkSearchInput" class="search-input" placeholder="搜索链接标题或描述...">
-        <button id="addLinkBtn" class="add-link-btn">添加链接</button>
+        <button id="addLinkBtn" class="add-icon-btn" style="display: none;">+</button>
+        <button id="toggleEditModeBtn" class="add-link-btn" style="display: none;">进入编辑模式</button>
         <button class="theme-toggle-btn" data-action="open-theme-modal">主题设置 <span
             id="currentThemeText"></span></button>
         <div class="hamburger-menu-container">
@@ -713,6 +953,8 @@
         </div>
 
         <div class="modal-actions">
+          <button type="button" class="cancel-btn danger-btn-modal" id="deleteLinkFromModalBtn"
+            style="margin-right: auto; display: none;">删除</button>
           <button type="submit" class="save-btn">保存</button>
           <button type="button" class="cancel-btn" id="cancelLinkModalBtn">取消</button>
         </div>
@@ -735,6 +977,8 @@
         </div>
 
         <div class="modal-actions">
+          <button type="button" class="cancel-btn danger-btn-modal" id="deleteCategoryFromModalBtn"
+            style="margin-right: auto; display: none;">删除</button>
           <button type="submit" class="save-btn">保存</button>
           <button type="button" class="cancel-btn" id="cancelCategoryModalBtn">取消</button>
         </div>
@@ -749,6 +993,7 @@
     let links = [];
     let currentCategoryID = 0; // 0 for "All Links"
     let publicMode = false; // Whether currently viewing public links
+    let editMode = false; // New: Global edit mode state
 
     // --- 工具函数 ---
     async function fetchData(url, options = {}) {
@@ -795,7 +1040,10 @@
       if (currentCategoryID === 0 && !publicMode) {
         allLinksBtn.classList.add('active');
       }
-      allLinksBtn.addEventListener('click', () => selectCategory(0, false));
+      allLinksBtn.addEventListener('click', () => {
+        if (!editMode) selectCategory(0, false);
+        else openCategoryModal({id: 0, name: '所有链接', is_public: false}); // Example, might need adjustment
+      });
       allLinksItem.appendChild(allLinksBtn);
       categoryList.appendChild(allLinksItem);
 
@@ -808,7 +1056,10 @@
       if (publicMode) {
         publicLinksBtn.classList.add('active');
       }
-      publicLinksBtn.addEventListener('click', () => selectCategory(-1, true));
+      publicLinksBtn.addEventListener('click', () => {
+        if (!editMode) selectCategory(-1, true);
+        else openCategoryModal({id: -1, name: '公开链接', is_public: true}); // Example, might need adjustment
+      });
       publicLinksItem.appendChild(publicLinksBtn);
       categoryList.appendChild(publicLinksItem);
 
@@ -816,9 +1067,9 @@
       // 渲染其他分类
       categories.forEach(category => {
         const li = document.createElement('li');
-        li.setAttribute('draggable', true);
         li.dataset.id = category.id;
         li.dataset.sortNum = category.sort_num;
+        li.classList.add('category-item'); // Add a class for styling
 
         const button = document.createElement('button');
         button.textContent = category.name + (category.is_public ? ' (公开)' : '');
@@ -827,7 +1078,14 @@
         if (currentCategoryID === category.id && !publicMode) {
           button.classList.add('active');
         }
-        button.addEventListener('click', () => selectCategory(category.id, false));
+        button.addEventListener('click', (e) => {
+          if (!editMode) {
+            selectCategory(category.id, false);
+          } else {
+            e.stopPropagation(); // Prevent default if it's a link
+            openCategoryModal(category);
+          }
+        });
 
         const actionsDiv = document.createElement('div');
         actionsDiv.classList.add('category-actions');
@@ -848,20 +1106,46 @@
           deleteCategory(category.id);
         });
 
-        actionsDiv.appendChild(editBtn);
-        actionsDiv.appendChild(deleteBtn);
+        const dragHandle = document.createElement('span');
+        dragHandle.classList.add('category-action-icon');
+        dragHandle.textContent = '☰'; // Hamburger icon for drag
+        dragHandle.setAttribute('draggable', editMode); // Only draggable in edit mode
+
+        // Attach drag events to the handle
+        if (editMode) {
+          li.setAttribute('draggable', false); // The li itself is not draggable
+          dragHandle.addEventListener('dragstart', (e) => {
+            draggedCategory = li; // Drag the whole li
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', li.dataset.id);
+            setTimeout(() => li.classList.add('dragging'), 0);
+          });
+          dragHandle.addEventListener('dragend', () => {
+            if (draggedCategory) {
+              draggedCategory.classList.remove('dragging');
+            }
+            document.querySelectorAll('.category-list li').forEach(el => el.classList.remove('drag-over'));
+            draggedCategory = null;
+          });
+        } else {
+          li.setAttribute('draggable', false); // Not draggable
+        }
+
 
         li.appendChild(button);
-        if (!publicMode) { // 非公开模式才显示编辑/删除按钮
-          li.appendChild(actionsDiv);
-        }
+        // li.appendChild(actionsDiv); // Actions moved to modal
+        li.appendChild(dragHandle); // Always append, visibility handled by CSS
 
         categoryList.appendChild(li);
       });
+      // Setup drag and drop for containers (li elements)
       setupCategoryDragAndDrop();
+      document.querySelector('.sidebar').classList.toggle('edit-mode', editMode); // Apply edit mode class
     }
 
     function selectCategory(id, isPublic = false) {
+      if (editMode) return; // Prevent navigation in edit mode
+
       currentCategoryID = id;
       publicMode = isPublic;
       const categoryTitleElement = document.getElementById('currentCategoryTitle');
@@ -885,29 +1169,10 @@
         }
       });
       loadLinks(id, isPublic);
-      renderCategories(); // 重新渲染分类列表以显示编辑/删除按钮的可见性
+      renderCategories(); // Re-render to update UI for edit mode
     }
 
-    async function addCategory() {
-      const nameInput = document.getElementById('newCategoryName');
-      const name = nameInput.value.trim();
-      if (!name) {
-        alert('分类名称不能为空');
-        return;
-      }
-      try {
-        const newCategory = await fetchData(`${API_BASE}categories`, {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({name: name, sort_num: 0, is_public: false})
-        });
-        categories.push(newCategory);
-        nameInput.value = '';
-        await loadCategories(); // 重新加载并渲染
-      } catch (error) {
-        console.error('添加分类失败:', error);
-      }
-    }
+
 
     async function deleteCategory(id) {
       if (!confirm('确定要删除此分类吗？关联的链接不会被删除，但会失去分类。')) return;
@@ -931,6 +1196,7 @@
     const categoryIsPublicInput = document.getElementById('categoryIsPublic');
     const categoryModalTitle = document.getElementById('categoryModalTitle');
     const cancelCategoryModalBtn = document.getElementById('cancelCategoryModalBtn');
+    const deleteCategoryFromModalBtn = document.getElementById('deleteCategoryFromModalBtn'); // New: Get delete button
 
     function openCategoryModal(category = null) {
       if (category) {
@@ -938,9 +1204,28 @@
         categoryNameInput.value = category.name;
         categoryIsPublicInput.checked = category.is_public;
         categoryModalTitle.textContent = '编辑分类';
+        // Only show delete button for existing categories (id != 0 or -1 for "All/Public Links")
+        if (category.id !== 0 && category.id !== -1) {
+          deleteCategoryFromModalBtn.style.display = 'inline-block';
+          deleteCategoryFromModalBtn.onclick = (e) => {
+            e.preventDefault(); // Prevent form submission
+            if (confirm('确定要删除此分类吗？关联的链接不会被删除，但会失去分类。')) {
+              deleteCategory(category.id);
+              closeCategoryModal();
+            }
+          };
+        } else {
+          deleteCategoryFromModalBtn.style.display = 'none';
+          deleteCategoryFromModalBtn.onclick = null;
+        }
       } else {
-        // 不支持直接添加，添加用侧边栏的输入框
-        return;
+        // Mode for adding a new category
+        categoryIdInput.value = ''; // Ensure ID is empty for new
+        categoryNameInput.value = '';
+        categoryIsPublicInput.checked = false; // Default to not public
+        categoryModalTitle.textContent = '添加分类';
+        deleteCategoryFromModalBtn.style.display = 'none'; // Always hide delete for new
+        deleteCategoryFromModalBtn.onclick = null;
       }
       categoryModalOverlay.classList.add('open');
     }
@@ -986,55 +1271,61 @@
     let draggedCategory = null;
 
     function setupCategoryDragAndDrop() {
-      const categoryItems = document.querySelectorAll('#categoryList > li[draggable="true"]');
+      // Clear previous drag event listeners to prevent duplicates
+      document.querySelectorAll('#categoryList > li').forEach(item => {
+        item.removeEventListener('dragenter', handleDragEnter);
+        item.removeEventListener('dragover', handleDragOver);
+        item.removeEventListener('dragleave', handleDragLeave);
+        item.removeEventListener('drop', handleDropCategory);
+      });
+
+      if (!editMode) return; // Only enable drag and drop in edit mode
+
+      const categoryItems = document.querySelectorAll('#categoryList > li'); // All li elements
       categoryItems.forEach(item => {
-        item.addEventListener('dragstart', (e) => {
-          draggedCategory = item;
-          e.dataTransfer.effectAllowed = 'move';
-          e.dataTransfer.setData('text/plain', item.dataset.id);
-          setTimeout(() => item.classList.add('dragging'), 0);
-        });
-
-        item.addEventListener('dragenter', (e) => {
-          e.preventDefault();
-          item.classList.add('drag-over');
-        });
-
-        item.addEventListener('dragover', (e) => {
-          e.preventDefault();
-          e.dataTransfer.dropEffect = 'move';
-        });
-
-        item.addEventListener('dragleave', () => {
-          item.classList.remove('drag-over');
-        });
-
-        item.addEventListener('drop', (e) => {
-          e.preventDefault();
-          item.classList.remove('drag-over');
-          if (draggedCategory && draggedCategory !== item) {
-            const draggedIndex = Array.from(categoryList.children).indexOf(draggedCategory);
-            const targetIndex = Array.from(categoryList.children).indexOf(item);
-
-            if (draggedIndex < targetIndex) {
-              categoryList.insertBefore(draggedCategory, item.nextSibling);
-            } else {
-              categoryList.insertBefore(draggedCategory, item);
-            }
-            updateCategorySortOrder();
-          }
-        });
-
-        item.addEventListener('dragend', () => {
-          draggedCategory.classList.remove('dragging');
-          document.querySelectorAll('.category-list li').forEach(el => el.classList.remove('drag-over'));
-          draggedCategory = null;
-        });
+        // These events should be on the draggable item (li) itself, not the handle
+        item.addEventListener('dragenter', handleDragEnter);
+        item.addEventListener('dragover', handleDragOver);
+        item.addEventListener('dragleave', handleDragLeave);
+        item.addEventListener('drop', handleDropCategory);
       });
     }
 
+    function handleDragEnter(e) {
+      e.preventDefault();
+      if (this !== draggedCategory) {
+        this.classList.add('drag-over');
+      }
+    }
+
+    function handleDragOver(e) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+    }
+
+    function handleDragLeave() {
+      this.classList.remove('drag-over');
+    }
+
+    function handleDropCategory(e) {
+      e.preventDefault();
+      this.classList.remove('drag-over');
+      if (draggedCategory && draggedCategory !== this) {
+        const categoryList = document.getElementById('categoryList');
+        const draggedIndex = Array.from(categoryList.children).indexOf(draggedCategory);
+        const targetIndex = Array.from(categoryList.children).indexOf(this);
+
+        if (draggedIndex < targetIndex) {
+          categoryList.insertBefore(draggedCategory, this.nextSibling);
+        } else {
+          categoryList.insertBefore(draggedCategory, this);
+        }
+        updateCategorySortOrder();
+      }
+    }
+
     async function updateCategorySortOrder() {
-      const sortedItems = Array.from(document.querySelectorAll('#categoryList > li[draggable="true"]'));
+      const sortedItems = Array.from(document.querySelectorAll('#categoryList > li.category-item')); // Select only draggable category items
       const sortData = sortedItems.map((item, index) => ({
         id: parseInt(item.dataset.id),
         sort_num: sortedItems.length - index // 简单倒序，确保越靠前的sort_num越大
@@ -1047,7 +1338,8 @@
           body: JSON.stringify(sortData)
         });
         console.log('分类排序更新成功');
-        await loadCategories(); // 重新加载以确保数据同步
+        // No need to reload categories completely, just update UI
+        renderCategories();
       } catch (error) {
         console.error('更新分类排序失败:', error);
       }
@@ -1068,7 +1360,12 @@
         url += `?${params.join('&')}`;
       }
 
-      links = await fetchData(url);
+      try {
+        links = await fetchData(url);
+      } catch (error) {
+        console.error("[links] 加载链接失败:", error);
+        links = []; // 确保 links 是一个数组，即使在错误发生时
+      }
       filterAndRenderLinks(); // Initial render and filter
     }
 
@@ -1076,53 +1373,105 @@
       const linksGrid = document.getElementById('linksGrid');
       linksGrid.innerHTML = '';
       if (filteredLinks.length === 0) {
-        linksGrid.innerHTML = '<p style="text-align: center; color: var(--text-secondary); width: 100%;">没有找到链接。</p>';
+        linksGrid.innerHTML = '<p style="text-align: center; color: var(--text-secondary); width: 100%;">该分类下没有链接。</p>';
         return;
       }
 
       filteredLinks.forEach(link => {
         const card = document.createElement('div');
         card.classList.add('link-card');
-        card.setAttribute('draggable', true);
         card.dataset.id = link.id;
         card.dataset.sortNum = link.sort_num;
 
-        card.innerHTML = `
-                    <h4>${link.title}</h4>
-                    <a href="${link.url}" target="_blank" class="link-url">${link.url}</a>
-                    <p>${link.description || '无描述'}</p>
-                    <div class="actions">
-                        <button class="edit-btn" data-id="${link.id}">编辑</button>
-                        <button class="delete-btn" data-id="${link.id}">删除</button>
-                    </div>
-                `;
+        const linkTitleElement = document.createElement('h4');
+        linkTitleElement.textContent = link.title;
+
+        const linkAnchor = document.createElement('a');
+        linkAnchor.href = link.url;
+        linkAnchor.target = '_blank';
+        linkAnchor.classList.add('link-url');
+        linkAnchor.appendChild(linkTitleElement); // Title is now inside the anchor
+
+        const descriptionTooltip = document.createElement('div');
+        descriptionTooltip.classList.add('description-tooltip');
+        descriptionTooltip.textContent = link.description || '无描述';
+
+        const actionIcon = document.createElement('span');
+        actionIcon.classList.add('action-icon');
+        actionIcon.textContent = 'ℹ'; // Info icon
+
+        const actionsDiv = document.createElement('div');
+        actionsDiv.classList.add('actions');
+
+        const editBtn = document.createElement('button');
+        editBtn.textContent = '编辑';
+        editBtn.classList.add('edit-btn');
+        editBtn.addEventListener('click', (e) => {
+          e.stopPropagation(); // Prevent card default action
+          openLinkModal(link);
+        });
+
+        // Append elements to card
+        card.appendChild(linkAnchor);
+        card.appendChild(descriptionTooltip); // Tooltip is always part of the card
+        card.appendChild(actionIcon);
+        // actionsDiv and buttons are no longer directly on the card for edit/delete
+        // card.appendChild(actionsDiv); // Actions are always part of the card
+
         linksGrid.appendChild(card);
+
+        // Event listeners
+        if (!editMode) {
+          // In view mode: click title to navigate, click icon for tooltip
+          linkAnchor.addEventListener('click', (e) => {
+            // Default navigation is handled by <a> tag, no need to prevent default here
+          });
+          actionIcon.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent event bubbling
+            descriptionTooltip.classList.toggle('show');
+          });
+          // Click anywhere else to hide tooltip
+          document.addEventListener('click', (e) => {
+            if (!actionIcon.contains(e.target) && !descriptionTooltip.contains(e.target)) {
+              descriptionTooltip.classList.remove('show');
+            }
+          });
+        } else {
+          // In edit mode: click title to edit, drag icon to sort
+          card.classList.add('edit-mode'); // Apply edit-mode class to card
+          card.setAttribute('draggable', false); // Whole card not draggable
+          linkAnchor.addEventListener('click', (e) => {
+            e.preventDefault(); // Prevent navigation
+            openLinkModal(link); // Open edit modal on title click
+          });
+          actionIcon.setAttribute('draggable', true); // Only icon is draggable
+          actionIcon.addEventListener('dragstart', (e) => {
+            draggedLink = card; // Drag the whole card
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', card.dataset.id);
+            setTimeout(() => card.classList.add('dragging'), 0);
+          });
+          actionIcon.addEventListener('dragend', () => {
+            if (draggedLink) {
+              draggedLink.classList.remove('dragging');
+            }
+            document.querySelectorAll('.link-card').forEach(el => el.classList.remove('drag-over'));
+            draggedLink = null;
+          });
+        }
       });
 
-      // 绑定编辑/删除事件
-      linksGrid.querySelectorAll('.edit-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          const linkId = parseInt(e.target.dataset.id);
-          const linkToEdit = links.find(l => l.id === linkId);
-          if (linkToEdit) openLinkModal(linkToEdit);
-        });
-      });
-      linksGrid.querySelectorAll('.delete-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          const linkId = parseInt(e.target.dataset.id);
-          deleteLink(linkId);
-        });
-      });
+      // Setup drag and drop for links grid containers
       setupLinkDragAndDrop();
     }
 
     function filterAndRenderLinks() {
       const searchInput = document.getElementById('linkSearchInput');
       const searchTerm = searchInput.value.toLowerCase();
-      const filteredLinks = links.filter(link =>
+      const filteredLinks = (links && Array.isArray(links)) ? links.filter(link =>
         link.title.toLowerCase().includes(searchTerm) ||
         link.description.toLowerCase().includes(searchTerm)
-      );
+      ) : []; // 如果 links 无效，则返回空数组
       renderLinks(filteredLinks);
     }
 
@@ -1137,6 +1486,7 @@
     const linkIsPublicInput = document.getElementById('linkIsPublic');
     const linkModalTitle = document.getElementById('linkModalTitle');
     const cancelLinkModalBtn = document.getElementById('cancelLinkModalBtn');
+    const deleteLinkFromModalBtn = document.getElementById('deleteLinkFromModalBtn'); // New: Get delete button
 
     function openLinkModal(link = null) {
       // 填充分类选项
@@ -1156,11 +1506,21 @@
         linkCategorySelect.value = link.category_id || 0;
         linkIsPublicInput.checked = link.is_public;
         linkModalTitle.textContent = '编辑链接';
+        deleteLinkFromModalBtn.style.display = 'inline-block'; // Show delete button for existing link
+        deleteLinkFromModalBtn.onclick = (e) => {
+          e.preventDefault(); // Prevent form submission
+          if (confirm('确定要删除此链接吗？')) {
+            deleteLink(link.id);
+            closeLinkModal();
+          }
+        };
       } else {
         linkIdInput.value = '';
         linkForm.reset();
-        linkCategorySelect.value = currentCategoryID > 0 ? currentCategoryID : 0; // 默认选择当前分类
+        linkCategorySelect.value = currentCategoryID > 0 ? currentCategoryID : 0; // Default select current category
         linkModalTitle.textContent = '添加链接';
+        deleteLinkFromModalBtn.style.display = 'none'; // Hide delete button for new link
+        deleteLinkFromModalBtn.onclick = null; // Clear handler
       }
       linkModalOverlay.classList.add('open');
     }
@@ -1229,55 +1589,57 @@
     const linksGrid = document.getElementById('linksGrid');
 
     function setupLinkDragAndDrop() {
+      // Clear previous drag event listeners to prevent duplicates
+      document.querySelectorAll('.link-card').forEach(card => {
+        card.removeEventListener('dragenter', handleLinkDragEnter);
+        card.removeEventListener('dragover', handleLinkDragOver);
+        card.removeEventListener('dragleave', handleLinkDragLeave);
+        card.removeEventListener('drop', handleDropLink);
+      });
+
+      if (!editMode) return; // Only enable drag and drop in edit mode
+
       const linkCards = document.querySelectorAll('.link-card');
       linkCards.forEach(card => {
-        card.addEventListener('dragstart', (e) => {
-          draggedLink = card;
-          e.dataTransfer.effectAllowed = 'move';
-          e.dataTransfer.setData('text/plain', card.dataset.id);
-          setTimeout(() => card.classList.add('dragging'), 0);
-        });
-
-        card.addEventListener('dragenter', (e) => {
-          e.preventDefault();
-          if (card !== draggedLink) {
-            card.classList.add('drag-over');
-          }
-        });
-
-        card.addEventListener('dragover', (e) => {
-          e.preventDefault();
-          if (card !== draggedLink) {
-            e.dataTransfer.dropEffect = 'move';
-          }
-        });
-
-        card.addEventListener('dragleave', () => {
-          card.classList.remove('drag-over');
-        });
-
-        card.addEventListener('drop', (e) => {
-          e.preventDefault();
-          card.classList.remove('drag-over');
-          if (draggedLink && draggedLink !== card) {
-            const draggedIndex = Array.from(linksGrid.children).indexOf(draggedLink);
-            const targetIndex = Array.from(linksGrid.children).indexOf(card);
-
-            if (draggedIndex < targetIndex) {
-              linksGrid.insertBefore(draggedLink, card.nextSibling);
-            } else {
-              linksGrid.insertBefore(draggedLink, card);
-            }
-            updateLinkSortOrder();
-          }
-        });
-
-        card.addEventListener('dragend', () => {
-          draggedLink.classList.remove('dragging');
-          document.querySelectorAll('.link-card').forEach(el => el.classList.remove('drag-over'));
-          draggedLink = null;
-        });
+        // These events should be on the draggable item (card) itself, not the handle
+        card.addEventListener('dragenter', handleLinkDragEnter);
+        card.addEventListener('dragover', handleLinkDragOver);
+        card.addEventListener('dragleave', handleLinkDragLeave);
+        card.addEventListener('drop', handleDropLink);
       });
+    }
+
+    function handleLinkDragEnter(e) {
+      e.preventDefault();
+      if (this !== draggedLink) {
+        this.classList.add('drag-over');
+      }
+    }
+
+    function handleLinkDragOver(e) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+    }
+
+    function handleLinkDragLeave() {
+      this.classList.remove('drag-over');
+    }
+
+    function handleDropLink(e) {
+      e.preventDefault();
+      this.classList.remove('drag-over');
+      if (draggedLink && draggedLink !== this) {
+        const linksGrid = document.getElementById('linksGrid');
+        const draggedIndex = Array.from(linksGrid.children).indexOf(draggedLink);
+        const targetIndex = Array.from(linksGrid.children).indexOf(this);
+
+        if (draggedIndex < targetIndex) {
+          linksGrid.insertBefore(draggedLink, this.nextSibling);
+        } else {
+          linksGrid.insertBefore(draggedLink, this);
+        }
+        updateLinkSortOrder();
+      }
     }
 
     async function updateLinkSortOrder() {
@@ -1294,7 +1656,8 @@
           body: JSON.stringify(sortData)
         });
         console.log('链接排序更新成功');
-        await loadLinks(currentCategoryID, publicMode); // 重新加载以确保数据同步
+        // No need to reload links completely, just update UI
+        filterAndRenderLinks();
       } catch (error) {
         console.error('更新链接排序失败:', error);
       }
@@ -1303,36 +1666,53 @@
 
     // --- 初始化和事件绑定 ---
     document.addEventListener('DOMContentLoaded', async () => {
+      // 获取常用DOM元素
+      const toggleEditModeBtn = document.getElementById('toggleEditModeBtn');
+      const addLinkBtn = document.getElementById('addLinkBtn');
+      const addCategoryBtn = document.getElementById('addCategoryBtn');
+      const linkSearchInput = document.getElementById('linkSearchInput');
+      const newCategoryNameInput = document.getElementById('newCategoryName');
+
+      // 定义切换编辑模式函数
+      function toggleEditMode() {
+        editMode = !editMode;
+        toggleEditModeBtn.textContent = editMode ? '退出编辑模式' : '进入编辑模式';
+
+        // 切换按钮和输入框的显示
+        addLinkBtn.style.display = editMode ? 'inline-block' : 'none'; // Only visible in edit mode
+        addCategoryBtn.style.display = editMode ? 'inline-block' : 'none'; // Only visible in edit mode
+        linkSearchInput.style.display = editMode ? 'none' : 'inline-block'; // Hidden in edit mode
+        // newCategoryNameInput is removed from HTML, so this line is no longer needed
+
+        // 重新渲染UI
+        renderCategories();      // 重新渲染分类以应用编辑模式样式和事件
+        filterAndRenderLinks();  // 重新渲染链接以应用编辑模式样式和事件
+      }
+
       // 初始化加载数据
       await loadCategories();
       await loadLinks(currentCategoryID, publicMode);
       renderNavigationMenu(); // 渲染导航菜单
 
-      // 搜索输入框事件
-      document.getElementById('linkSearchInput').addEventListener('input', debounce(filterAndRenderLinks, 300));
-      document.getElementById('categorySearchInput').addEventListener('input', debounce(() => {
-        const searchTerm = document.getElementById('categorySearchInput').value.toLowerCase();
-        document.querySelectorAll('#categoryList li[draggable="true"]').forEach(li => {
-          const categoryName = li.querySelector('button').textContent.toLowerCase();
-          if (categoryName.includes(searchTerm)) {
-            li.style.display = '';
-          } else {
-            li.style.display = 'none';
-          }
-        });
-      }, 300));
-
+      // 链接搜索输入框事件
+      linkSearchInput.addEventListener('input', debounce(filterAndRenderLinks, 300));
 
       // 添加链接按钮
-      document.getElementById('addLinkBtn').addEventListener('click', () => openLinkModal());
+      addLinkBtn.addEventListener('click', () => openLinkModal());
       // 添加分类按钮
-      document.getElementById('addCategoryBtn').addEventListener('click', addCategory);
+      addCategoryBtn.addEventListener('click', () => openCategoryModal());
 
       // 初始选择“所有链接”
       selectCategory(0, false);
       // 绑定主题设置按钮
       if (window.bindThemeButton) {
         window.bindThemeButton();
+      }
+
+      // 仅在登录时显示编辑模式按钮并绑定事件
+      if (window.isLoggedIn && window.isLoggedIn()) {
+        toggleEditModeBtn.style.display = 'inline-block';
+        toggleEditModeBtn.addEventListener('click', toggleEditMode);
       }
     });
 
@@ -1394,7 +1774,6 @@
         }
       });
     }
-
   </script>
 </body>
 
