@@ -23,6 +23,7 @@ async function searchByAPIAndKeyWord(apiId, query) {
     const controller = new AbortController()
     const timeoutId = setTimeout(() => controller.abort(), 8000)
     console.log('DEBUG: Fetching proxied Search apiUrl:', PROXY_URL + encodeURIComponent(apiUrl))
+    
     const response = await fetch(PROXY_URL + encodeURIComponent(apiUrl), {
       headers: API_CONFIG.search.headers,
       signal: controller.signal,
@@ -31,12 +32,38 @@ async function searchByAPIAndKeyWord(apiId, query) {
     clearTimeout(timeoutId)
 
     if (!response.ok) {
+      console.warn(`API ${apiId} 搜索失败: 状态码 ${response.status}`)
+      return []
+    }
+    
+    // 检查Content-Type
+    const contentType = response.headers.get('content-type')
+    if (!contentType || !contentType.includes('application/json')) {
+      console.warn(`API ${apiId} 搜索失败: 响应不是JSON格式，而是 ${contentType}`)
       return []
     }
 
-    const data = await response.json()
+    // 先获取响应文本
+    const responseText = await response.text()
+    
+    // 检查响应文本是否为空
+    if (!responseText || responseText.trim() === '') {
+      console.warn(`API ${apiId} 搜索失败: 响应为空`)
+      return []
+    }
+    
+    // 尝试解析JSON
+    let data
+    try {
+      data = JSON.parse(responseText)
+    } catch (jsonError) {
+      console.warn(`API ${apiId} 搜索失败: JSON解析错误`, jsonError)
+      console.warn(`收到的响应内容: ${responseText.substring(0, 100)}...`)
+      return []
+    }
 
     if (!data || !data.list || !Array.isArray(data.list) || data.list.length === 0) {
+      console.log(`API ${apiId} 没有找到匹配的结果`)
       return []
     }
 
@@ -76,7 +103,25 @@ async function searchByAPIAndKeyWord(apiId, query) {
 
             if (!pageResponse.ok) return []
 
-            const pageData = await pageResponse.json()
+            // 检查页面响应内容类型
+            const pageContentType = pageResponse.headers.get('content-type')
+            if (!pageContentType || !pageContentType.includes('application/json')) {
+              return []
+            }
+
+            // 获取响应文本并检查
+            const pageResponseText = await pageResponse.text()
+            if (!pageResponseText || pageResponseText.trim() === '') {
+              return []
+            }
+            
+            // 尝试解析JSON
+            let pageData
+            try {
+              pageData = JSON.parse(pageResponseText)
+            } catch (jsonError) {
+              return []
+            }
 
             if (!pageData || !pageData.list || !Array.isArray(pageData.list)) return []
 
@@ -88,7 +133,7 @@ async function searchByAPIAndKeyWord(apiId, query) {
               api_url: apiId.startsWith('custom_') ? getCustomApiInfo(apiId.replace('custom_', ''))?.url : undefined,
             }))
           } catch (error) {
-            console.warn(`API ${apiId} 第${page}页 搜索失败4:`, error)
+            console.warn(`API ${apiId} 第${page}页 搜索失败:`, error)
             return []
           }
         })()
@@ -109,7 +154,7 @@ async function searchByAPIAndKeyWord(apiId, query) {
 
     return results
   } catch (error) {
-    console.warn(`API ${apiId} 搜索失败3 :`, error)
+    console.warn(`API ${apiId} 搜索失败:`, error)
     return []
   }
 }

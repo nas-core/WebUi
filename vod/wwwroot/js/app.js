@@ -599,8 +599,11 @@ async function search() {
     showToast('请输入搜索内容', 'info')
     return
   }
-
-  if (selectedAPIs.length === 0) {
+  
+  // 确保使用最新的选中API状态
+  const currentSelectedAPIs = JSON.parse(localStorage.getItem('selectedAPIs') || '[]')
+  
+  if (currentSelectedAPIs.length === 0) {
     showToast('请至少选择一个API源', 'warning')
     return
   }
@@ -613,7 +616,7 @@ async function search() {
 
     // 从所有选中的API源搜索
     let allResults = []
-    const searchPromises = selectedAPIs.map((apiId) => searchByAPIAndKeyWord(apiId, query))
+    const searchPromises = currentSelectedAPIs.map((apiId) => searchByAPIAndKeyWord(apiId, query))
 
     // 等待所有搜索请求完成
     const resultsArray = await Promise.all(searchPromises)
