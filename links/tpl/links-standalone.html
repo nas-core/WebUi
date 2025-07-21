@@ -1037,7 +1037,7 @@
 
       // 渲染其他分类
       categories.forEach(category => {
-        const nameText = category.name + (isUserLoggedIn && category.is_public ? ' (公开)' : '');
+        const nameText = category.name + (isUserLoggedIn && category.is_public ? ' 🌐' : '');
         const li = document.createElement('li');
         li.dataset.id = category.id;
         li.dataset.sortNum = category.sort_num;
@@ -1138,7 +1138,7 @@
 
 
     async function deleteCategory(id) {
-      if (!confirm('确定要删除此分类吗？关联的链接不会被删除，但会失去分类。')) return;
+      // 这个确认逻辑将移到 openCategoryModal 中，这里直接调用 API
       try {
         await fetchData(`${API_BASE}categories?id=${id}`, { method: 'DELETE' });
         await loadCategories(); // 重新加载分类
@@ -1172,7 +1172,17 @@
           deleteCategoryFromModalBtn.style.display = 'inline-block';
           deleteCategoryFromModalBtn.onclick = (e) => {
             e.preventDefault(); // Prevent form submission
-            if (confirm('确定要删除此分类吗？关联的链接不会被删除，但会失去分类。')) {
+            
+            // 前端自己统计链接数量，并增加健壮性检查
+            const linksInCategory = Array.isArray(links) ? links.filter(link => link.category_id === category.id) : [];
+            const linkCount = linksInCategory.length;
+
+            let confirmMessage = `确定要删除分类 "${category.name}" 吗？此操作不可恢复。`;
+            if (linkCount > 0) {
+              confirmMessage += `\n\n警告：此分类下包含 ${linkCount} 个链接，这些链接将一同被永久删除。`;
+            }
+
+            if (confirm(confirmMessage)) {
               deleteCategory(category.id);
               closeCategoryModal();
             }

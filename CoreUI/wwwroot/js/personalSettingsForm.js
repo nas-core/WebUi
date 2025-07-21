@@ -9,47 +9,59 @@ document.addEventListener('DOMContentLoaded', function () {
   const showExactDateInput = document.getElementById('showExactDate')
   const maxConcurrentUploadsInput = document.getElementById('maxConcurrentUploads')
 
-  // 加载并显示当前设置
-  const config = window.NascoreConfig.get()
-  hideHiddenFilesInput.checked = config.hideHiddenFiles
-  useSingleClickInput.checked = config.useSingleClick
-  onlineEditFileSizeLimitInput.value = config.onlineEditFileSizeLimit
-  useOnlyThumbnailsInput.checked = config.useOnlyThumbnails || false
-  imagePreviewSizeLimitInput.value = config.imagePreviewSizeLimit || 1024
-  showExactDateInput.checked = config.showExactDate || false
-  maxConcurrentUploadsInput.value = config.maxConcurrentUploads || 3
+  // 确保所有必要的元素都存在
+  if (form) {
+    // 加载并显示当前设置
+    const config = window.NascoreConfig.get()
+    hideHiddenFilesInput.checked = config.hideHiddenFiles
+    useSingleClickInput.checked = config.useSingleClick
+    onlineEditFileSizeLimitInput.value = config.onlineEditFileSizeLimit
+    useOnlyThumbnailsInput.checked = config.useOnlyThumbnails || false
+    imagePreviewSizeLimitInput.value = config.imagePreviewSizeLimit || 1024
+    showExactDateInput.checked = config.showExactDate || false
+    maxConcurrentUploadsInput.value = config.maxConcurrentUploads || 3
 
-  // 处理表单提交
-  form.addEventListener('submit', function (e) {
-    e.preventDefault()
+    // 处理表单提交
+    form.addEventListener('submit', function (e) {
+      e.preventDefault()
 
-    // 保存新设置
-    const newConfig = {
-      ...config,
-      hideHiddenFiles: hideHiddenFilesInput.checked,
-      useSingleClick: useSingleClickInput.checked,
-      onlineEditFileSizeLimit: parseInt(onlineEditFileSizeLimitInput.value, 10),
-      useOnlyThumbnails: useOnlyThumbnailsInput.checked,
-      imagePreviewSizeLimit: parseInt(imagePreviewSizeLimitInput.value, 10),
-      showExactDate: showExactDateInput.checked,
-      maxConcurrentUploads: Math.max(1, Math.min(20, parseInt(maxConcurrentUploadsInput.value, 10) || 1)),
-    }
+      // 保存新设置
+      const newConfig = {
+        ...config,
+        hideHiddenFiles: hideHiddenFilesInput.checked,
+        useSingleClick: useSingleClickInput.checked,
+        onlineEditFileSizeLimit: parseInt(onlineEditFileSizeLimitInput.value, 10),
+        useOnlyThumbnails: useOnlyThumbnailsInput.checked,
+        imagePreviewSizeLimit: parseInt(imagePreviewSizeLimitInput.value, 10),
+        showExactDate: showExactDateInput.checked,
+        maxConcurrentUploads: Math.max(1, Math.min(20, parseInt(maxConcurrentUploadsInput.value, 10) || 1)),
+      }
 
-    window.NascoreConfig.save(newConfig)
-    window.showNotification('设置已保存', 'success')
+      window.NascoreConfig.save(newConfig)
+      window.showNotification('设置已保存', 'success')
 
-    // 如果当前在文件列表页面,刷新列表以应用新设置
-    if (window.location.pathname.endsWith('nascore.shtml')) {
-      window.location.reload()
-    }
-  })
+      // 如果当前在文件列表页面,刷新列表以应用新设置
+      if (window.location.pathname.endsWith('nascore.shtml')) {
+        window.location.reload()
+      }
+    })
+  }
 
   // 处理密码修改表单
   const changePasswordForm = document.getElementById('changePasswordForm')
-  console.log('changePasswordForm element:', changePasswordForm)
-
+  
+  // 确保密码修改表单存在
   if (changePasswordForm) {
     console.log('密码修改表单找到，添加事件监听器')
+    
+    // 确保提交按钮存在
+    const submitButton = changePasswordForm.querySelector('button[type="submit"]')
+    if (!submitButton) {
+      console.error('未找到密码修改表单提交按钮')
+    } else {
+      console.log('找到密码修改表单提交按钮')
+    }
+    
     changePasswordForm.addEventListener('submit', function (e) {
       console.log('密码修改表单提交事件触发')
       e.preventDefault()
@@ -58,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const newPassword = document.getElementById('newPassword').value
       const confirmPassword = document.getElementById('confirmPassword').value
 
-      console.log('表单数据:', { oldPassword: '***', newPassword: '***', confirmPassword: '***' })
+      console.log('表单数据收集完成')
 
       // 验证输入
       if (!oldPassword || !newPassword || !confirmPassword) {
@@ -102,6 +114,20 @@ document.addEventListener('DOMContentLoaded', function () {
         return
       }
 
+      // 获取表单提交按钮
+      const submitBtn = e.target.querySelector('button[type="submit"]')
+      
+      // 如果找不到提交按钮，尝试直接从changePasswordForm获取
+      const buttonToUse = submitBtn || changePasswordForm.querySelector('button[type="submit"]')
+      
+      // 保存原始文本，用于恢复
+      let originalText = '更新密码'
+      if (buttonToUse) {
+        originalText = buttonToUse.textContent || '更新密码'
+        buttonToUse.disabled = true
+        buttonToUse.textContent = '更新中...'
+      }
+
       // 发送密码修改请求
       const token = TokenManager.getAccessToken()
       console.log('获取到的token:', token ? '存在' : '不存在')
@@ -113,17 +139,20 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
           alert('请先登录')
         }
+        if (buttonToUse) {
+          buttonToUse.disabled = false
+          buttonToUse.textContent = originalText
+        }
         return
       }
 
-      // 显示加载状态
-      const submitButton = changePasswordForm.querySelector('button[type="submit"]')
-      const originalText = submitButton.textContent
-      submitButton.disabled = true
-      submitButton.textContent = '更新中...'
-
       console.log('开始发送密码修改请求')
-      fetch('{{.ServerUrl}}/@api/user/changePassword', {
+      
+      // 替换为正确的API URL（确保不使用模板变量）
+      const apiUrl = window.location.origin + '/@api/user/changePassword'
+      console.log('API URL:', apiUrl)
+      
+      fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -168,8 +197,10 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .finally(() => {
           // 恢复按钮状态
-          submitButton.disabled = false
-          submitButton.textContent = originalText
+          if (buttonToUse) {
+            buttonToUse.disabled = false
+            buttonToUse.textContent = originalText
+          }
         })
     })
   } else {

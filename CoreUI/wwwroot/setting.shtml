@@ -131,7 +131,7 @@
                 </div>
 
                 <div class="mb-3">
-                  <label for="newPassword" class="form-label">新密码 (新密码会被加密储存到配置文件中，长度尽量在8-32字符)</label>
+                  <label for="newPassword" class="form-label">新密码 (长度尽量在8-32字符)</label>
                   <input type="password" class="form-control" id="newPassword" placeholder="请输入新密码" required>
                 </div>
 
