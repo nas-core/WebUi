@@ -1,4 +1,4 @@
-module github.com/nas-core/WebUi/links
+module github.com/nas-core/WebUi/pkgs/replacetemplateplaceholders
 
 go 1.24.5
 

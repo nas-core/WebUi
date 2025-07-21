@@ -12,7 +12,7 @@ import (
 
 func main() {
 	configPath := os.Args[1]
-	CoreUI.ServerUrl = os.Args[2] // http://127.0.0.1:9000/
+	CoreUI.ServerUrlForTest = os.Args[2] // http://127.0.0.1:9000/
 
 	nsCfg, err := system_config.LoadConfig(configPath)
 	if err != nil {

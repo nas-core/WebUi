@@ -3,8 +3,8 @@ module github.com/nas-core/WebUi/CoreUI
 go 1.24.5
 
 require (
-	github.com/nas-core/nascore/nascore_util v0.0.0-20250719194637-4a5ece1b3587
-	github.com/tdewolff/minify/v2 v2.23.8
+	github.com/joyanhui/golang-pkgs/pkgs/minify_yh v0.0.0-20250721223009-757da7b3c81b
+	github.com/nas-core/nascore/nascore_util v0.0.0-20250721194844-58d56d323f86
 	go.uber.org/zap v1.27.0
 )
 
@@ -20,9 +20,14 @@ require (
 	github.com/spf13/pflag v1.0.7 // indirect
 	github.com/spf13/viper v1.20.1 // indirect
 	github.com/subosito/gotenv v1.6.0 // indirect
+	github.com/tdewolff/minify/v2 v2.23.9 // indirect
 	github.com/tdewolff/parse/v2 v2.8.1 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	golang.org/x/sys v0.34.0 // indirect
 	golang.org/x/text v0.27.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
+
+replace github.com/nas-core/nascore/nascore_util => ../../nascore/nascore_util
+
+replace github.com/joyanhui/golang-pkgs/pkgs/minify_yh => ../../joyanhui-golang-pkgs/pkgs/minify_yh

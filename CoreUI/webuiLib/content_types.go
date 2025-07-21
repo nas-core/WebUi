@@ -36,18 +36,3 @@ func GetContentType(path string) string {
 		return "application/octet-stream" // 对于未知类型,返回通用二进制类型
 	}
 }
-
-func IsMinifyableType(path string) bool { // IsMinifyableType 检查文件类型是否可以进行压缩
-	ext := filepath.Ext(path)
-	switch ext {
-	case ".html", ".shtml", ".htm", ".shtm",
-		".css",
-		".js",
-		".json",
-		".svg",
-		".xml":
-		return true
-	default:
-		return false
-	}
-}
