@@ -1,445 +1,1401 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-  <title>Links 管理</title>
-  <script src="/@public/theme.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我的链接</title>
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔗</text></svg>">
   <style>
     :root {
-      --main-bg: #f7f7f7;
-      --main-fg: #222;
-      --accent: #0078ff;
-      --border: #e0e0e0;
-      --card-bg: #fff;
-      --card-fg: #222;
-      --shadow: 0 2px 8px rgba(0,0,0,0.04);
-      --radius: 0.7rem;
-      --input-bg: #f5f5f5;
-      --input-fg: #222;
-      --input-border: #ccc;
-      --danger: #e74c3c;
-      --success: #27ae60;
+      --bg-body: #f8f9fa;
+      --bg-card: #ffffff;
+      --text-main: #212529;
+      --text-secondary: #6c757d;
+      --border-color: #dee2e6;
+      --primary-color: #007bff;
+      --primary-hover-color: #0056b3;
+      --success-color: #28a745;
+      --danger-color: #dc3545;
+      --input-bg: #fff;
+      --input-border: #ced4da;
+      --shadow-light: rgba(0, 0, 0, 0.05);
+      --shadow-medium: rgba(0, 0, 0, 0.1);
+      --highlight-bg: #e2f0ff;
+      --category-active-bg: #e9ecef;
+      --category-active-border: #007bff;
     }
-    [data-theme="dark"] {
-      --main-bg: #181a1b;
-      --main-fg: #eee;
-      --accent: #4fa3ff;
-      --border: #333;
-      --card-bg: #23272a;
-      --card-fg: #eee;
-      --shadow: 0 2px 8px rgba(0,0,0,0.18);
-      --input-bg: #23272a;
-      --input-fg: #eee;
-      --input-border: #444;
+
+    [data-theme='dark'] {
+      --bg-body: #1a1a1a;
+      --bg-card: #2c2c2c;
+      --text-main: #e0e0e0;
+      --text-secondary: #b0b0b0;
+      --border-color: #444444;
+      --primary-color: #6a9cff;
+      --primary-hover-color: #4a7cdd;
+      --success-color: #4caf50;
+      --danger-color: #ff6b6b;
+      --input-bg: #3a3a3a;
+      --input-border: #555555;
+      --shadow-light: rgba(0, 0, 0, 0.2);
+      --shadow-medium: rgba(0, 0, 0, 0.3);
+      --highlight-bg: #2b3d57;
+      --category-active-bg: #3d3d3d;
+      --category-active-border: #6a9cff;
     }
-    html, body {
-      margin: 0; padding: 0; height: 100%;
-      background: var(--main-bg); color: var(--main-fg);
-      font-family: system-ui, sans-serif;
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+      line-height: 1.6;
+      color: var(--text-main);
+      background-color: var(--bg-body);
+      transition: background-color 0.3s, color 0.3s;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
       min-height: 100vh;
     }
+
     .container {
-      display: flex; flex-direction: row; height: 100vh; max-width: 100vw;
-      gap: 0.5rem;
-      padding: 0.5rem;
-      box-sizing: border-box;
-    }
-    @media (max-width: 800px) {
-      .container { flex-direction: column; height: auto; }
-      .categories, .links { min-width: 0; }
-    }
-    .categories {
-      min-width: 16rem; max-width: 22rem; flex: 0 0 18rem;
-      background: var(--card-bg); border-radius: var(--radius);
-      box-shadow: var(--shadow); padding: 1rem; display: flex; flex-direction: column;
-      gap: 1rem; border: 1px solid var(--border);
-    }
-    .links {
-      flex: 1 1 0; background: var(--card-bg); border-radius: var(--radius);
-      box-shadow: var(--shadow); padding: 1rem; display: flex; flex-direction: column;
-      gap: 1rem; border: 1px solid var(--border);
-      min-width: 0;
-    }
-    .header {
-      display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;
+      max-width: 96rem;
+      width: 100%;
+      margin: auto;
+      display: flex;
       flex-wrap: wrap;
+      gap: 1.25rem;
+      flex-grow: 1;
     }
-    .search {
-      flex: 1 1 0; min-width: 8rem;
-      background: var(--input-bg); color: var(--input-fg);
-      border: 1px solid var(--input-border); border-radius: var(--radius);
-      padding: 0.5rem 1rem; font-size: 1rem;
-      outline: none;
+
+    /* 侧边栏样式 */
+    .sidebar {
+      flex: 0 0 16rem;
+      /* 固定宽度 */
+      background-color: var(--bg-card);
+      padding: 1rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 0.125rem 0.25rem var(--shadow-light);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      height: fit-content;
+      /* 让侧边栏高度适应内容 */
+      position: sticky;
+      /* 粘性定位 */
+      top: 1.25rem;
+      /* 距离顶部1.25rem */
     }
-    .theme-btn {
-      background: none; border: none; color: var(--accent); font-size: 1.3rem;
-      cursor: pointer; margin-left: 0.5rem;
+
+    .sidebar h3 {
+      font-size: 1.125rem;
+      margin-bottom: 0.5rem;
+      color: var(--text-main);
     }
-    .cat-list, .link-list {
-      list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.3rem;
+
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
     }
-    .cat-item, .link-item {
-      background: var(--input-bg); color: var(--input-fg);
-      border-radius: var(--radius); padding: 0.5rem 0.7rem;
-      display: flex; align-items: center; gap: 0.5rem;
+
+    .sidebar li {
+      margin-bottom: 0.5rem;
+    }
+
+    .sidebar a,
+    .sidebar button {
+      display: block;
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.375rem;
+      color: var(--text-main);
+      text-decoration: none;
+      background-color: transparent;
+      border: 1px solid transparent;
+      text-align: left;
+      cursor: pointer;
+      transition: background-color 0.2s, border-color 0.2s;
+      font-size: 0.9375rem;
+    }
+
+    .sidebar a:hover,
+    .sidebar button:hover {
+      background-color: var(--bg-body);
+    }
+
+    .sidebar a.active,
+    .sidebar button.active {
+      background-color: var(--category-active-bg);
+      border-color: var(--category-active-border);
+      color: var(--primary-color);
+      font-weight: bold;
+    }
+
+    .sidebar .search-input,
+    .sidebar .add-category-input {
+      width: 100%;
+      padding: 0.5rem 0.75rem;
       border: 1px solid var(--input-border);
-      cursor: grab; user-select: none;
-      transition: background 0.2s, box-shadow 0.2s;
+      border-radius: 0.375rem;
+      background-color: var(--input-bg);
+      color: var(--text-main);
+      font-size: 0.9375rem;
+      margin-bottom: 0.5rem;
     }
-    .cat-item.selected { background: var(--accent); color: #fff; }
-    .cat-item .cat-actions, .link-item .link-actions {
-      margin-left: auto; display: flex; gap: 0.2rem;
+
+    .sidebar .add-category-btn {
+      background-color: var(--success-color);
+      color: #fff;
+      border: none;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      width: 100%;
+      font-size: 0.9375rem;
+      transition: background-color 0.2s;
     }
-    .cat-item .cat-actions button, .link-item .link-actions button {
-      background: none; border: none; color: var(--main-fg); font-size: 1.1rem;
-      cursor: pointer; border-radius: 0.3rem; padding: 0.1rem 0.4rem;
-      transition: background 0.15s;
+
+    .sidebar .add-category-btn:hover {
+      background-color: #218838;
     }
-    .cat-item .cat-actions button:hover, .link-item .link-actions button:hover {
-      background: var(--border);
-    }
-    .add-btn {
-      background: var(--accent); color: #fff; border: none;
-      border-radius: var(--radius); padding: 0.4rem 1.2rem; font-size: 1rem;
-      cursor: pointer; margin-top: 0.5rem;
-      transition: background 0.2s;
-    }
-    .add-btn:hover { background: #005bb5; }
-    .link-list {
+
+    .sidebar .category-actions {
+      display: flex;
       gap: 0.5rem;
+      margin-top: 0.25rem;
     }
-    .link-item {
-      flex-direction: column; align-items: flex-start; cursor: grab;
-      border-left: 4px solid var(--accent);
-      padding-left: 0.8rem;
+
+    .sidebar .category-actions button {
+      flex-grow: 1;
+      font-size: 0.875rem;
+      padding: 0.3rem 0.5rem;
+      border: none;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      color: #fff;
     }
-    .link-title-row {
-      display: flex; align-items: center; width: 100%; gap: 0.5rem;
+
+    .sidebar .category-actions .edit-btn {
+      background-color: var(--primary-color);
     }
-    .link-title {
-      font-weight: bold; font-size: 1.1rem; flex: 1 1 0;
+
+    .sidebar .category-actions .edit-btn:hover {
+      background-color: var(--primary-hover-color);
+    }
+
+    .sidebar .category-actions .delete-btn {
+      background-color: var(--danger-color);
+    }
+
+    .sidebar .category-actions .delete-btn:hover {
+      background-color: #c82333;
+    }
+
+    .sidebar .category-actions .save-btn {
+      background-color: var(--success-color);
+    }
+
+    .sidebar .category-actions .save-btn:hover {
+      background-color: #218838;
+    }
+
+    .sidebar .category-actions .cancel-btn {
+      background-color: var(--text-secondary);
+    }
+
+    .sidebar .category-actions .cancel-btn:hover {
+      background-color: #5a6268;
+    }
+
+    /* 主内容区域样式 */
+    .main-content {
+      flex: 1;
+      min-width: 0;
+      /* Allow content to shrink */
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .header-actions {
+      background-color: var(--bg-card);
+      padding: 1rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 0.125rem 0.25rem var(--shadow-light);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .header-actions .search-input {
+      flex: 1;
+      min-width: 10rem;
+      padding: 0.5rem 0.75rem;
+      border: 1px solid var(--input-border);
+      border-radius: 0.375rem;
+      background-color: var(--input-bg);
+      color: var(--text-main);
+      font-size: 0.9375rem;
+    }
+
+    .header-actions button {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      font-size: 0.9375rem;
+      transition: background-color 0.2s;
+    }
+
+    .header-actions .add-link-btn {
+      background-color: var(--primary-color);
+      color: #fff;
+    }
+
+    .header-actions .add-link-btn:hover {
+      background-color: var(--primary-hover-color);
+    }
+
+    .header-actions .theme-toggle-btn {
+      background-color: var(--text-secondary);
+      color: #fff;
+    }
+
+    .header-actions .theme-toggle-btn:hover {
+      background-color: #5a6268;
+    }
+
+    .header-actions .current-category-title {
+      font-size: 1.25rem;
+      font-weight: bold;
+      color: var(--primary-color);
+      margin-right: auto;
+      /* Push other items to the right */
+    }
+
+    /* 汉堡菜单样式 */
+    .hamburger-menu-container {
+      position: relative;
+      /* 用于定位下拉菜单 */
+      margin-left: 0.75rem;
+      /* 与其他按钮的间隔 */
+      display: flex;
+      align-items: center;
+    }
+
+    .hamburger-icon {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      width: 2rem;
+      height: 2rem;
+      background: var(--primary-color);
+      border: none;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      padding: 0.4rem;
+      box-sizing: border-box;
+      transition: background-color 0.2s;
+    }
+
+    .hamburger-icon:hover {
+      background-color: var(--primary-hover-color);
+    }
+
+    .hamburger-icon .line {
+      width: 100%;
+      height: 0.2rem;
+      background-color: #fff;
+      border-radius: 0.125rem;
+      transition: all 0.2s ease-in-out;
+    }
+
+    /* 下拉菜单样式 */
+    .dropdown-menu {
+      position: absolute;
+      top: 100%;
+      /* 位于汉堡图标下方 */
+      right: 0;
+      /* 对齐右侧 */
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      box-shadow: 0 0.25rem 0.5rem var(--shadow-medium);
+      min-width: 10rem;
+      padding: 0.5rem 0;
+      z-index: 1001;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-0.625rem);
+      transition: opacity 0.2s ease-out, visibility 0.2s ease-out, transform 0.2s ease-out;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .dropdown-menu.open {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .dropdown-menu .nav-item {
+      display: block;
+      padding: 0.5rem 1rem;
+      color: var(--text-main);
+      text-decoration: none;
+      white-space: nowrap;
+      transition: background-color 0.2s;
+    }
+
+    .dropdown-menu .nav-item:hover {
+      background-color: var(--bg-body);
+    }
+
+    .links-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+      gap: 1.25rem;
+      flex-grow: 1;
+    }
+
+    .link-card {
+      background-color: var(--bg-card);
+      padding: 1rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 0.125rem 0.25rem var(--shadow-light);
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--border-color);
+      position: relative;
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: grab;
+      /* Indicate draggable */
+    }
+
+    .link-card:active {
+      cursor: grabbing;
+    }
+
+    .link-card.dragging {
+      opacity: 0.5;
+      box-shadow: 0 0.5rem 1rem var(--shadow-medium);
+    }
+
+    .link-card.drag-over {
+      border: 2px dashed var(--primary-color);
+    }
+
+    .link-card h4 {
+      font-size: 1.125rem;
+      margin-bottom: 0.5rem;
+      color: var(--primary-color);
+    }
+
+    .link-card p {
+      font-size: 0.9375rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.75rem;
+      flex-grow: 1;
+      /* Pushes button to bottom */
+    }
+
+    .link-card .link-url {
+      display: block;
+      color: var(--primary-color);
+      text-decoration: none;
       word-break: break-all;
+      margin-bottom: 0.75rem;
+      font-size: 0.9375rem;
     }
-    .link-url {
-      color: var(--accent); font-size: 0.97rem; text-decoration: underline;
-      word-break: break-all;
+
+    .link-card .link-url:hover {
+      text-decoration: underline;
     }
-    .link-desc {
-      color: #888; font-size: 0.95rem; margin-top: 0.1rem;
-      word-break: break-all;
+
+    .link-card .actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
     }
-    .link-item .link-actions { margin-left: 0; }
-    .drag-over { box-shadow: 0 0 0 2px var(--accent) inset; }
-    /* 弹窗 */
-    .modal {
-      position: fixed; left: 0; top: 0; width: 100vw; height: 100vh;
-      background: rgba(0,0,0,0.18); display: flex; align-items: center; justify-content: center;
+
+    .link-card .actions button {
+      padding: 0.4rem 0.75rem;
+      border: none;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      font-size: 0.875rem;
+      transition: background-color 0.2s;
+      color: #fff;
+    }
+
+    .link-card .actions .edit-btn {
+      background-color: var(--primary-color);
+    }
+
+    .link-card .actions .edit-btn:hover {
+      background-color: var(--primary-hover-color);
+    }
+
+    .link-card .actions .delete-btn {
+      background-color: var(--danger-color);
+    }
+
+    .link-card .actions .delete-btn:hover {
+      background-color: #c82333;
+    }
+
+    /* 模态框样式 */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
       z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
     }
-    .modal-content {
-      background: var(--card-bg); color: var(--card-fg); border-radius: var(--radius);
-      min-width: 18rem; max-width: 95vw; padding: 1.2rem 1.5rem; box-shadow: var(--shadow);
-      display: flex; flex-direction: column; gap: 1rem;
+
+    .modal-overlay.open {
+      opacity: 1;
+      visibility: visible;
     }
-    .modal-content label { font-size: 1rem; margin-bottom: 0.2rem; }
-    .modal-content input, .modal-content textarea {
-      width: 100%; padding: 0.5rem; border-radius: var(--radius);
-      border: 1px solid var(--input-border); background: var(--input-bg); color: var(--input-fg);
-      font-size: 1rem; margin-bottom: 0.5rem;
+
+    .modal-box {
+      background-color: var(--bg-card);
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 0.5rem 1rem var(--shadow-medium);
+      width: 90%;
+      max-width: 30rem;
+      color: var(--text-main);
+      transform: translateY(-1.25rem);
+      transition: transform 0.3s;
+      position: relative;
     }
-    .modal-content textarea { min-height: 3.5rem; resize: vertical; }
-    .modal-actions { display: flex; gap: 1rem; justify-content: flex-end; }
+
+    .modal-overlay.open .modal-box {
+      transform: translateY(0);
+    }
+
+    .modal-title {
+      font-size: 1.375rem;
+      margin-bottom: 1.25rem;
+      color: var(--primary-color);
+    }
+
+    .modal-form label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+      font-size: 0.9375rem;
+    }
+
+    .modal-form input[type="text"],
+    .modal-form input[type="url"],
+    .modal-form textarea,
+    .modal-form select {
+      width: 100%;
+      padding: 0.625rem;
+      margin-bottom: 1rem;
+      border: 1px solid var(--input-border);
+      border-radius: 0.375rem;
+      background-color: var(--input-bg);
+      color: var(--text-main);
+      font-size: 0.9375rem;
+    }
+
+    .modal-form textarea {
+      resize: vertical;
+      min-height: 5rem;
+    }
+
+    .modal-form .checkbox-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+      font-size: 0.9375rem;
+    }
+
+    .modal-form .checkbox-group input[type="checkbox"] {
+      margin-right: 0.5rem;
+      width: auto;
+      margin-bottom: 0;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
     .modal-actions button {
-      padding: 0.4rem 1.2rem; border-radius: var(--radius); border: none;
-      font-size: 1rem; cursor: pointer;
+      padding: 0.625rem 1.25rem;
+      border: none;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      font-size: 0.9375rem;
+      transition: background-color 0.2s;
     }
-    .modal-actions .danger { background: var(--danger); color: #fff; }
-    .modal-actions .primary { background: var(--accent); color: #fff; }
-    .modal-actions .cancel { background: #888; color: #fff; }
-    @media (max-width: 600px) {
-      .container { padding: 0.1rem; }
-      .categories, .links { padding: 0.5rem; }
-      .modal-content { padding: 0.7rem 0.5rem; }
+
+    .modal-actions .save-btn {
+      background-color: var(--primary-color);
+      color: #fff;
+    }
+
+    .modal-actions .save-btn:hover {
+      background-color: var(--primary-hover-color);
+    }
+
+    .modal-actions .cancel-btn {
+      background-color: var(--border-color);
+      color: var(--text-main);
+    }
+
+    .modal-actions .cancel-btn:hover {
+      background-color: #d1d7dc;
+    }
+
+    [data-theme='dark'] .modal-actions .cancel-btn {
+      background-color: #555555;
+      color: #e0e0e0;
+    }
+
+    [data-theme='dark'] .modal-actions .cancel-btn:hover {
+      background-color: #666666;
+    }
+
+    /* 底部导航或信息 */
+    .footer {
+      margin-top: 2rem;
+      text-align: center;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        flex: none;
+        /* Remove fixed width */
+        width: 100%;
+        /* Take full width */
+        position: static;
+        /* Remove sticky on mobile */
+        margin-bottom: 1.25rem;
+      }
+
+      .header-actions {
+        /* Adjust header actions to accommodate hamburger menu better on small screens */
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+
+      .header-actions .search-input {
+        width: 100%;
+        margin-bottom: 0.5rem;
+      }
+
+      .header-actions .current-category-title {
+        margin-right: 0;
+        margin-bottom: 0.5rem;
+        text-align: center;
+        margin-bottom: 1rem;
+      }
+
+      .header-actions button {
+        width: 100%;
+      }
+
+      .hamburger-menu-container {
+        order: 3;
+        /* Hamburger menu last */
+        margin-left: auto;
+        /* Push to right */
+      }
+
+      .dropdown-menu {
+        left: auto;
+        right: 0;
+        /* Align right on small screens */
+      }
+
+      .links-grid {
+        grid-template-columns: 1fr;
+        /* Single column on mobile */
+      }
     }
   </style>
 </head>
+
 <body>
-  <div class="header">
-    <input class="search" id="searchInput" type="search" placeholder="搜索链接/描述..." autocomplete="off">
-    <button class="theme-btn" id="themeBtn" title="切换主题">🌓</button>
-  </div>
+  <script src="/@public/theme.js"></script>
+  <script src="/@public/nav.js"></script>
+
   <div class="container">
-    <section class="categories">
-      <div style="display:flex;align-items:center;justify-content:space-between;">
-        <span style="font-weight:bold;font-size:1.1rem;">分类</span>
-        <button class="add-btn" id="addCatBtn" title="新增分类">＋</button>
+    <!-- 侧边栏 - 分类列表 -->
+    <aside class="sidebar">
+      <h3>链接分类</h3>
+      <input type="text" id="categorySearchInput" class="search-input" placeholder="搜索分类...">
+      <ul id="categoryList" class="category-list">
+        <!-- 分类项将通过JS动态加载 -->
+      </ul>
+      <div class="add-category-section">
+        <input type="text" id="newCategoryName" class="add-category-input" placeholder="新分类名称">
+        <button id="addCategoryBtn" class="add-category-btn">添加分类</button>
       </div>
-      <ul class="cat-list" id="catList"></ul>
-    </section>
-    <section class="links">
-      <div style="display:flex;align-items:center;justify-content:space-between;">
-        <span id="linksTitle" style="font-weight:bold;font-size:1.1rem;">链接</span>
-        <button class="add-btn" id="addLinkBtn" title="新增链接">＋</button>
-      </div>
-      <ul class="link-list" id="linkList"></ul>
-    </section>
-  </div>
-  <div id="modal" style="display:none;"></div>
-  <script>
-// ========== 工具函数 ==========
-const $ = sel => document.querySelector(sel);
-const $$ = sel => Array.from(document.querySelectorAll(sel));
-const apiBase = '/@links/api/';
-function fetchJSON(url, opts) {
-  return fetch(url, opts).then(r => {
-    if (!r.ok) throw new Error('网络错误');
-    return r.json();
-  });
-}
-function showModal(html, onClose) {
-  const modal = $('#modal');
-  modal.innerHTML = `<div class='modal'><div class='modal-content'>${html}</div></div>`;
-  modal.style.display = '';
-  modal.onclick = e => {
-    if (e.target === modal.firstChild) { hideModal(); if(onClose)onClose(); }
-  };
-}
-function hideModal() {
-  const modal = $('#modal');
-  modal.innerHTML = '';
-  modal.style.display = 'none';
-}
-function toast(msg, sec=1.5) {
-  let t = document.createElement('div');
-  t.textContent = msg;
-  t.style = 'position:fixed;top:20%;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;padding:0.7rem 1.5rem;border-radius:1rem;z-index:2000;font-size:1.1rem;box-shadow:var(--shadow);';
-  document.body.appendChild(t);
-  setTimeout(()=>t.remove(), sec*1000);
-}
-function confirmModal(msg, cb) {
-  showModal(`<div>${msg}</div><div class='modal-actions'><button class='primary'>确定</button><button class='cancel'>取消</button></div>`);
-  $$('.modal-actions button')[0].onclick = ()=>{ hideModal(); cb(true); };
-  $$('.modal-actions button')[1].onclick = ()=>{ hideModal(); cb(false); };
-}
-// ========== 状态 ==========
-let categories = [];
-let links = [];
-let selectedCat = null;
-let searchText = '';
-// ========== 分类相关 ==========
-function loadCategories() {
-  fetchJSON(apiBase+'categories').then(data => {
-    categories = data;
-    if (!selectedCat && categories.length) selectedCat = categories[0].id;
-    renderCategories();
-    renderLinks();
-  });
-}
-function renderCategories() {
-  const ul = $('#catList');
-  ul.innerHTML = '';
-  categories.forEach(cat => {
-    const li = document.createElement('li');
-    li.className = 'cat-item' + (cat.id===selectedCat?' selected':'');
-    li.draggable = true;
-    li.innerHTML = `<span>${cat.name}</span>
-      <div class='cat-actions'>
-        <button title='编辑'>✏️</button>
-        <button title='删除'>🗑️</button>
-      </div>`;
-    li.onclick = e => {
-      if (e.target.closest('.cat-actions')) return;
-      selectedCat = cat.id; renderCategories(); renderLinks();
-    };
-    li.querySelector('button[title="编辑"]').onclick = e => {
-      e.stopPropagation();
-      showCatModal(cat);
-    };
-    li.querySelector('button[title="删除"]').onclick = e => {
-      e.stopPropagation();
-      confirmModal('确定删除该分类？', ok => {
-        if (!ok) return;
-        fetch(apiBase+`categories?id=${cat.id}`, {method:'DELETE'}).then(()=>{
-          toast('已删除'); loadCategories();
-        });
-      });
-    };
-    // 拖拽
-    li.ondragstart = ev => { ev.dataTransfer.setData('cat', cat.id); };
-    li.ondragover = ev => { ev.preventDefault(); li.classList.add('drag-over'); };
-    li.ondragleave = ev => { li.classList.remove('drag-over'); };
-    li.ondrop = ev => {
-      ev.preventDefault(); li.classList.remove('drag-over');
-      const fromId = +ev.dataTransfer.getData('cat');
-      const toId = cat.id;
-      if (fromId === toId) return;
-      const fromIdx = categories.findIndex(c=>c.id===fromId);
-      const toIdx = categories.findIndex(c=>c.id===toId);
-      if (fromIdx<0||toIdx<0) return;
-      // 交换sort_num
-      [categories[fromIdx].sort_num, categories[toIdx].sort_num] = [categories[toIdx].sort_num, categories[fromIdx].sort_num];
-      // 提交
-      fetch(apiBase+'categories/sort', {
-        method:'PATCH', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify(categories.map(c=>({id:c.id,sort_num:c.sort_num})))
-      }).then(()=>{ loadCategories(); });
-    };
-    ul.appendChild(li);
-  });
-}
-$('#addCatBtn').onclick = ()=> showCatModal();
-function showCatModal(cat={}) {
-  showModal(`
-    <label>分类名称</label>
-    <input id='catName' value='${cat.name||''}' maxlength='30' required>
-    <div class='modal-actions'>
-      <button class='primary'>保存</button>
-      <button class='cancel'>取消</button>
-    </div>
-  `);
-  $$('.modal-actions button')[0].onclick = ()=>{
-    const name = $('#catName').value.trim();
-    if (!name) return toast('名称不能为空');
-    const data = {name, sort_num:cat.sort_num||0, is_public:cat.is_public||false};
-    if (cat.id) { data.id=cat.id; data.owner_id=cat.owner_id; }
-    fetch(apiBase+'categories', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify(data)
-    }).then(()=>{ hideModal(); loadCategories(); });
-  };
-  $$('.modal-actions button')[1].onclick = hideModal;
-}
-// ========== 链接相关 ==========
-function loadLinks() {
-  if (!selectedCat) { $('#linkList').innerHTML = ''; return; }
-  fetchJSON(apiBase+`links?category_id=${selectedCat}`).then(data => {
-    links = data;
-    renderLinks();
-  });
-}
-function renderLinks() {
-  if (!selectedCat) { $('#linkList').innerHTML = ''; return; }
-  fetchJSON(apiBase+`links?category_id=${selectedCat}`).then(data => {
-    links = data;
-    let filtered = links.filter(l => {
-      if (!searchText) return true;
-      const t = searchText.toLowerCase();
-      return l.title.toLowerCase().includes(t) || (l.description||'').toLowerCase().includes(t);
-    });
-    const ul = $('#linkList');
-    ul.innerHTML = '';
-    filtered.forEach(link => {
-      const li = document.createElement('li');
-      li.className = 'link-item';
-      li.draggable = true;
-      li.innerHTML = `
-        <div class='link-title-row'>
-          <span class='link-title'>${link.title}</span>
-          <div class='link-actions'>
-            <button title='编辑'>✏️</button>
-            <button title='删除'>🗑️</button>
+    </aside>
+
+    <!-- 主内容区域 - 链接列表 -->
+    <main class="main-content">
+      <div class="header-actions">
+        <h2 id="currentCategoryTitle" class="current-category-title">所有链接</h2>
+        <input type="text" id="linkSearchInput" class="search-input" placeholder="搜索链接标题或描述...">
+        <button id="addLinkBtn" class="add-link-btn">添加链接</button>
+        <button class="theme-toggle-btn" data-action="open-theme-modal">主题设置 <span
+            id="currentThemeText"></span></button>
+        <div class="hamburger-menu-container">
+          <button id="hamburgerIcon" class="hamburger-icon">
+            <span class="line"></span>
+            <span class="line"></span>
+            <span class="line"></span>
+          </button>
+          <div id="dropdownNavMenu" class="dropdown-menu">
+            <!-- Nav items will be rendered here by JS -->
           </div>
         </div>
-        <a class='link-url' href='${link.url}' target='_blank'>${link.url}</a>
-        <div class='link-desc'>${link.description||''}</div>
-      `;
-      li.querySelector('button[title="编辑"]').onclick = e => {
-        e.stopPropagation();
-        showLinkModal(link);
-      };
-      li.querySelector('button[title="删除"]').onclick = e => {
-        e.stopPropagation();
-        confirmModal('确定删除该链接？', ok => {
-          if (!ok) return;
-          fetch(apiBase+`link?id=${link.id}`, {method:'DELETE'}).then(()=>{
-            toast('已删除'); loadLinks();
-          });
-        });
-      };
-      // 拖拽
-      li.ondragstart = ev => { ev.dataTransfer.setData('link', link.id); };
-      li.ondragover = ev => { ev.preventDefault(); li.classList.add('drag-over'); };
-      li.ondragleave = ev => { li.classList.remove('drag-over'); };
-      li.ondrop = ev => {
-        ev.preventDefault(); li.classList.remove('drag-over');
-        const fromId = +ev.dataTransfer.getData('link');
-        const toId = link.id;
-        if (fromId === toId) return;
-        const fromIdx = links.findIndex(l=>l.id===fromId);
-        const toIdx = links.findIndex(l=>l.id===toId);
-        if (fromIdx<0||toIdx<0) return;
-        [links[fromIdx].sort_num, links[toIdx].sort_num] = [links[toIdx].sort_num, links[fromIdx].sort_num];
-        fetch(apiBase+'links/sort', {
-          method:'PATCH', headers:{'Content-Type':'application/json'},
-          body: JSON.stringify(links.map(l=>({id:l.id,sort_num:l.sort_num})))
-        }).then(()=>{ loadLinks(); });
-      };
-      $('#linkList').appendChild(li);
-    });
-  });
-}
-$('#addLinkBtn').onclick = ()=> showLinkModal();
-function showLinkModal(link={}) {
-  showModal(`
-    <label>标题</label>
-    <input id='linkTitle' value='${link.title||''}' maxlength='60' required>
-    <label>URL</label>
-    <input id='linkUrl' value='${link.url||''}' maxlength='1024' required>
-    <label>描述</label>
-    <textarea id='linkDesc' maxlength='200'>${link.description||''}</textarea>
-    <div class='modal-actions'>
-      <button class='primary'>保存</button>
-      <button class='cancel'>取消</button>
+      </div>
+      <div id="linksGrid" class="links-grid">
+        <!-- 链接卡片将通过JS动态加载 -->
+      </div>
+    </main>
+  </div>
+
+  <!-- 链接添加/编辑模态框 -->
+  <div id="linkModalOverlay" class="modal-overlay">
+    <div class="modal-box">
+      <h3 class="modal-title" id="linkModalTitle">添加链接</h3>
+      <form id="linkForm" class="modal-form">
+        <input type="hidden" id="linkId">
+        <label for="linkTitle">标题:</label>
+        <input type="text" id="linkTitle" required>
+
+        <label for="linkUrl">URL:</label>
+        <input type="url" id="linkUrl" required>
+
+        <label for="linkDescription">描述:</label>
+        <textarea id="linkDescription"></textarea>
+
+        <label for="linkCategory">分类:</label>
+        <select id="linkCategory">
+          <!-- 分类选项通过JS动态填充 -->
+        </select>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="linkIsPublic">
+          <label for="linkIsPublic">公开可见</label>
+        </div>
+
+        <div class="modal-actions">
+          <button type="submit" class="save-btn">保存</button>
+          <button type="button" class="cancel-btn" id="cancelLinkModalBtn">取消</button>
+        </div>
+      </form>
     </div>
-  `);
-  $$('.modal-actions button')[0].onclick = ()=>{
-    const title = $('#linkTitle').value.trim();
-    const url = $('#linkUrl').value.trim();
-    if (!title || !url) return toast('标题和URL必填');
-    const data = {
-      title, url,
-      description: $('#linkDesc').value.trim(),
-      category_id: selectedCat,
-      sort_num: link.sort_num||0,
-      is_public: link.is_public||false
-    };
-    if (link.id) { data.id=link.id; data.owner_id=link.owner_id; }
-    fetch(apiBase+'link', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify(data)
-    }).then(()=>{ hideModal(); loadLinks(); });
-  };
-  $$('.modal-actions button')[1].onclick = hideModal;
-}
-// ========== 搜索 ==========
-$('#searchInput').oninput = e => {
-  searchText = e.target.value.trim();
-  renderLinks();
-};
-// ========== 主题切换 ==========
-$('#themeBtn').onclick = () => {
-  if (document.documentElement.getAttribute('data-theme') === 'dark') {
-    document.documentElement.setAttribute('data-theme', '');
-    localStorage.setItem('theme', 'light');
-  } else {
-    document.documentElement.setAttribute('data-theme', 'dark');
-    localStorage.setItem('theme', 'dark');
-  }
-};
-(function initTheme() {
-  let t = localStorage.getItem('theme');
-  if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : '';
-  if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
-})();
-// ========== 初始化 ==========
-window.onload = () => {
-  loadCategories();
-  $('#searchInput').value = '';
-};
-// 分类切换时自动加载链接
-const origRenderCategories = renderCategories;
-renderCategories = function() { origRenderCategories.apply(this, arguments); loadLinks(); };
+  </div>
+
+  <!-- 分类编辑模态框 -->
+  <div id="categoryModalOverlay" class="modal-overlay">
+    <div class="modal-box">
+      <h3 class="modal-title" id="categoryModalTitle">编辑分类</h3>
+      <form id="categoryForm" class="modal-form">
+        <input type="hidden" id="categoryId">
+        <label for="categoryName">名称:</label>
+        <input type="text" id="categoryName" required>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="categoryIsPublic">
+          <label for="categoryIsPublic">公开可见</label>
+        </div>
+
+        <div class="modal-actions">
+          <button type="submit" class="save-btn">保存</button>
+          <button type="button" class="cancel-btn" id="cancelCategoryModalBtn">取消</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <script>
+    const API_BASE = '/@links/api/';
+    let categories = [];
+    let links = [];
+    let currentCategoryID = 0; // 0 for "All Links"
+    let publicMode = false; // Whether currently viewing public links
+
+    // --- 工具函数 ---
+    async function fetchData(url, options = {}) {
+      try {
+        const response = await fetch(url, options);
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`HTTP error! Status: ${response.status}, Message: ${errorText}`);
+        }
+        return await response.json();
+      } catch (error) {
+        console.error("Fetch error:", error);
+        alert("请求失败: " + error.message);
+        throw error;
+      }
+    }
+
+    function debounce(func, delay) {
+      let timeout;
+      return function (...args) {
+        const context = this;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(context, args), delay);
+      };
+    }
+
+    // --- 分类管理 ---
+    async function loadCategories(isPublic = false) {
+      const url = `${API_BASE}categories${isPublic ? '?public=1' : ''}`;
+      categories = await fetchData(url);
+      renderCategories();
+    }
+
+    function renderCategories() {
+      const categoryList = document.getElementById('categoryList');
+      categoryList.innerHTML = ''; // 清空现有分类
+
+      // 添加“所有链接”选项
+      const allLinksItem = document.createElement('li');
+      const allLinksBtn = document.createElement('button');
+      allLinksBtn.textContent = '所有链接';
+      allLinksBtn.dataset.id = 0;
+      allLinksBtn.classList.add('category-btn');
+      if (currentCategoryID === 0 && !publicMode) {
+        allLinksBtn.classList.add('active');
+      }
+      allLinksBtn.addEventListener('click', () => selectCategory(0, false));
+      allLinksItem.appendChild(allLinksBtn);
+      categoryList.appendChild(allLinksItem);
+
+      // 添加“公共链接”选项
+      const publicLinksItem = document.createElement('li');
+      const publicLinksBtn = document.createElement('button');
+      publicLinksBtn.textContent = '公开链接';
+      publicLinksBtn.dataset.id = -1; // 用-1表示公共链接
+      publicLinksBtn.classList.add('category-btn');
+      if (publicMode) {
+        publicLinksBtn.classList.add('active');
+      }
+      publicLinksBtn.addEventListener('click', () => selectCategory(-1, true));
+      publicLinksItem.appendChild(publicLinksBtn);
+      categoryList.appendChild(publicLinksItem);
+
+
+      // 渲染其他分类
+      categories.forEach(category => {
+        const li = document.createElement('li');
+        li.setAttribute('draggable', true);
+        li.dataset.id = category.id;
+        li.dataset.sortNum = category.sort_num;
+
+        const button = document.createElement('button');
+        button.textContent = category.name + (category.is_public ? ' (公开)' : '');
+        button.dataset.id = category.id;
+        button.classList.add('category-btn');
+        if (currentCategoryID === category.id && !publicMode) {
+          button.classList.add('active');
+        }
+        button.addEventListener('click', () => selectCategory(category.id, false));
+
+        const actionsDiv = document.createElement('div');
+        actionsDiv.classList.add('category-actions');
+
+        const editBtn = document.createElement('button');
+        editBtn.textContent = '编辑';
+        editBtn.classList.add('edit-btn');
+        editBtn.addEventListener('click', (e) => {
+          e.stopPropagation(); // 阻止点击分类按钮
+          openCategoryModal(category);
+        });
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = '删除';
+        deleteBtn.classList.add('delete-btn');
+        deleteBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          deleteCategory(category.id);
+        });
+
+        actionsDiv.appendChild(editBtn);
+        actionsDiv.appendChild(deleteBtn);
+
+        li.appendChild(button);
+        if (!publicMode) { // 非公开模式才显示编辑/删除按钮
+          li.appendChild(actionsDiv);
+        }
+
+        categoryList.appendChild(li);
+      });
+      setupCategoryDragAndDrop();
+    }
+
+    function selectCategory(id, isPublic = false) {
+      currentCategoryID = id;
+      publicMode = isPublic;
+      const categoryTitleElement = document.getElementById('currentCategoryTitle');
+      if (isPublic) {
+        categoryTitleElement.textContent = '公开链接';
+      } else if (id === 0) {
+        categoryTitleElement.textContent = '所有链接';
+      } else {
+        const selectedCategory = categories.find(cat => cat.id === id);
+        categoryTitleElement.textContent = selectedCategory ? selectedCategory.name : '所有链接';
+      }
+      // 更新分类列表的激活状态
+      document.querySelectorAll('.category-btn').forEach(btn => {
+        if (parseInt(btn.dataset.id) === id && !isPublic) {
+          btn.classList.add('active');
+        } else if (parseInt(btn.dataset.id) === -1 && isPublic) {
+          btn.classList.add('active');
+        }
+        else {
+          btn.classList.remove('active');
+        }
+      });
+      loadLinks(id, isPublic);
+      renderCategories(); // 重新渲染分类列表以显示编辑/删除按钮的可见性
+    }
+
+    async function addCategory() {
+      const nameInput = document.getElementById('newCategoryName');
+      const name = nameInput.value.trim();
+      if (!name) {
+        alert('分类名称不能为空');
+        return;
+      }
+      try {
+        const newCategory = await fetchData(`${API_BASE}categories`, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({name: name, sort_num: 0, is_public: false})
+        });
+        categories.push(newCategory);
+        nameInput.value = '';
+        await loadCategories(); // 重新加载并渲染
+      } catch (error) {
+        console.error('添加分类失败:', error);
+      }
+    }
+
+    async function deleteCategory(id) {
+      if (!confirm('确定要删除此分类吗？关联的链接不会被删除，但会失去分类。')) return;
+      try {
+        await fetchData(`${API_BASE}categories?id=${id}`, {method: 'DELETE'});
+        await loadCategories();
+        // 如果删除的是当前分类，则切换到“所有链接”
+        if (currentCategoryID === id) {
+          selectCategory(0, false);
+        }
+      } catch (error) {
+        console.error('删除分类失败:', error);
+      }
+    }
+
+    // 分类编辑模态框
+    const categoryModalOverlay = document.getElementById('categoryModalOverlay');
+    const categoryForm = document.getElementById('categoryForm');
+    const categoryIdInput = document.getElementById('categoryId');
+    const categoryNameInput = document.getElementById('categoryName');
+    const categoryIsPublicInput = document.getElementById('categoryIsPublic');
+    const categoryModalTitle = document.getElementById('categoryModalTitle');
+    const cancelCategoryModalBtn = document.getElementById('cancelCategoryModalBtn');
+
+    function openCategoryModal(category = null) {
+      if (category) {
+        categoryIdInput.value = category.id;
+        categoryNameInput.value = category.name;
+        categoryIsPublicInput.checked = category.is_public;
+        categoryModalTitle.textContent = '编辑分类';
+      } else {
+        // 不支持直接添加，添加用侧边栏的输入框
+        return;
+      }
+      categoryModalOverlay.classList.add('open');
+    }
+
+    function closeCategoryModal() {
+      categoryModalOverlay.classList.remove('open');
+      categoryForm.reset();
+    }
+
+    categoryForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = parseInt(categoryIdInput.value);
+      const name = categoryNameInput.value.trim();
+      const is_public = categoryIsPublicInput.checked;
+
+      if (!name) {
+        alert('分类名称不能为空');
+        return;
+      }
+
+      try {
+        await fetchData(`${API_BASE}categories`, {
+          method: 'POST', // 后端POST用于新增或更新，根据ID判断
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({id: id, name: name, is_public: is_public})
+        });
+        closeCategoryModal();
+        await loadCategories(); // 重新加载并渲染分类
+        loadLinks(currentCategoryID, publicMode); // 重新加载链接
+      } catch (error) {
+        console.error('保存分类失败:', error);
+      }
+    });
+
+    cancelCategoryModalBtn.addEventListener('click', closeCategoryModal);
+    categoryModalOverlay.addEventListener('click', (e) => {
+      if (e.target === categoryModalOverlay) {
+        closeCategoryModal();
+      }
+    });
+
+    // 分类拖拽排序
+    let draggedCategory = null;
+
+    function setupCategoryDragAndDrop() {
+      const categoryItems = document.querySelectorAll('#categoryList > li[draggable="true"]');
+      categoryItems.forEach(item => {
+        item.addEventListener('dragstart', (e) => {
+          draggedCategory = item;
+          e.dataTransfer.effectAllowed = 'move';
+          e.dataTransfer.setData('text/plain', item.dataset.id);
+          setTimeout(() => item.classList.add('dragging'), 0);
+        });
+
+        item.addEventListener('dragenter', (e) => {
+          e.preventDefault();
+          item.classList.add('drag-over');
+        });
+
+        item.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = 'move';
+        });
+
+        item.addEventListener('dragleave', () => {
+          item.classList.remove('drag-over');
+        });
+
+        item.addEventListener('drop', (e) => {
+          e.preventDefault();
+          item.classList.remove('drag-over');
+          if (draggedCategory && draggedCategory !== item) {
+            const draggedIndex = Array.from(categoryList.children).indexOf(draggedCategory);
+            const targetIndex = Array.from(categoryList.children).indexOf(item);
+
+            if (draggedIndex < targetIndex) {
+              categoryList.insertBefore(draggedCategory, item.nextSibling);
+            } else {
+              categoryList.insertBefore(draggedCategory, item);
+            }
+            updateCategorySortOrder();
+          }
+        });
+
+        item.addEventListener('dragend', () => {
+          draggedCategory.classList.remove('dragging');
+          document.querySelectorAll('.category-list li').forEach(el => el.classList.remove('drag-over'));
+          draggedCategory = null;
+        });
+      });
+    }
+
+    async function updateCategorySortOrder() {
+      const sortedItems = Array.from(document.querySelectorAll('#categoryList > li[draggable="true"]'));
+      const sortData = sortedItems.map((item, index) => ({
+        id: parseInt(item.dataset.id),
+        sort_num: sortedItems.length - index // 简单倒序，确保越靠前的sort_num越大
+      }));
+
+      try {
+        await fetchData(`${API_BASE}categories/sort`, {
+          method: 'PATCH',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(sortData)
+        });
+        console.log('分类排序更新成功');
+        await loadCategories(); // 重新加载以确保数据同步
+      } catch (error) {
+        console.error('更新分类排序失败:', error);
+      }
+    }
+
+
+    // --- 链接管理 ---
+    async function loadLinks(categoryID = 0, isPublic = false) {
+      let url = `${API_BASE}links`;
+      const params = [];
+      if (categoryID > 0) {
+        params.push(`category_id=${categoryID}`);
+      }
+      if (isPublic) {
+        params.push('public=1');
+      }
+      if (params.length > 0) {
+        url += `?${params.join('&')}`;
+      }
+
+      links = await fetchData(url);
+      filterAndRenderLinks(); // Initial render and filter
+    }
+
+    function renderLinks(filteredLinks) {
+      const linksGrid = document.getElementById('linksGrid');
+      linksGrid.innerHTML = '';
+      if (filteredLinks.length === 0) {
+        linksGrid.innerHTML = '<p style="text-align: center; color: var(--text-secondary); width: 100%;">没有找到链接。</p>';
+        return;
+      }
+
+      filteredLinks.forEach(link => {
+        const card = document.createElement('div');
+        card.classList.add('link-card');
+        card.setAttribute('draggable', true);
+        card.dataset.id = link.id;
+        card.dataset.sortNum = link.sort_num;
+
+        card.innerHTML = `
+                    <h4>${link.title}</h4>
+                    <a href="${link.url}" target="_blank" class="link-url">${link.url}</a>
+                    <p>${link.description || '无描述'}</p>
+                    <div class="actions">
+                        <button class="edit-btn" data-id="${link.id}">编辑</button>
+                        <button class="delete-btn" data-id="${link.id}">删除</button>
+                    </div>
+                `;
+        linksGrid.appendChild(card);
+      });
+
+      // 绑定编辑/删除事件
+      linksGrid.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const linkId = parseInt(e.target.dataset.id);
+          const linkToEdit = links.find(l => l.id === linkId);
+          if (linkToEdit) openLinkModal(linkToEdit);
+        });
+      });
+      linksGrid.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const linkId = parseInt(e.target.dataset.id);
+          deleteLink(linkId);
+        });
+      });
+      setupLinkDragAndDrop();
+    }
+
+    function filterAndRenderLinks() {
+      const searchInput = document.getElementById('linkSearchInput');
+      const searchTerm = searchInput.value.toLowerCase();
+      const filteredLinks = links.filter(link =>
+        link.title.toLowerCase().includes(searchTerm) ||
+        link.description.toLowerCase().includes(searchTerm)
+      );
+      renderLinks(filteredLinks);
+    }
+
+    // 链接添加/编辑模态框
+    const linkModalOverlay = document.getElementById('linkModalOverlay');
+    const linkForm = document.getElementById('linkForm');
+    const linkIdInput = document.getElementById('linkId');
+    const linkTitleInput = document.getElementById('linkTitle');
+    const linkUrlInput = document.getElementById('linkUrl');
+    const linkDescriptionInput = document.getElementById('linkDescription');
+    const linkCategorySelect = document.getElementById('linkCategory');
+    const linkIsPublicInput = document.getElementById('linkIsPublic');
+    const linkModalTitle = document.getElementById('linkModalTitle');
+    const cancelLinkModalBtn = document.getElementById('cancelLinkModalBtn');
+
+    function openLinkModal(link = null) {
+      // 填充分类选项
+      linkCategorySelect.innerHTML = '<option value="0">无分类</option>';
+      categories.forEach(cat => {
+        const option = document.createElement('option');
+        option.value = cat.id;
+        option.textContent = cat.name;
+        linkCategorySelect.appendChild(option);
+      });
+
+      if (link) {
+        linkIdInput.value = link.id;
+        linkTitleInput.value = link.title;
+        linkUrlInput.value = link.url;
+        linkDescriptionInput.value = link.description;
+        linkCategorySelect.value = link.category_id || 0;
+        linkIsPublicInput.checked = link.is_public;
+        linkModalTitle.textContent = '编辑链接';
+      } else {
+        linkIdInput.value = '';
+        linkForm.reset();
+        linkCategorySelect.value = currentCategoryID > 0 ? currentCategoryID : 0; // 默认选择当前分类
+        linkModalTitle.textContent = '添加链接';
+      }
+      linkModalOverlay.classList.add('open');
+    }
+
+    function closeLinkModal() {
+      linkModalOverlay.classList.remove('open');
+      linkForm.reset();
+    }
+
+    linkForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = linkIdInput.value ? parseInt(linkIdInput.value) : 0;
+      const title = linkTitleInput.value.trim();
+      const url = linkUrlInput.value.trim();
+      const description = linkDescriptionInput.value.trim();
+      const category_id = parseInt(linkCategorySelect.value) || 0;
+      const is_public = linkIsPublicInput.checked;
+
+      if (!title || !url) {
+        alert('标题和URL不能为空');
+        return;
+      }
+
+      const linkData = {
+        id: id,
+        title: title,
+        url: url,
+        description: description,
+        category_id: category_id,
+        is_public: is_public,
+        sort_num: 0 // 新增时默认排序
+      };
+
+      try {
+        await fetchData(`${API_BASE}link`, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(linkData)
+        });
+        closeLinkModal();
+        await loadLinks(currentCategoryID, publicMode); // 重新加载并渲染链接
+      } catch (error) {
+        console.error('保存链接失败:', error);
+      }
+    });
+
+    cancelLinkModalBtn.addEventListener('click', closeLinkModal);
+    linkModalOverlay.addEventListener('click', (e) => {
+      if (e.target === linkModalOverlay) {
+        closeLinkModal();
+      }
+    });
+
+    async function deleteLink(id) {
+      if (!confirm('确定要删除此链接吗？')) return;
+      try {
+        await fetchData(`${API_BASE}link?id=${id}`, {method: 'DELETE'});
+        await loadLinks(currentCategoryID, publicMode); // 重新加载并渲染链接
+      } catch (error) {
+        console.error('删除链接失败:', error);
+      }
+    }
+
+    // 链接拖拽排序
+    let draggedLink = null;
+    const linksGrid = document.getElementById('linksGrid');
+
+    function setupLinkDragAndDrop() {
+      const linkCards = document.querySelectorAll('.link-card');
+      linkCards.forEach(card => {
+        card.addEventListener('dragstart', (e) => {
+          draggedLink = card;
+          e.dataTransfer.effectAllowed = 'move';
+          e.dataTransfer.setData('text/plain', card.dataset.id);
+          setTimeout(() => card.classList.add('dragging'), 0);
+        });
+
+        card.addEventListener('dragenter', (e) => {
+          e.preventDefault();
+          if (card !== draggedLink) {
+            card.classList.add('drag-over');
+          }
+        });
+
+        card.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          if (card !== draggedLink) {
+            e.dataTransfer.dropEffect = 'move';
+          }
+        });
+
+        card.addEventListener('dragleave', () => {
+          card.classList.remove('drag-over');
+        });
+
+        card.addEventListener('drop', (e) => {
+          e.preventDefault();
+          card.classList.remove('drag-over');
+          if (draggedLink && draggedLink !== card) {
+            const draggedIndex = Array.from(linksGrid.children).indexOf(draggedLink);
+            const targetIndex = Array.from(linksGrid.children).indexOf(card);
+
+            if (draggedIndex < targetIndex) {
+              linksGrid.insertBefore(draggedLink, card.nextSibling);
+            } else {
+              linksGrid.insertBefore(draggedLink, card);
+            }
+            updateLinkSortOrder();
+          }
+        });
+
+        card.addEventListener('dragend', () => {
+          draggedLink.classList.remove('dragging');
+          document.querySelectorAll('.link-card').forEach(el => el.classList.remove('drag-over'));
+          draggedLink = null;
+        });
+      });
+    }
+
+    async function updateLinkSortOrder() {
+      const sortedItems = Array.from(document.querySelectorAll('.link-card'));
+      const sortData = sortedItems.map((item, index) => ({
+        id: parseInt(item.dataset.id),
+        sort_num: sortedItems.length - index // 简单倒序，确保越靠前的sort_num越大
+      }));
+
+      try {
+        await fetchData(`${API_BASE}links/sort`, {
+          method: 'PATCH',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(sortData)
+        });
+        console.log('链接排序更新成功');
+        await loadLinks(currentCategoryID, publicMode); // 重新加载以确保数据同步
+      } catch (error) {
+        console.error('更新链接排序失败:', error);
+      }
+    }
+
+
+    // --- 初始化和事件绑定 ---
+    document.addEventListener('DOMContentLoaded', async () => {
+      // 初始化加载数据
+      await loadCategories();
+      await loadLinks(currentCategoryID, publicMode);
+      renderNavigationMenu(); // 渲染导航菜单
+
+      // 搜索输入框事件
+      document.getElementById('linkSearchInput').addEventListener('input', debounce(filterAndRenderLinks, 300));
+      document.getElementById('categorySearchInput').addEventListener('input', debounce(() => {
+        const searchTerm = document.getElementById('categorySearchInput').value.toLowerCase();
+        document.querySelectorAll('#categoryList li[draggable="true"]').forEach(li => {
+          const categoryName = li.querySelector('button').textContent.toLowerCase();
+          if (categoryName.includes(searchTerm)) {
+            li.style.display = '';
+          } else {
+            li.style.display = 'none';
+          }
+        });
+      }, 300));
+
+
+      // 添加链接按钮
+      document.getElementById('addLinkBtn').addEventListener('click', () => openLinkModal());
+      // 添加分类按钮
+      document.getElementById('addCategoryBtn').addEventListener('click', addCategory);
+
+      // 初始选择“所有链接”
+      selectCategory(0, false);
+      // 绑定主题设置按钮
+      if (window.bindThemeButton) {
+        window.bindThemeButton();
+      }
+    });
+
+    // --- 导航菜单渲染 ---
+    function renderNavigationMenu() {
+      const hamburgerIcon = document.getElementById('hamburgerIcon');
+      const dropdownNavMenu = document.getElementById('dropdownNavMenu');
+      dropdownNavMenu.innerHTML = ''; // 清空现有内容
+
+      if (window.GlobalNavMenu) {
+        const isLoggedIn = window.isLoggedIn ? window.isLoggedIn() : false;
+
+        window.GlobalNavMenu.forEach(item => {
+          // 根据登录状态过滤导航项
+          if (item.onlyWhenNotLogin && isLoggedIn) {
+            return;
+          }
+          if (item.onlyWhenLogin && !isLoggedIn) {
+            return;
+          }
+
+          const link = document.createElement('a');
+          link.href = item.url;
+          link.textContent = item.name;
+          link.classList.add('nav-item'); // 使用新的class for dropdown items
+
+          // 如果是退出按钮，使用定义的函数
+          if (item.key === 'logout') {
+            link.href = 'javascript:void(0)'; // 防止页面跳转
+            link.addEventListener('click', (e) => {
+              e.preventDefault(); // Prevent default link behavior
+              if (window.logoutAndRedirect) {
+                window.logoutAndRedirect();
+                // Close menu after action
+                dropdownNavMenu.classList.remove('open');
+              }
+            });
+          } else {
+            // For other links, close menu on click
+            link.addEventListener('click', () => {
+              dropdownNavMenu.classList.remove('open');
+            });
+          }
+
+          dropdownNavMenu.appendChild(link);
+        });
+      }
+
+      // 汉堡图标点击事件
+      hamburgerIcon.addEventListener('click', (e) => {
+        e.stopPropagation(); // 防止事件冒泡到document，立即关闭
+        dropdownNavMenu.classList.toggle('open');
+      });
+
+      // 点击文档其他地方关闭菜单
+      document.addEventListener('click', (e) => {
+        if (!hamburgerIcon.contains(e.target) && !dropdownNavMenu.contains(e.target)) {
+          dropdownNavMenu.classList.remove('open');
+        }
+      });
+    }
+
   </script>
 </body>
+
 </html>
