@@ -933,6 +933,7 @@
     let currentCategoryID = 0; // 0 for "All Links"
     let publicMode = false; // Whether currently viewing public links
     let editMode = false; // New: Global edit mode state
+    let isUserLoggedIn = false; // To hold login status
 
     let sidebar;
     let mainContent;
@@ -984,7 +985,12 @@
     // --- 分类管理 ---
     async function loadCategories(isPublic = false) {
       const url = `${API_BASE}categories${isPublic ? '?public=1' : ''}`;
-      categories = await fetchData(url);
+      try {
+        categories = await fetchData(url);
+      } catch (error) {
+        console.error("[links] 加载分类失败:", error);
+        categories = [];
+      }
       renderCategories();
     }
 
@@ -1000,7 +1006,7 @@
         button.textContent = name;
         button.dataset.id = id;
         button.classList.add('category-btn');
-        if ((currentCategoryID === id && !publicMode && id !== -1) || (id === -1 && publicMode)) {
+        if (currentCategoryID === id) { // 简化active逻辑
           button.classList.add('active');
         }
         button.addEventListener('click', (e) => {
@@ -1008,7 +1014,7 @@
             e.preventDefault();
             e.stopPropagation();
 
-            if (id === 0 || id === -1) {
+            if (id === 0) {
               alert("这个分类不能被编辑。");
               return;
             }
@@ -1025,17 +1031,13 @@
 
       // 添加“所有链接”选项
       const allLinksItem = document.createElement('li');
-      allLinksItem.appendChild(createCategoryButton(0, '所有链接', false));
+      // 未登录时，"所有链接"也应在public模式下工作
+      allLinksItem.appendChild(createCategoryButton(0, '所有链接', publicMode));
       categoryList.appendChild(allLinksItem);
-
-      // 添加“公共链接”选项
-      const publicLinksItem = document.createElement('li');
-      publicLinksItem.appendChild(createCategoryButton(-1, '公开链接', true));
-      categoryList.appendChild(publicLinksItem);
 
       // 渲染其他分类
       categories.forEach(category => {
-        const nameText = category.name + (category.is_public ? ' (公开)' : '');
+        const nameText = category.name + (isUserLoggedIn && category.is_public ? ' (公开)' : '');
         const li = document.createElement('li');
         li.dataset.id = category.id;
         li.dataset.sortNum = category.sort_num;
@@ -1110,11 +1112,12 @@
       if (editMode) return; // Prevent navigation in edit mode
 
       currentCategoryID = id;
-      publicMode = isPublic;
+      // For non-logged-in users, publicMode should always be true.
+      // For logged-in users, it depends on the category selected.
+      publicMode = !isUserLoggedIn || isPublic;
+
       const categoryTitleElement = document.getElementById('currentCategoryTitle');
-      if (isPublic) {
-        categoryTitleElement.textContent = '公开链接';
-      } else if (id === 0) {
+      if (id === 0) {
         categoryTitleElement.textContent = '所有链接';
       } else {
         const selectedCategory = categories.find(cat => cat.id === id);
@@ -1122,17 +1125,13 @@
       }
       // 更新分类列表的激活状态
       document.querySelectorAll('.category-btn').forEach(btn => {
-        if (parseInt(btn.dataset.id) === id && !isPublic) {
-          btn.classList.add('active');
-        } else if (parseInt(btn.dataset.id) === -1 && isPublic) {
-          btn.classList.add('active');
-        }
-        else {
-          btn.classList.remove('active');
-        }
+        btn.classList.toggle('active', parseInt(btn.dataset.id) === id);
       });
-      loadLinks(id, isPublic);
-      renderCategories(); // Re-render to update UI for edit mode
+
+      loadLinks(id, publicMode);
+      // Re-render to update UI for edit mode
+      // This might be excessive, but it keeps the active state correct.
+      renderCategories();
       hideSidebar();
     }
 
@@ -1141,11 +1140,11 @@
     async function deleteCategory(id) {
       if (!confirm('确定要删除此分类吗？关联的链接不会被删除，但会失去分类。')) return;
       try {
-        await fetchData(`${API_BASE}categories?id=${id}`, {method: 'DELETE'});
-        await loadCategories();
+        await fetchData(`${API_BASE}categories?id=${id}`, { method: 'DELETE' });
+        await loadCategories(); // 重新加载分类
         // 如果删除的是当前分类，则切换到“所有链接”
         if (currentCategoryID === id) {
-          selectCategory(0, false);
+          selectCategory(0, publicMode);
         }
       } catch (error) {
         console.error('删除分类失败:', error);
@@ -1317,7 +1316,8 @@
       if (categoryID > 0) {
         params.push(`category_id=${categoryID}`);
       }
-      if (isPublic) {
+      // When not logged in, we must force public=1
+      if (!isUserLoggedIn || isPublic) {
         params.push('public=1');
       }
       if (params.length > 0) {
@@ -1652,7 +1652,8 @@
       const addLinkBtn = document.getElementById('addLinkBtn');
       const addCategoryBtn = document.getElementById('addCategoryBtn');
       const searchInput = document.getElementById('searchInput');
-      const newCategoryNameInput = document.getElementById('newCategoryName');
+
+      isUserLoggedIn = window.isLoggedIn && window.isLoggedIn();
 
       if (showSidebarBtn && sidebar && closeSidebarBtn) {
         showSidebarBtn.addEventListener('click', showSidebar);
@@ -1671,23 +1672,31 @@
 
       // 定义切换编辑模式函数
       function toggleEditMode() {
+        if (!isUserLoggedIn) return; // 安全检查
         editMode = !editMode;
-        toggleEditModeBtn.textContent = editMode ? '退出编辑模式' : '进入编辑模式';
+        toggleEditModeBtn.textContent = editMode ? '完成编辑' : '编辑排序';
+        toggleEditModeBtn.innerHTML = editMode ? `
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="vertical-align:middle" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7 14.5L3.5 11L2 12.5L7 17.5L18 6.5L16.5 5L7 14.5Z" fill="currentColor"/>
+          </svg> <span>完成编辑</span>
+        ` : `
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="vertical-align:middle" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 15.5V17H5.5L14.1 8.4L12.6 6.9L4 15.5Z" fill="currentColor"/>
+            <path d="M16.7 6.3C17.1 5.9 17.1 5.3 16.7 4.9L15.1 3.3C14.7 2.9 14.1 2.9 13.7 3.3L12.1 4.9L15.1 7.9L16.7 6.3Z" fill="currentColor"/>
+          </svg> <span>编辑排序</span>
+        `;
+
 
         // 切换按钮和输入框的显示
         addLinkBtn.style.display = editMode ? 'inline-block' : 'none'; // Only visible in edit mode
         addCategoryBtn.style.display = editMode ? 'inline-block' : 'none'; // Only visible in edit mode
         searchInput.style.display = editMode ? 'none' : 'inline-block'; // Hidden in edit mode
-        // newCategoryNameInput is removed from HTML, so this line is no longer needed
 
         // 重新渲染UI
         renderCategories();      // 重新渲染分类以应用编辑模式样式和事件
         filterAndRenderLinks();  // 重新渲染链接以应用编辑模式样式和事件
       }
 
-      // 初始化加载数据
-      await loadCategories();
-      await loadLinks(currentCategoryID, publicMode);
       renderNavigationMenu(); // 渲染导航菜单
 
       // 链接搜索输入框事件
@@ -1698,17 +1707,24 @@
       // 添加分类按钮
       addCategoryBtn.addEventListener('click', () => openCategoryModal());
 
-      // 初始选择“所有链接”
-      selectCategory(0, false);
       // 绑定主题设置按钮
       if (window.bindThemeButton) {
         window.bindThemeButton();
       }
 
-      // 仅在登录时显示编辑模式按钮并绑定事件
-      if (window.isLoggedIn && window.isLoggedIn()) {
+      // 根据登录状态初始化页面
+      if (isUserLoggedIn) {
         toggleEditModeBtn.style.display = 'inline-block';
         toggleEditModeBtn.addEventListener('click', toggleEditMode);
+        await loadCategories(false);
+        selectCategory(0, false);
+      } else {
+        publicMode = true; // 强制公共模式
+        toggleEditModeBtn.style.display = 'none';
+        addLinkBtn.style.display = 'none';
+        addCategoryBtn.style.display = 'none';
+        await loadCategories(true);
+        selectCategory(0, true);
       }
     });
 
