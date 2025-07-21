@@ -141,7 +141,7 @@ function addAdultAPI() {
                        class="form-checkbox h-3 w-3 text-blue-600 bg-[#222] border border-[#333] api-adult"
                        ${checked ? 'checked' : ''}
                        data-api="${apiKey}">
-                <label for="api_${apiKey}" class="ml-1 text-xs text-pink-400 truncate">${api.name}</label>
+                <label for="api_${apiKey}" class="ml-1 text-xs text-pink-400 truncate">${api.name}<span style="color:red">*</span></label>
             `
       adultdiv.appendChild(checkbox)
 
@@ -221,6 +221,8 @@ function renderCustomAPIsList() {
     const apiItem = document.createElement('div')
     apiItem.className = 'flex items-center justify-between p-1 mb-1 bg-[#222] rounded'
     const textColorClass = api.isAdult ? 'text-pink-400' : 'text-white'
+    // 为成人站点添加红色星号
+    const adultMark = api.isAdult ? '<span style="color:red">*</span>' : ''
     const adultTag = api.isAdult ? '<span class="text-xs text-pink-400 mr-1">(18+)</span>' : ''
     // 新增 detail 地址显示
     const detailLine = api.detail ? `<div class="text-xs text-gray-400 truncate">detail: ${api.detail}</div>` : ''
@@ -232,7 +234,7 @@ function renderCustomAPIsList() {
                        data-custom-index="${index}">
                 <div class="flex-1 min-w-0">
                     <div class="text-xs font-medium ${textColorClass} truncate">
-                        ${adultTag}${api.name}
+                        ${adultTag}${api.name}${adultMark}
                     </div>
                     <div class="text-xs text-gray-500 truncate">${api.url}</div>
                     ${detailLine}
