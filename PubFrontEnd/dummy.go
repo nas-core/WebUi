@@ -15,6 +15,7 @@ type NavMenuItem struct {
 	Key              string `json:"key"`
 	OnlyWhenLogin    bool   `json:"onlyWhenLogin,omitempty"`
 	OnlyWhenNotLogin bool   `json:"onlyWhenNotLogin,omitempty"`
+	OnlyWhenAdmin    bool   `json:"onlyWhenAdmin,omitempty"`
 }
 
 func HandlerNavJS(nsCfg *system_config.SysCfg, logger *zap.SugaredLogger, qpsCounter *uint64) http.HandlerFunc {
@@ -33,6 +34,7 @@ func HandlerNavJS(nsCfg *system_config.SysCfg, logger *zap.SugaredLogger, qpsCou
 			menu = append(menu, NavMenuItem{Name: "视频订阅", URL: system_config.PrefixNasCoreTv, Key: "vod"})
 		}
 		menu = append(menu,
+			NavMenuItem{Name: "系统管理", URL: system_config.PrefixPublicFun + "/system/", Key: "system", OnlyWhenAdmin: true},
 			NavMenuItem{Name: "登录", URL: system_config.PrefixPublicFun + "/login/?redirect=${location}", Key: "login", OnlyWhenNotLogin: true},
 			NavMenuItem{Name: "退出", URL: "javascript:logoutAndRedirect()", Key: "logout", OnlyWhenLogin: true},
 		)
