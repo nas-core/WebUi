@@ -258,8 +258,22 @@
       /* Push icon to the right within the flex container */
       cursor: grab;
       /* 指示可拖动 */
-      padding: 0 0.5rem;
-      /* 为拖动图标提供一些点击/拖动区域 */
+      padding: 0.25rem 0.75rem;
+      /* Increased padding for better hit area */
+      font-size: 1.2rem;
+      /* Make icon larger */
+      color: var(--text-secondary);
+      /* Default color */
+      border-radius: 0.2rem;
+      /* Consistent with link action icon */
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    .sidebar .category-action-icon:hover {
+      background-color: var(--hover-bg);
+      /* Highlight on hover */
+      color: var(--primary-color);
+      /* Change color on hover */
     }
 
     /* 编辑模式下显示 category-action-icon */
@@ -268,8 +282,10 @@
     }
 
     .link-card .action-icon {
-      width: 1.1rem;
-      height: 1.1rem;
+      width: 1.5rem;
+      /* Increased size for easier grab */
+      height: 1.5rem;
+      /* Increased size for easier grab */
       display: flex;
       align-items: center;
       justify-content: center;
@@ -280,7 +296,8 @@
       border-radius: 0.2rem;
       transition: background-color 0.2s, color 0.2s, border-color 0.2s;
       font-weight: normal;
-      font-size: 0.75rem;
+      font-size: 1rem;
+      /* Increased font size for icon */
       border: 1px solid transparent;
     }
 
@@ -923,7 +940,7 @@
 
         const dragHandle = document.createElement('span');
         dragHandle.classList.add('category-action-icon');
-        dragHandle.textContent = '☰'; // Hamburger icon for drag
+        dragHandle.textContent = '✠'; // Hamburger icon for drag
         dragHandle.setAttribute('draggable', editMode); // Only draggable in edit mode
 
         // Attach drag events to the handle
@@ -1153,8 +1170,8 @@
           body: JSON.stringify(sortData)
         });
         console.log('分类排序更新成功');
-        // No need to reload categories completely, just update UI
-        renderCategories();
+        await loadCategories(); // 重新加载最新的分类数据
+        renderCategories(); // 重新渲染分类列表
       } catch (error) {
         console.error('更新分类排序失败:', error);
       }
@@ -1216,9 +1233,9 @@
         const actionIcon = document.createElement('span');
         actionIcon.classList.add('action-icon');
         if (!editMode) {
-          actionIcon.textContent = '📃'; // 文档图标
+          actionIcon.textContent = '•'; // 图标
         } else {
-          actionIcon.textContent = '☰'; // 编辑模式下三横线
+          actionIcon.textContent = '✠'; // 编辑模式
         }
 
         // Append elements to card
@@ -1473,8 +1490,8 @@
           body: JSON.stringify(sortData)
         });
         console.log('链接排序更新成功');
-        // No need to reload links completely, just update UI
-        filterAndRenderLinks();
+        await loadLinks(); // 重新加载最新的链接数据
+        filterAndRenderLinks(); // 重新渲染链接列表
       } catch (error) {
         console.error('更新链接排序失败:', error);
       }
