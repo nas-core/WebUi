@@ -96,30 +96,67 @@
       .catch(() => window.showNotification('获取全局设置失败', 'error'));
   }
 
-  // 监听左侧导航切换区块，加载html后自动渲染表单
+  // 根据 hash 加载页面
+  function loadSectionFromHash() {
+    const hash = window.location.hash;
+    if (hash.startsWith('#system_page=')) {
+      const page = hash.replace('#system_page=', '');
+      // 找到对应的 data-section
+      const navLinks = document.querySelectorAll('aside nav a[data-section]');
+      let found = false;
+      navLinks.forEach(a => {
+        const section = a.getAttribute('data-section');
+        const sectionName = section.replace('.html', '');
+        if (sectionName.toLowerCase() === page.toLowerCase()) {
+          a.classList.add('is-active');
+          // 触发内容加载
+          fetch(section)
+            .then(r => r.text())
+            .then(html => {
+              document.getElementById('system-sections').innerHTML = html;
+              renderAllSections();
+            });
+          found = true;
+        } else {
+          a.classList.remove('is-active');
+        }
+      });
+      if (!found) {
+        // hash不合法，显示欢迎页
+        const welcome = document.getElementById('welcome-info');
+        if (welcome) {
+          document.getElementById('system-sections').innerHTML = welcome.outerHTML;
+        }
+      }
+    } else {
+      // 没有hash，显示欢迎页
+      const welcome = document.getElementById('welcome-info');
+      if (welcome) {
+        document.getElementById('system-sections').innerHTML = welcome.outerHTML;
+      }
+      // 取消激活
+      document.querySelectorAll('aside nav a[data-section]').forEach(x => x.classList.remove('is-active'));
+    }
+  }
+
+  // 侧边栏点击事件，设置hash，不直接加载内容
   document.addEventListener('DOMContentLoaded', function () {
-    // 监听区块加载
     document.querySelectorAll('aside nav a[data-section]').forEach(a => {
       a.addEventListener('click', function (e) {
         e.preventDefault();
         const file = this.getAttribute('data-section');
-        const container = document.getElementById('system-sections');
-        // 激活当前导航
-        document.querySelectorAll('aside nav a[data-section]').forEach(x => x.classList.remove('is-active'));
-        this.classList.add('is-active');
-        // 加载区块并替换内容
-        fetch(file)
-          .then(r => r.text())
-          .then(html => {
-            container.innerHTML = html;
-            // 加载后渲染表单
-            renderAllSections();
-          });
+        const sectionName = file.replace('.html', '');
+        window.location.hash = '#system_page=' + sectionName;
+        // loadSectionFromHash 会自动加载内容
       });
     });
     // 页面初次加载时获取全局设置
     getGlobalSettings();
+    setTimeout(loadSectionFromHash, 0); // 等待DOM渲染后执行
   });
+
+  // hash变化监听
+  window.addEventListener('hashchange', loadSectionFromHash);
 
   // 通用通知（如已在主页面定义可省略）
   if (!window.showNotification) {
