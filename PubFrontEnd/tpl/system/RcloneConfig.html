@@ -2,44 +2,44 @@
   <h2 class="text-lg font-semibold mb-4 text-blue-700 dark:text-blue-400 tracking-tight">Rclone 云存储配置</h2>
   <form class="space-y-4">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div class="flex items-center space-x-2">
+      <div class="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-2">
         <input type="checkbox" id="RcloneAutoMountEnable" class="mr-2" data-bind="ThirdPartyExt.Rclone.AutoMountEnable">
         <label for="RcloneAutoMountEnable" class="block text-sm font-medium text-gray-700 dark:text-gray-100">启用 Rclone自动挂载</label>
       </div>
       <div>
         <label for="ThirdPartyExtRcloneDownLoadlink" class="block text-sm font-medium text-gray-700 dark:text-gray-100">rclone github下载地址</label>
-        <input type="text" id="ThirdPartyExtRcloneDownLoadlink" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" data-bind="ThirdPartyExt.Rclone.DownLoadlink">
+        <input type="text" id="ThirdPartyExtRcloneDownLoadlink" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition w-full" data-bind="ThirdPartyExt.Rclone.DownLoadlink">
       </div>
       <div>
         <label for="ThirdPartyExtRcloneVersion" class="block text-sm font-medium text-gray-700 dark:text-gray-100">Version</label>
-        <input type="text" id="ThirdPartyExtRcloneVersion" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" data-bind="ThirdPartyExt.Rclone.Version">
+        <input type="text" id="ThirdPartyExtRcloneVersion" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition w-full" data-bind="ThirdPartyExt.Rclone.Version">
       </div>
       <div>
         <label for="RcloneBinPath" class="block text-sm font-medium text-gray-700 dark:text-gray-100">Rclone 路径</label>
-        <div class="flex gap-2">
-          <input type="text" id="RcloneBinPath" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" data-bind="ThirdPartyExt.Rclone.BinPath">
-          <button type="button" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow transition" onclick="downloadRclone()">下载</button>
+        <div class="flex flex-col md:flex-row gap-2">
+          <input type="text" id="RcloneBinPath" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition w-full" data-bind="ThirdPartyExt.Rclone.BinPath">
+          <button type="button" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow transition w-full md:w-auto" onclick="downloadRclone()">下载</button>
         </div>
       </div>
       <div class="col-span-2">
         <label for="ThirdPartyExtRcloneAutoMountCommand" class="block text-sm font-medium text-gray-700 dark:text-gray-100">rclone自动挂载命令</label>
-        <div class="flex gap-2">
-          <textarea id="ThirdPartyExtRcloneAutoMountCommand" rows="2" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" data-bind="ThirdPartyExt.Rclone.AutoMountCommand"></textarea>
-          <button type="button" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow transition" onclick="copyRcloneMountCommand()">复制命令</button>
+        <div class="flex flex-col md:flex-row gap-2">
+          <textarea id="ThirdPartyExtRcloneAutoMountCommand" rows="2" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition w-full" data-bind="ThirdPartyExt.Rclone.AutoMountCommand"></textarea>
+          <button type="button" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow transition w-full md:w-auto" onclick="copyRcloneMountCommand()">复制命令</button>
         </div>
         <span class="text-xs text-gray-500 dark:text-gray-400">（ 如果命令最后结束 是字符 &nascore ，那么会作为后台命令执行）</span>
       </div>
       <div class="col-span-2">
         <label for="ThirdPartyExtRcloneAutoUnMountCommand" class="block text-sm font-medium text-gray-700 dark:text-gray-100">rclone自动卸载命令</label>
-        <textarea id="ThirdPartyExtRcloneAutoUnMountCommand" rows="2" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" data-bind="ThirdPartyExt.Rclone.AutoUnMountCommand"></textarea>
+        <textarea id="ThirdPartyExtRcloneAutoUnMountCommand" rows="2" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition w-full" data-bind="ThirdPartyExt.Rclone.AutoUnMountCommand"></textarea>
       </div>
     </div>
     <div class="mt-2 text-xs text-gray-500 dark:text-gray-400">
       rclone的目录挂载 在linux 依赖 fuse,频繁挂载卸载可能会出错。请务必测试命令正常后再托管到nascore的跟随启动启动挂载。<br />
       nascore在挂载之前会先执行 卸载命令，nascore退出的时候也会执行卸载命令。
     </div>
-    <div class="mt-6 flex justify-end">
-      <button type="button" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg shadow transition" onclick="saveGlobalSetting()">保存设置</button>
+    <div class="mt-6 flex flex-col md:flex-row justify-end gap-2">
+      <button type="button" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg shadow transition w-full md:w-auto" onclick="saveGlobalSetting()">保存设置</button>
     </div>
   </form>
 </section> 

@@ -4,36 +4,36 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div>
         <label for="ThirdPartyExtDdnsGODownLoadlink" class="block text-sm font-medium text-gray-700 dark:text-gray-100">DDNS github下载地址</label>
-        <input type="text" id="ThirdPartyExtDdnsGODownLoadlink" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" data-bind="ThirdPartyExt.DdnsGO.DownLoadlink">
+        <input type="text" id="ThirdPartyExtDdnsGODownLoadlink" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition w-full" data-bind="ThirdPartyExt.DdnsGO.DownLoadlink">
       </div>
       <div>
         <label for="ThirdPartyExtDdnsGOVersion" class="block text-sm font-medium text-gray-700 dark:text-gray-100">Version</label>
-        <input type="text" id="ThirdPartyExtDdnsGOVersion" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" data-bind="ThirdPartyExt.DdnsGO.Version">
+        <input type="text" id="ThirdPartyExtDdnsGOVersion" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition w-full" data-bind="ThirdPartyExt.DdnsGO.Version">
       </div>
-      <div class="flex items-center space-x-2">
+      <div class="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-2">
         <input type="checkbox" id="IsDDnsGOProxyEnable" class="mr-2" data-bind="ThirdPartyExt.DdnsGO.IsDDnsGOProxyEnable">
         <label for="IsDDnsGOProxyEnable" class="block text-sm font-medium text-gray-700 dark:text-gray-100">启用 DDNS-GO 反向代理</label>
       </div>
       <div>
         <label for="ThirdPartyExtReverseproxyUrl" class="block text-sm font-medium text-gray-700 dark:text-gray-100">DDNS-GO 反向代理地址</label>
-        <input type="text" id="ThirdPartyExtReverseproxyUrl" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" data-bind="ThirdPartyExt.DdnsGO.ReverseproxyUrl">
+        <input type="text" id="ThirdPartyExtReverseproxyUrl" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition w-full" data-bind="ThirdPartyExt.DdnsGO.ReverseproxyUrl">
       </div>
-      <div class="flex items-center space-x-2">
+      <div class="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-2">
         <input type="checkbox" id="DDNSGOAutoMountEnable" class="mr-2" data-bind="ThirdPartyExt.DdnsGO.AutoStartEnable">
         <label for="DDNSGOAutoMountEnable" class="block text-sm font-medium text-gray-700 dark:text-gray-100">启用 DDNS-GO 跟随启动</label>
       </div>
       <div>
         <label for="DdnsGOBinPath" class="block text-sm font-medium text-gray-700 dark:text-gray-100">DDNS-go 路径</label>
-        <div class="flex gap-2">
-          <input type="text" id="DdnsGOBinPath" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" data-bind="ThirdPartyExt.DdnsGO.BinPath">
-          <button type="button" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow transition" onclick="downloadDDNSGo()">下载</button>
+        <div class="flex flex-col md:flex-row gap-2">
+          <input type="text" id="DdnsGOBinPath" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition w-full" data-bind="ThirdPartyExt.DdnsGO.BinPath">
+          <button type="button" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow transition w-full md:w-auto" onclick="downloadDDNSGo()">下载</button>
         </div>
       </div>
       <div>
         <label for="ThirdPartyExtDdnsGOConfigFilePath" class="block text-sm font-medium text-gray-700 dark:text-gray-100">配置文件</label>
-        <div class="flex gap-2">
-          <input type="text" id="ThirdPartyExtDdnsGOConfigFilePath" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" data-bind="ThirdPartyExt.DdnsGO.ConfigFilePath">
-          <button type="button" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg shadow transition" onclick="resetDDNSGOPassword()">重置密码</button>
+        <div class="flex flex-col md:flex-row gap-2">
+          <input type="text" id="ThirdPartyExtDdnsGOConfigFilePath" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition w-full" data-bind="ThirdPartyExt.DdnsGO.ConfigFilePath">
+          <button type="button" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg shadow transition w-full md:w-auto" onclick="resetDDNSGOPassword()">重置密码</button>
         </div>
       </div>
     </div>
@@ -41,8 +41,8 @@
       DDNS-GO 可以下载到和nascore 同目录下，并尝试解压，你也可以用其他方式自行下载安装。<br>
       如果自行安装的ddns-go 记得修改路径，或者自行安装成服务模式。
     </div>
-    <div class="mt-6 flex justify-end">
-      <button type="button" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg shadow transition" onclick="saveGlobalSetting()">保存设置</button>
+    <div class="mt-6 flex flex-col md:flex-row justify-end gap-2">
+      <button type="button" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg shadow transition w-full md:w-auto" onclick="saveGlobalSetting()">保存设置</button>
     </div>
   </form>
 </section> 

@@ -4,28 +4,28 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div>
         <label for="ThirdPartyExtOpenlistDownLoadlink" class="block text-sm font-medium text-gray-700 dark:text-gray-100">openlist github下载地址</label>
-        <input type="text" id="ThirdPartyExtOpenlistDownLoadlink" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" data-bind="ThirdPartyExt.Openlist.DownLoadlink">
+        <input type="text" id="ThirdPartyExtOpenlistDownLoadlink" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition w-full" data-bind="ThirdPartyExt.Openlist.DownLoadlink">
       </div>
       <div>
         <label for="ThirdPartyExtOpenlistVersion" class="block text-sm font-medium text-gray-700 dark:text-gray-100">Version</label>
-        <input type="text" id="ThirdPartyExtOpenlistVersion" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" data-bind="ThirdPartyExt.Openlist.Version">
+        <input type="text" id="ThirdPartyExtOpenlistVersion" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition w-full" data-bind="ThirdPartyExt.Openlist.Version">
       </div>
-      <div class="flex items-center space-x-2">
+      <div class="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-2">
         <input type="checkbox" id="OpenlistAutoMountEnable" class="mr-2" data-bind="ThirdPartyExt.Openlist.AutoStartEnable">
         <label for="OpenlistAutoMountEnable" class="block text-sm font-medium text-gray-700 dark:text-gray-100">启用 OpenList 跟随启动</label>
       </div>
       <div>
         <label for="OpenlistBinPath" class="block text-sm font-medium text-gray-700 dark:text-gray-100">OpenList 路径</label>
-        <div class="flex gap-2">
-          <input type="text" id="OpenlistBinPath" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" data-bind="ThirdPartyExt.Openlist.BinPath">
-          <button type="button" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow transition" onclick="downloadOpenlist()">下载</button>
+        <div class="flex flex-col md:flex-row gap-2">
+          <input type="text" id="OpenlistBinPath" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition w-full" data-bind="ThirdPartyExt.Openlist.BinPath">
+          <button type="button" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow transition w-full md:w-auto" onclick="downloadOpenlist()">下载</button>
         </div>
       </div>
       <div>
         <label for="ThirdPartyExtOpenlistDataPath" class="block text-sm font-medium text-gray-700 dark:text-gray-100">数据目录</label>
-        <div class="flex gap-2">
-          <input type="text" id="ThirdPartyExtOpenlistDataPath" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" data-bind="ThirdPartyExt.Openlist.DataPath">
-          <button type="button" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg shadow transition" onclick="resetOpenListPassword()">重置密码</button>
+        <div class="flex flex-col md:flex-row gap-2">
+          <input type="text" id="ThirdPartyExtOpenlistDataPath" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition w-full" data-bind="ThirdPartyExt.Openlist.DataPath">
+          <button type="button" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg shadow transition w-full md:w-auto" onclick="resetOpenListPassword()">重置密码</button>
         </div>
       </div>
     </div>
@@ -33,8 +33,8 @@
       OpenList 可以下载到和nascore 同目录下，并尝试解压，你也可以用其他方式自行下载安装。<br>
       如果自行安装的 OpenList 记得修改路径，或者自行安装成服务模式。
     </div>
-    <div class="mt-6 flex justify-end">
-      <button type="button" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg shadow transition" onclick="saveGlobalSetting()">保存设置</button>
+    <div class="mt-6 flex flex-col md:flex-row justify-end gap-2">
+      <button type="button" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg shadow transition w-full md:w-auto" onclick="saveGlobalSetting()">保存设置</button>
     </div>
   </form>
 </section> 
