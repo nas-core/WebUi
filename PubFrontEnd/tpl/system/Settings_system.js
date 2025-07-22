@@ -118,10 +118,20 @@
               // 新增：如果是LegoConfig.html，绑定按钮事件
               if (section === 'LegoConfig.html') {
                 setTimeout(() => {
-                  const btn = document.getElementById('lego-download-btn');
-                  if (btn) btn.onclick = window.downloadLego;
-                  const copyBtn = document.getElementById('lego-copy-command-btn');
-                  if (copyBtn) copyBtn.onclick = window.copyLegoCommand;
+                  // 加载 copyCommand.js 和 download.js
+                  const legoCopyScript = document.createElement('script');
+                  legoCopyScript.src = './copyCommand.js';
+                  document.body.appendChild(legoCopyScript);
+
+                  const legoDownloadScript = document.createElement('script');
+                  legoDownloadScript.src = './download.js';
+                  
+                  document.body.appendChild(legoDownloadScript);
+                  // 移除以下多余的事件绑定
+                  // const btn = document.getElementById('lego-download-btn');
+                  // if (btn) btn.onclick = window.downloadLego;
+                  // const copyBtn = document.getElementById('lego-copy-command-btn');
+                  // if (copyBtn) copyBtn.onclick = window.copyLegoCommand;
                 }, 0);
               }
             });

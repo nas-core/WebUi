@@ -81,4 +81,3 @@ document.getElementById('lego-download-btn').onclick = downloadLego
 
 // 挂到 window 上，方便外部绑定
 window.downloadLego = downloadLego
-window.copyLegoCommand = copyLegoCommand 
