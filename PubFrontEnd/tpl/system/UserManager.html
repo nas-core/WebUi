@@ -1,32 +1,32 @@
-<section id="user" class="bg-[var(--bg-card)] rounded-lg shadow p-6 border border-[var(--border-main)]">
-  <h2 class="text-xl font-semibold mb-4 text-blue-700">用户管理</h2>
+<section id="user" class="bg-white dark:bg-zinc-800 rounded-xl shadow-md border border-gray-200 dark:border-zinc-700 p-6 mb-6">
+  <h2 class="text-lg font-semibold mb-4 text-blue-700 dark:text-blue-400 tracking-tight">用户管理</h2>
   <div class="flex flex-wrap gap-2 mb-4 items-center">
-    <input type="text" id="searchUsername" placeholder="用户名" class="border rounded px-3 py-2 w-32 border-[var(--border-main)] bg-[var(--input-bg)] text-[var(--text-main)]">
-    <input type="text" id="searchHomeDir" placeholder="主目录" class="border rounded px-3 py-2 w-32 border-[var(--border-main)] bg-[var(--input-bg)] text-[var(--text-main)]">
-    <button id="searchBtn" class="bg-[var(--btn-main)] text-white px-4 py-2 rounded hover:bg-[var(--btn-hover)]">检索</button>
-    <button id="addUserBtn" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 ml-auto" data-modal-target="#addUserModal">添加用户</button>
+    <input type="text" id="searchUsername" placeholder="用户名" class="border rounded-lg border-gray-300 dark:border-zinc-700 px-3 py-2 w-32 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+    <input type="text" id="searchHomeDir" placeholder="主目录" class="border rounded-lg border-gray-300 dark:border-zinc-700 px-3 py-2 w-32 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+    <button id="searchBtn" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow transition">检索</button>
+    <button id="addUserBtn" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg shadow transition ml-auto" data-modal-target="#addUserModal">添加用户</button>
   </div>
   <div class="overflow-x-auto">
-    <table class="min-w-full text-sm text-left">
-      <thead class="bg-[var(--bg-main)]">
+    <table class="min-w-full text-sm text-left border border-gray-200 dark:border-zinc-700 rounded-xl overflow-hidden">
+      <thead class="bg-gray-100 dark:bg-zinc-900">
         <tr>
-          <th class="px-4 py-2">用户ID</th>
-          <th class="px-4 py-2">用户名</th>
-          <th class="px-4 py-2">密码</th>
-          <th class="px-4 py-2">主目录</th>
-          <th class="px-4 py-2">管理员</th>
-          <th class="px-4 py-2">操作</th>
+          <th class="px-4 py-2 border-b border-gray-200 dark:border-zinc-700">用户ID</th>
+          <th class="px-4 py-2 border-b border-gray-200 dark:border-zinc-700">用户名</th>
+          <th class="px-4 py-2 border-b border-gray-200 dark:border-zinc-700">密码</th>
+          <th class="px-4 py-2 border-b border-gray-200 dark:border-zinc-700">主目录</th>
+          <th class="px-4 py-2 border-b border-gray-200 dark:border-zinc-700">管理员</th>
+          <th class="px-4 py-2 border-b border-gray-200 dark:border-zinc-700">操作</th>
         </tr>
       </thead>
-      <tbody id="usersTableBody" data-bind="Users" data-bind-handler="renderUsersTable">
+      <tbody id="usersTableBody" data-bind="Users" data-bind-handler="renderUsersTable" class="bg-white dark:bg-zinc-800">
         <!-- 动态生成用户数据 -->
       </tbody>
     </table>
   </div>
   <div class="flex flex-wrap justify-between items-center mt-4">
     <div>
-      <label>每页数量：</label>
-      <select id="pageSizeSelect" class="border rounded px-2 py-1 border-[var(--border-main)] bg-[var(--input-bg)] text-[var(--text-main)]">
+      <label class="text-gray-700 dark:text-gray-100">每页数量：</label>
+      <select id="pageSizeSelect" class="border rounded-lg border-gray-300 dark:border-zinc-700 px-2 py-1 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100">
         <option value="10">10</option>
         <option value="20" selected>20</option>
         <option value="50">50</option>
@@ -35,49 +35,49 @@
       </select>
     </div>
     <div>
-      <button id="prevPageBtn" class="bg-[var(--bg-main)] border border-[var(--border-main)] px-3 py-1 rounded hover:bg-[var(--input-bg)]">上一页</button>
-      <span id="pageInfo" class="mx-2">第 1 页</span>
-      <button id="nextPageBtn" class="bg-[var(--bg-main)] border border-[var(--border-main)] px-3 py-1 rounded hover:bg-[var(--input-bg)]">下一页</button>
+      <button id="prevPageBtn" class="bg-white dark:bg-zinc-900 border border-gray-300 dark:border-zinc-700 px-3 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-zinc-800 transition">上一页</button>
+      <span id="pageInfo" class="mx-2 text-gray-700 dark:text-gray-100">第 1 页</span>
+      <button id="nextPageBtn" class="bg-white dark:bg-zinc-900 border border-gray-300 dark:border-zinc-700 px-3 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-zinc-800 transition">下一页</button>
     </div>
     <div>
-      <span id="totalInfo"></span>
+      <span id="totalInfo" class="text-gray-700 dark:text-gray-100"></span>
     </div>
   </div>
   <!-- 添加用户模态框 -->
   <div id="addUserModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-40">
-    <div class="bg-[var(--bg-card)] rounded-lg shadow-lg w-full max-w-md mx-auto p-6 border border-[var(--border-main)]">
+    <div class="bg-white dark:bg-zinc-800 rounded-xl shadow-lg w-full max-w-md mx-auto p-6 border border-gray-200 dark:border-zinc-700">
       <div class="flex justify-between items-center mb-4">
-        <h3 class="text-lg font-semibold">添加用户</h3>
-        <button class="text-[var(--text-secondary)] hover:text-[var(--text-main)]" onclick="closeModal('addUserModal')">✕</button>
+        <h3 class="text-lg font-semibold text-blue-700 dark:text-blue-400">添加用户</h3>
+        <button class="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100" onclick="closeModal('addUserModal')">✕</button>
       </div>
       <div class="space-y-4">
-        <input type="text" id="addUsername" placeholder="用户名" class="border rounded px-3 py-2 w-full border-[var(--border-main)] bg-[var(--input-bg)] text-[var(--text-main)]">
-        <input type="password" id="addPasswd" placeholder="密码" class="border rounded px-3 py-2 w-full border-[var(--border-main)] bg-[var(--input-bg)] text-[var(--text-main)]">
-        <input type="text" id="addHome" placeholder="主目录" class="border rounded px-3 py-2 w-full border-[var(--border-main)] bg-[var(--input-bg)] text-[var(--text-main)]">
+        <input type="text" id="addUsername" placeholder="用户名" class="border rounded-lg border-gray-300 dark:border-zinc-700 px-3 py-2 w-full bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+        <input type="password" id="addPasswd" placeholder="密码" class="border rounded-lg border-gray-300 dark:border-zinc-700 px-3 py-2 w-full bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+        <input type="text" id="addHome" placeholder="主目录" class="border rounded-lg border-gray-300 dark:border-zinc-700 px-3 py-2 w-full bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
         <label class="flex items-center"><input type="checkbox" id="addIsAdmin" class="mr-2">管理员</label>
       </div>
       <div class="mt-6 flex justify-end gap-2">
-        <button class="bg-[var(--bg-main)] border border-[var(--border-main)] px-4 py-2 rounded hover:bg-[var(--input-bg)]" onclick="closeModal('addUserModal')">关闭</button>
-        <button id="saveUserBtn" class="bg-[var(--btn-main)] text-white px-4 py-2 rounded hover:bg-[var(--btn-hover)]">保存</button>
+        <button class="bg-white dark:bg-zinc-900 border border-gray-300 dark:border-zinc-700 px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-zinc-800 transition" onclick="closeModal('addUserModal')">关闭</button>
+        <button id="saveUserBtn" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow transition">保存</button>
       </div>
     </div>
   </div>
   <!-- 编辑用户模态框 -->
   <div id="editUserModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-40">
-    <div class="bg-[var(--bg-card)] rounded-lg shadow-lg w-full max-w-md mx-auto p-6 border border-[var(--border-main)]">
+    <div class="bg-white dark:bg-zinc-800 rounded-xl shadow-lg w-full max-w-md mx-auto p-6 border border-gray-200 dark:border-zinc-700">
       <div class="flex justify-between items-center mb-4">
-        <h3 class="text-lg font-semibold">编辑用户</h3>
-        <button class="text-[var(--text-secondary)] hover:text-[var(--text-main)]" onclick="closeModal('editUserModal')">✕</button>
+        <h3 class="text-lg font-semibold text-blue-700 dark:text-blue-400">编辑用户</h3>
+        <button class="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100" onclick="closeModal('editUserModal')">✕</button>
       </div>
       <div class="space-y-4">
-        <input type="text" id="editUsername" readonly class="border rounded px-3 py-2 w-full border-[var(--border-main)] bg-[var(--input-bg)] text-[var(--text-main)]">
-        <input type="password" id="editPasswd" placeholder="密码" class="border rounded px-3 py-2 w-full border-[var(--border-main)] bg-[var(--input-bg)] text-[var(--text-main)]">
-        <input type="text" id="editHome" placeholder="主目录" class="border rounded px-3 py-2 w-full border-[var(--border-main)] bg-[var(--input-bg)] text-[var(--text-main)]">
+        <input type="text" id="editUsername" readonly class="border rounded-lg border-gray-300 dark:border-zinc-700 px-3 py-2 w-full bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100">
+        <input type="password" id="editPasswd" placeholder="密码" class="border rounded-lg border-gray-300 dark:border-zinc-700 px-3 py-2 w-full bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+        <input type="text" id="editHome" placeholder="主目录" class="border rounded-lg border-gray-300 dark:border-zinc-700 px-3 py-2 w-full bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
         <label class="flex items-center"><input type="checkbox" id="editIsAdmin" class="mr-2">管理员</label>
       </div>
       <div class="mt-6 flex justify-end gap-2">
-        <button class="bg-[var(--bg-main)] border border-[var(--border-main)] px-4 py-2 rounded hover:bg-[var(--input-bg)]" onclick="closeModal('editUserModal')">关闭</button>
-        <button id="updateUserBtn" class="bg-[var(--btn-main)] text-white px-4 py-2 rounded hover:bg-[var(--btn-hover)]">保存</button>
+        <button class="bg-white dark:bg-zinc-900 border border-gray-300 dark:border-zinc-700 px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-zinc-800 transition" onclick="closeModal('editUserModal')">关闭</button>
+        <button id="updateUserBtn" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow transition">保存</button>
       </div>
     </div>
   </div>

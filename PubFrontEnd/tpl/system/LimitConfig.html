@@ -1,19 +1,22 @@
-<section id="limit" class="bg-white rounded-lg shadow p-6">
-  <h2 class="text-xl font-semibold mb-4 text-blue-700">限制配置</h2>
+<section id="limit" class="bg-white dark:bg-zinc-800 rounded-xl shadow-md border border-gray-200 dark:border-zinc-700 p-6 mb-6">
+  <h2 class="text-lg font-semibold mb-4 text-blue-700 dark:text-blue-400 tracking-tight">限制配置</h2>
   <form class="space-y-4">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div>
-        <label for="OnlineEditMaxSizeKB" class="block text-sm font-medium text-gray-700">在线编辑最大文件大小（KB）</label>
-        <input type="number" id="OnlineEditMaxSizeKB" class="mt-1 block w-full rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500" data-bind="Limit.OnlineEditMaxSizeKB">
+        <label for="OnlineEditMaxSizeKB" class="block text-sm font-medium text-gray-700 dark:text-gray-100">在线编辑最大文件大小（KB）</label>
+        <input type="number" id="OnlineEditMaxSizeKB" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" data-bind="Limit.OnlineEditMaxSizeKB">
       </div>
       <div>
-        <label for="MaxFailedLoginsIpMap" class="block text-sm font-medium text-gray-700">最大失败登录次数（IP）</label>
-        <input type="number" id="MaxFailedLoginsIpMap" class="mt-1 block w-full rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500" data-bind="Limit.MaxFailedLoginsIpMap">
+        <label for="MaxFailedLoginsIpMap" class="block text-sm font-medium text-gray-700 dark:text-gray-100">最大失败登录次数（IP）</label>
+        <input type="number" id="MaxFailedLoginsIpMap" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" data-bind="Limit.MaxFailedLoginsIpMap">
       </div>
       <div>
-        <label for="MaxFailedLoginSleepTimeSec" class="block text-sm font-medium text-gray-700">失败登录休眠时间（秒）</label>
-        <input type="number" id="MaxFailedLoginSleepTimeSec" class="mt-1 block w-full rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500" data-bind="Limit.MaxFailedLoginSleepTimeSec">
+        <label for="MaxFailedLoginSleepTimeSec" class="block text-sm font-medium text-gray-700 dark:text-gray-100">失败登录休眠时间（秒）</label>
+        <input type="number" id="MaxFailedLoginSleepTimeSec" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" data-bind="Limit.MaxFailedLoginSleepTimeSec">
       </div>
+    </div>
+    <div class="mt-6 flex justify-end">
+      <button type="button" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg shadow transition" onclick="saveGlobalSetting()">保存设置</button>
     </div>
   </form>
 </section> 
