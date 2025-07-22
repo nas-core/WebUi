@@ -7,6 +7,7 @@
   <title>系统配置 - NasCore</title>
   <script src="../theme.js"></script>
   <script src='{{.WebUICdnPrefix}}libs/tailwindcss.min.js'></script>
+
   <script>
     window.tailwind = window.tailwind || {};
     window.tailwind.config = { darkMode: 'class' };
@@ -79,6 +80,10 @@
   }
 }
   </style>
+    <script src="{{.WebUICdnPrefix}}axios@0.26.0/dist/axios.min.js" type="application/javascript"></script>
+    <script src="api.js"></script>
+    <script src="download.js"></script>
+    <script src="Settings_system.js"></script>
 </head>
 
 <body class="min-h-screen bg-gray-50 dark:bg-zinc-900 text-gray-900 dark:text-gray-100">
@@ -105,20 +110,21 @@
       <div class="p-4 text-lg font-bold text-blue-600 dark:text-blue-400 border-b border-gray-200 dark:border-zinc-700 tracking-tight">NasCore 设置</div>
       <nav class="flex-1 p-2 space-y-px">
         <a href="#server" data-section="ServerConfig.html" class="block px-3 py-2 rounded-md sidebar-link">服务器设置</a>
+        <a href="#staticfile" data-section="StaticFileConfig.html" class="block px-3 py-2 rounded-md sidebar-link">静态文件服务</a>
         <a href="#jwt" data-section="JWTConfig.html" class="block px-3 py-2 rounded-md sidebar-link">JWT设置</a>
+        <a href="#limit" data-section="LimitConfig.html" class="block px-3 py-2 rounded-md sidebar-link">限制配置</a>
         <a href="#secret" data-section="SecretConfig.html" class="block px-3 py-2 rounded-md sidebar-link">密钥配置</a>
         <a href="#user" data-section="UserManager.html" class="block px-3 py-2 rounded-md sidebar-link">用户管理</a>
         <a href="#nascoreext" data-section="NascoreExt.html" class="block px-3 py-2 rounded-md sidebar-link">NasCore扩展</a>
         <a href="#vod" data-section="NascoreVod.html" class="block px-3 py-2 rounded-md sidebar-link">NasCore_vod</a>
         <div class="pt-3 border-t border-gray-200 dark:border-zinc-700 text-xs text-gray-400 dark:text-gray-500">第三方扩展</div>
-        <a href="#limit" data-section="LimitConfig.html" class="block px-3 py-2 rounded-md sidebar-link">限制配置</a>
         <a href="#rclone" data-section="RcloneConfig.html" class="block px-3 py-2 rounded-md sidebar-link">Rclone云存储</a>
         <a href="#ddnsgo" data-section="DDNSGoConfig.html" class="block px-3 py-2 rounded-md sidebar-link">DDNS-GO</a>
         <a href="#adguard" data-section="AdGuardConfig.html" class="block px-3 py-2 rounded-md sidebar-link">AdGuard DNS</a>
         <a href="#lego" data-section="LegoConfig.html" class="block px-3 py-2 rounded-md sidebar-link">Lego证书</a>
         <a href="#openlist" data-section="OpenListConfig.html" class="block px-3 py-2 rounded-md sidebar-link">OpenList云盘</a>
         <a href="#caddy2" data-section="Caddy2Config.html" class="block px-3 py-2 rounded-md sidebar-link">Caddy2服务</a>
-        <a href="#staticfile" data-section="StaticFileConfig.html" class="block px-3 py-2 rounded-md sidebar-link">静态文件服务</a>
+   
       </nav>
       <div class="p-2 text-xs text-gray-400 dark:text-gray-500 border-t border-gray-200 dark:border-zinc-700">  © NasCore <span id="year"></span>
       </div>
@@ -153,8 +159,6 @@
       </div>
     </main>
   </div>
-  <script src="{{.WebUICdnPrefix}}axios@0.26.0/dist/axios.min.js" type="application/javascript"></script>
-  <script src="api.js"></script>
   <script src="/@public/nav.js"></script>
   <script src="Settings_system.js"></script>
 
