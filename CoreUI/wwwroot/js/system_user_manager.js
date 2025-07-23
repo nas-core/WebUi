@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     try {
       const res = await API.request(
-        '{{.ServerUrl}}/@api/admin/users',
+        '{{.ServerUrl}}/@adminapi/admin/users',
         { username, passwd, home_dir: home, is_admin },
         { needToken: true, method: 'POST' }
       );
@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const body = { home_dir: home, is_admin };
       if (passwd) body.passwd = passwd;
       const res = await API.request(
-        `{{.ServerUrl}}/@api/admin/users/${id}`,
+        `{{.ServerUrl}}/@adminapi/admin/users/${id}`,
         body,
         { needToken: true, method: 'PUT' }
       );
@@ -116,7 +116,7 @@ async function loadUsers() {
     if (searchHomeDir) params.home_dir = searchHomeDir;
     const query = Object.entries(params).map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');
     const res = await API.request(
-      `{{.ServerUrl}}/@api/admin/users?${query}`,
+      `{{.ServerUrl}}/@adminapi/admin/users?${query}`,
       null,
       { needToken: true, method: 'GET' }
     );
@@ -174,7 +174,7 @@ window.deleteUser = async function (id, username) {
   if (!confirm('确定要删除用户 ' + username + ' 吗？')) return;
   try {
     const res = await API.request(
-      `{{.ServerUrl}}/@api/admin/users/${id}`,
+      `{{.ServerUrl}}/@adminapi/admin/users/${id}`,
       {},
       { needToken: true, method: 'DELETE' }
     );

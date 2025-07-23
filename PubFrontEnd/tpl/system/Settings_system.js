@@ -75,7 +75,7 @@
 
   // 保存设置
   window.saveGlobalSetting = function () {
-    API.request('/@api/admin/globalSettings', window.globalSettingsData, { method: 'POST', needToken: true })
+    API.request('/@adminapi/admin/globalSettings', window.globalSettingsData, { method: 'POST', needToken: true })
       .then(res => {
         if (!res.error) {
           window.showNotification('保存成功', 'success');
@@ -88,7 +88,7 @@
 
   // 获取全局设置
   function getGlobalSettings() {
-    API.request('/@api/admin/globalSettings', {}, { method: 'GET', needToken: true })
+    API.request('/@adminapi/admin/globalSettings', {}, { method: 'GET', needToken: true })
       .then(res => {
         window.globalSettingsData = res.data || {};
         renderAllSections();

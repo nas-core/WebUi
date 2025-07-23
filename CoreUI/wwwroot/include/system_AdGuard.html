@@ -88,7 +88,7 @@
 
     try {
       const response = await API.request(
-        `{{.ServerUrl}}/@api/admin/get_adguard_rules?DownLoadlink=${encodeURIComponent(DownLoadlink)}&GitHubDownloadMirror=${encodeURIComponent(ThirdPartyExtGitHubDownloadMirror)}&savepath=${encodeURIComponent(Savepath)}`,
+        `{{.ServerUrl}}/@adminapi/admin/get_adguard_rules?DownLoadlink=${encodeURIComponent(DownLoadlink)}&GitHubDownloadMirror=${encodeURIComponent(ThirdPartyExtGitHubDownloadMirror)}&savepath=${encodeURIComponent(Savepath)}`,
         {},
         { needToken: true }
       )

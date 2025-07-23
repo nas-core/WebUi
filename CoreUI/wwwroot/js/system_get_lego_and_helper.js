@@ -12,7 +12,7 @@ async function downloadLego() {
 
   try {
     const response = await API.request(
-      `{{.ServerUrl}}/@api/admin/get_ThirdParty_lego?DownLoadlink=${encodeURIComponent(DownLoadlink)}&Version=${encodeURIComponent(Version)}&BinPath=${encodeURIComponent(BinPath)}&GitHubDownloadMirror=${encodeURIComponent(ThirdPartyExtGitHubDownloadMirror)}`,
+      `{{.ServerUrl}}/@adminapi/admin/get_ThirdParty_lego?DownLoadlink=${encodeURIComponent(DownLoadlink)}&Version=${encodeURIComponent(Version)}&BinPath=${encodeURIComponent(BinPath)}&GitHubDownloadMirror=${encodeURIComponent(ThirdPartyExtGitHubDownloadMirror)}`,
       {},
       { needToken: true }
     )

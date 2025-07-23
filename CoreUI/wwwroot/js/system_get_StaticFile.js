@@ -10,7 +10,7 @@ async function downloadStaticFile() {
 
   try {
     const response = await API.request(
-      `{{.ServerUrl}}/@api/admin/get_staticfile?DownLoadlink=${encodeURIComponent(DownLoadlink)}&fileName=tmp-static.zip&GitHubDownloadMirror=${encodeURIComponent(ThirdPartyExtGitHubDownloadMirror)}&dstDir=${encodeURIComponent(dstDir)}`,
+      `{{.ServerUrl}}/@adminapi/admin/get_staticfile?DownLoadlink=${encodeURIComponent(DownLoadlink)}&fileName=tmp-static.zip&GitHubDownloadMirror=${encodeURIComponent(ThirdPartyExtGitHubDownloadMirror)}&dstDir=${encodeURIComponent(dstDir)}`,
       {},
       { needToken: true }
     )

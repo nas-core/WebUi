@@ -367,7 +367,7 @@ async function saveSiteConfig() {
     // 调用后端API来加密密码
     try {
       const bcryptRes = await window.API.request(
-        `{{.ServerUrl}}/@api/admin/bcryptPassword?password=${encodeURIComponent(password)}`,
+        `{{.ServerUrl}}/@adminapi/admin/bcryptPassword?password=${encodeURIComponent(password)}`,
         {},
         { needToken: true, method: 'GET' }
       )

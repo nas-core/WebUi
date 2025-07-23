@@ -12,7 +12,7 @@ async function downloadRclone() {
 
   try {
     const response = await API.request(
-      `{{.ServerUrl}}/@api/admin/get_ThirdParty_rclone?DownLoadlink=${encodeURIComponent(DownLoadlink)}&Version=${encodeURIComponent(Version)}&BinPath=${encodeURIComponent(BinPath)}&GitHubDownloadMirror=${encodeURIComponent(ThirdPartyExtGitHubDownloadMirror)}`,
+      `{{.ServerUrl}}/@adminapi/admin/get_ThirdParty_rclone?DownLoadlink=${encodeURIComponent(DownLoadlink)}&Version=${encodeURIComponent(Version)}&BinPath=${encodeURIComponent(BinPath)}&GitHubDownloadMirror=${encodeURIComponent(ThirdPartyExtGitHubDownloadMirror)}`,
       {},
       { needToken: true }
     )

@@ -12,7 +12,7 @@ async function downloadOpenlist() {
 
   try {
     const response = await API.request(
-      `{{.ServerUrl}}/@api/admin/get_ThirdParty_openlist?DownLoadlink=${encodeURIComponent(DownLoadlink)}&Version=${encodeURIComponent(Version)}&BinPath=${encodeURIComponent(BinPath)}&GitHubDownloadMirror=${encodeURIComponent(ThirdPartyExtGitHubDownloadMirror)}`,
+      `{{.ServerUrl}}/@adminapi/admin/get_ThirdParty_openlist?DownLoadlink=${encodeURIComponent(DownLoadlink)}&Version=${encodeURIComponent(Version)}&BinPath=${encodeURIComponent(BinPath)}&GitHubDownloadMirror=${encodeURIComponent(ThirdPartyExtGitHubDownloadMirror)}`,
       {},
       { needToken: true }
     )
@@ -37,7 +37,7 @@ async function resetOpenListPassword() {
   }
   try {
     const res = await window.API.request(
-      `{{.ServerUrl}}/@api/admin/SpecialOPT?opt=openlist_reset_admin&binPath=${encodeURIComponent(binPath)}&dataPath=${encodeURIComponent(dataPath)}`,
+      `{{.ServerUrl}}/@adminapi/admin/SpecialOPT?opt=openlist_reset_admin&binPath=${encodeURIComponent(binPath)}&dataPath=${encodeURIComponent(dataPath)}`,
       {},
       { needToken: true, method: 'GET' } // 后端 Handers_admin_caddyreload 是GET请求
     )

@@ -87,7 +87,7 @@ window.EditCaddy = function() {
     window.showNotification('请先填写配置文件路径', 'danger')
     return
   }
-  API.request('/@api/admin/getServerFile?path=' + encodeURIComponent(filePath), {}, { method: 'GET', needToken: true })
+  API.request('/@adminapi/admin/getServerFile?path=' + encodeURIComponent(filePath), {}, { method: 'GET', needToken: true })
     .then(res => {
       let fileNotExist = false
       if ((res.code === 1 && res.data && res.data.content) || (res.code !== 1 && (res.message||'').includes('not found'))) {
@@ -402,7 +402,7 @@ window.saveCaddySites = function() {
   if (tip && !tip.classList.contains('hidden')) {
     isCreatFile = true
   }
-  let url = '/@api/admin/saveServerFile?path=' + encodeURIComponent(filePath)
+  let url = '/@adminapi/admin/saveServerFile?path=' + encodeURIComponent(filePath)
   if (isCreatFile) url += '&isCreatFile=true'
   API.request(url, { content: caddyfile }, { method: 'POST', needToken: true })
     .then(res => {

@@ -69,7 +69,7 @@ function downloadLego() {
   const BinPath = document.getElementById('AcmeLegoBinPath').value
   const ThirdPartyExtGitHubDownloadMirror = document.getElementById('ThirdPartyExtGitHubDownloadMirror')?.value || ''
   window.downloadThirdParty({
-    url: `/@api/admin/get_ThirdParty_lego?Version=${encodeURIComponent(Version)}&BinPath=${encodeURIComponent(BinPath)}`,
+    url: `/@adminapi/admin/get_ThirdParty_lego?Version=${encodeURIComponent(Version)}&BinPath=${encodeURIComponent(BinPath)}`,
     moduleName: 'LEGO',
     timeoutMs: 60000,
     onTimeout: () => showNotification('LEGO 下载请求超时，后台可能仍在下载，请稍后刷新或检查文件', 'warning'),
@@ -86,7 +86,7 @@ function downloadRclone() {
   const Version = document.getElementById('ThirdPartyExtRcloneVersion').value
   const BinPath = document.getElementById('RcloneBinPath').value
   window.downloadThirdParty({
-    url: `/@api/admin/get_ThirdParty_rclone?Version=${encodeURIComponent(Version)}&BinPath=${encodeURIComponent(BinPath)}`,
+    url: `/@adminapi/admin/get_ThirdParty_rclone?Version=${encodeURIComponent(Version)}&BinPath=${encodeURIComponent(BinPath)}`,
     moduleName: 'Rclone',
     timeoutMs: 60000,
     onTimeout: () => showNotification('Rclone 下载请求超时，后台可能仍在下载，请稍后刷新或检查文件', 'warning'),
@@ -104,7 +104,7 @@ function downloadDDNSGo() {
   const Version = document.getElementById('ThirdPartyExtDdnsGOVersion').value
   const BinPath = document.getElementById('DdnsGOBinPath').value
   window.downloadThirdParty({
-    url: `/@api/admin/get_ThirdParty_ddnsgo?Version=${encodeURIComponent(Version)}&BinPath=${encodeURIComponent(BinPath)}`,
+    url: `/@adminapi/admin/get_ThirdParty_ddnsgo?Version=${encodeURIComponent(Version)}&BinPath=${encodeURIComponent(BinPath)}`,
     moduleName: 'DDNS-GO',
     timeoutMs: 60000,
     onTimeout: () => showNotification('DDNS-GO 下载请求超时，后台可能仍在下载，请稍后刷新或检查文件', 'warning'),
@@ -124,7 +124,7 @@ function resetDDNSGOPassword() {
   }
   showNotification('正在重置DDNS-go密码...', 'info');
   window.API.request(
-    `/@api/admin/SpecialOPT?opt=ddnsgo_reset_admin&binPath=${encodeURIComponent(binPath)}&configPath=${encodeURIComponent(configPath)}`,
+    `/@adminapi/admin/SpecialOPT?opt=ddnsgo_reset_admin&binPath=${encodeURIComponent(binPath)}&configPath=${encodeURIComponent(configPath)}`,
     {},
     { needToken: true, method: 'GET' }
   ).then(res => {
@@ -148,7 +148,7 @@ function restartDDNSGo() {
   }
   showNotification('正在重启DDNS-go...', 'info');
   window.API.request(
-    `/@api/admin/SpecialOPT?opt=ddnsgo_restart&binPath=${encodeURIComponent(binPath)}&configPath=${encodeURIComponent(configPath)}`,
+    `/@adminapi/admin/SpecialOPT?opt=ddnsgo_restart&binPath=${encodeURIComponent(binPath)}&configPath=${encodeURIComponent(configPath)}`,
     {},
     { needToken: true, method: 'GET' }
   ).then(res => {
@@ -173,7 +173,7 @@ function downloadAdgRules() {
   }
   showNotification('正在下载规则文件...', 'info');
   window.API.request(
-    `/@api/admin/get_adguard_rules?DownLoadlink=${encodeURIComponent(DownLoadlink)}&GitHubDownloadMirror=${encodeURIComponent(GitHubDownloadMirror)}&savepath=${encodeURIComponent(savepath)}`,
+    `/@adminapi/admin/get_adguard_rules?DownLoadlink=${encodeURIComponent(DownLoadlink)}&GitHubDownloadMirror=${encodeURIComponent(GitHubDownloadMirror)}&savepath=${encodeURIComponent(savepath)}`,
     {},
     { needToken: true, method: 'GET' }
   ).then(res => {
@@ -192,7 +192,7 @@ function downloadOpenlist() {
   const Version = document.getElementById('ThirdPartyExtOpenlistVersion').value;
   const BinPath = document.getElementById('OpenlistBinPath').value;
   window.downloadThirdParty({
-    url: `/@api/admin/get_ThirdParty_openlist?Version=${encodeURIComponent(Version)}&BinPath=${encodeURIComponent(BinPath)}`,
+    url: `/@adminapi/admin/get_ThirdParty_openlist?Version=${encodeURIComponent(Version)}&BinPath=${encodeURIComponent(BinPath)}`,
     moduleName: 'OpenList',
     timeoutMs: 60000,
     onTimeout: () => showNotification('OpenList 下载请求超时，后台可能仍在下载，请稍后刷新或检查文件', 'warning'),
@@ -206,7 +206,7 @@ function downloadCaddy2() {
   const Version = document.getElementById('ThirdPartyExtCaddy2Version').value;
   const BinPath = document.getElementById('Caddy2BinPath').value;
   window.downloadThirdParty({
-    url: `/@api/admin/get_ThirdParty_caddy2?Version=${encodeURIComponent(Version)}&BinPath=${encodeURIComponent(BinPath)}`,
+    url: `/@adminapi/admin/get_ThirdParty_caddy2?Version=${encodeURIComponent(Version)}&BinPath=${encodeURIComponent(BinPath)}`,
     moduleName: 'Caddy2',
     timeoutMs: 60000,
     onTimeout: () => showNotification('Caddy2 下载请求超时，后台可能仍在下载，请稍后刷新或检查文件', 'warning'),
@@ -225,7 +225,7 @@ function resetOpenListPassword() {
   }
   showNotification('正在重置OpenList密码...', 'info');
   window.API.request(
-    `/@api/admin/SpecialOPT?opt=openlist_reset_admin&binPath=${encodeURIComponent(binPath)}&dataPath=${encodeURIComponent(dataPath)}`,
+    `/@adminapi/admin/SpecialOPT?opt=openlist_reset_admin&binPath=${encodeURIComponent(binPath)}&dataPath=${encodeURIComponent(dataPath)}`,
     {},
     { needToken: true, method: 'GET' }
   ).then(res => {
