@@ -30,6 +30,12 @@ func HandlerNavJS(nsCfg *system_config.SysCfg, logger *zap.SugaredLogger, qpsCou
 				NavMenuItem{Name: "文件管理", URL: nsCfg.Server.WebUIPrefix + "nascore.shtml", Key: "webui"},
 			)
 		}
+		if nsCfg.ThirdPartyExt.DdnsGO.IsDDnsGOProxyEnable {
+			menu = append(menu, NavMenuItem{Name: "DDNS-GO", URL: system_config.PrefixDdnsGo, Key: "ddnsgo", OnlyWhenAdmin: true})
+		}
+		if nsCfg.ThirdPartyExt.AdGuard.IsAdGuardProxyEnable {
+			menu = append(menu, NavMenuItem{Name: "AdGuardHome", URL: system_config.PrefixAdguardhome, Key: "adguardhome", OnlyWhenAdmin: true})
+		}
 		if nsCfg.NascoreExt.Vod.VodEnable {
 			menu = append(menu, NavMenuItem{Name: "视频订阅", URL: system_config.PrefixNasCoreTv, Key: "vod"})
 		}

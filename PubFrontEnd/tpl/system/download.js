@@ -113,3 +113,44 @@ function downloadDDNSGo() {
   })
 }
 window.downloadDDNSGo = downloadDDNSGo;
+
+// ddnsgo 重置密码按钮逻辑
+function resetDDNSGOPassword() {
+  const binPath = document.getElementById('DdnsGOBinPath').value;
+  const configPath = document.getElementById('ThirdPartyExtDdnsGOConfigFilePath').value;
+  if (!binPath || !configPath) {
+    showNotification('请填写DDNS-go路径和配置文件路径', 'danger');
+    return;
+  }
+  showNotification('正在重置DDNS-go密码...', 'info');
+  window.API.request(
+    `/@api/admin/SpecialOPT?opt=ddnsgo_reset_admin&binPath=${encodeURIComponent(binPath)}&configPath=${encodeURIComponent(configPath)}`,
+    {},
+    { needToken: true, method: 'GET' }
+  ).then(res => {
+    showNotification('重置密码结果：' + (res.data || '无返回'), 'success');
+  }).catch(err => {
+    showNotification('重置密码失败: ' + (err.message || err), 'danger');
+  });
+}
+window.resetDDNSGOPassword = resetDDNSGOPassword;
+
+function restartDDNSGo() {
+  const binPath = document.getElementById('DdnsGOBinPath').value;
+  const configPath = document.getElementById('ThirdPartyExtDdnsGOConfigFilePath').value;
+  if (!binPath || !configPath) {
+    showNotification('请填写DDNS-go路径和配置文件路径', 'danger');
+    return;
+  }
+  showNotification('正在重启DDNS-go...', 'info');
+  window.API.request(
+    `/@api/admin/SpecialOPT?opt=ddnsgo_restart&binPath=${encodeURIComponent(binPath)}&configPath=${encodeURIComponent(configPath)}`,
+    {},
+    { needToken: true, method: 'GET' }
+  ).then(res => {
+    showNotification('重启结果：' + (res.data || '无返回'), 'success');
+  }).catch(err => {
+    showNotification('重启失败: ' + (err.message || err), 'danger');
+  });
+}
+window.restartDDNSGo = restartDDNSGo;

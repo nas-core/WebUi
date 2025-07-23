@@ -115,7 +115,6 @@
             .then(html => {
               document.getElementById('system-sections').innerHTML = html;
               renderAllSections();
-              // 新增：如果是LegoConfig.html，绑定按钮事件
               if (section === 'LegoConfig.html') {
                 setTimeout(() => {
                   const legoCopyScript = document.createElement('script');
