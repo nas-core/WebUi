@@ -143,6 +143,27 @@
                   document.body.appendChild(legoDownloadScript);
                 }, 0);
               }
+              if (section === 'AdGuardConfig.html') {
+                setTimeout(() => {
+                  const legoDownloadScript = document.createElement('script');
+                  legoDownloadScript.src = './download.js';
+                  document.body.appendChild(legoDownloadScript);
+                }, 0);
+              }
+              if (section === 'OpenListConfig.html') {
+                setTimeout(() => {
+                  const legoDownloadScript = document.createElement('script');
+                  legoDownloadScript.src = './download.js';
+                  document.body.appendChild(legoDownloadScript);
+                }, 0);
+              }
+              if (section === 'Caddy2Config.html') {
+                setTimeout(() => {
+                  const legoDownloadScript = document.createElement('script');
+                  legoDownloadScript.src = './download.js';
+                  document.body.appendChild(legoDownloadScript);
+                }, 0);
+              }
             });
           found = true;
         } else {
@@ -241,6 +262,37 @@
         navList.appendChild(a);
       });
     }
+    // 导出全局方法供按钮 onclick 调用
+    window.toggleNavMenuDropdown = function() {
+      var navDropdown = document.getElementById('navMenuDropdown');
+      var navList = document.getElementById('navMenuList');
+      if (navDropdown && navDropdown.classList.contains('hidden')) {
+        // 渲染菜单
+        if (window.GlobalNavMenu && navList) {
+          navList.innerHTML = '';
+          var isLogin = window.isLoggedIn && window.isLoggedIn();
+          window.GlobalNavMenu.forEach(function(item) {
+            if (item.onlyWhenLogin && !isLogin) return;
+            if (item.onlyWhenNotLogin && isLogin) return;
+            var a = document.createElement('a');
+            a.href = item.url;
+            a.textContent = item.name;
+            a.className = 'block px-4 py-2 rounded hover:bg-gray-100 dark:hover:bg-zinc-700 text-gray-900 dark:text-gray-100';
+            if (item.key === 'logout') {
+              a.onclick = function(e) { e.preventDefault(); window.logoutAndRedirect(); navDropdown && navDropdown.classList.add('hidden'); navDropdown.style.display = ''; };
+            } else {
+              a.onclick = function() { navDropdown && navDropdown.classList.add('hidden'); navDropdown.style.display = ''; };
+            }
+            navList.appendChild(a);
+          });
+        }
+        navDropdown.classList.remove('hidden');
+        navDropdown.style.display = 'block';
+      } else if (navDropdown) {
+        navDropdown.classList.add('hidden');
+        navDropdown.style.display = '';
+      }
+    };
     if (navBtn) {
       navBtn.addEventListener('click', function(e) {
         e.stopPropagation();
