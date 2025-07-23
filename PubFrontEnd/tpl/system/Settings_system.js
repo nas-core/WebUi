@@ -137,6 +137,13 @@
                   document.body.appendChild(legoDownloadScript);
                 }, 0);
               }
+              if (section === 'DDNSGoConfig.html') {
+                setTimeout(() => {
+                  const legoDownloadScript = document.createElement('script');
+                  legoDownloadScript.src = './download.js';
+                  document.body.appendChild(legoDownloadScript);
+                }, 0);
+              }
             });
           found = true;
         } else {

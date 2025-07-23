@@ -98,3 +98,18 @@ function downloadRclone() {
 
 // 挂到 window 上，方便外部绑定
 window.downloadRclone = downloadRclone;
+
+// ddns-go 下载按钮逻辑
+function downloadDDNSGo() {
+  const Version = document.getElementById('ThirdPartyExtDdnsGOVersion').value
+  const BinPath = document.getElementById('DdnsGOBinPath').value
+  window.downloadThirdParty({
+    url: `/@api/admin/get_ThirdParty_ddnsgo?Version=${encodeURIComponent(Version)}&BinPath=${encodeURIComponent(BinPath)}`,
+    moduleName: 'DDNS-GO',
+    timeoutMs: 60000,
+    onTimeout: () => showNotification('DDNS-GO 下载请求超时，后台可能仍在下载，请稍后刷新或检查文件', 'warning'),
+    onSuccess: () => showNotification('DDNS-GO 下载成功', 'success'),
+    onError: (err) => showNotification('DDNS-GO 下载失败: ' + (err.message || err), 'danger'),
+  })
+}
+window.downloadDDNSGo = downloadDDNSGo;
