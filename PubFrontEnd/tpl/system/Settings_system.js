@@ -121,7 +121,7 @@
                   legoCopyScript.src = './copyCommand.js';
                   document.body.appendChild(legoCopyScript);
                   const legoDownloadScript = document.createElement('script');
-                  legoDownloadScript.src = './download.js';
+                  legoDownloadScript.src = './actions.js';
                   document.body.appendChild(legoDownloadScript);
     
                 }, 0);
@@ -132,39 +132,43 @@
                   legoCopyScript.src = './copyCommand.js';
                   document.body.appendChild(legoCopyScript);
                   const legoDownloadScript = document.createElement('script');
-                  legoDownloadScript.src = './download.js';
+                  legoDownloadScript.src = './actions.js';
                   document.body.appendChild(legoDownloadScript);
                 }, 0);
               }
               if (section === 'DDNSGoConfig.html') {
                 setTimeout(() => {
                   const legoDownloadScript = document.createElement('script');
-                  legoDownloadScript.src = './download.js';
+                  legoDownloadScript.src = './actions.js';
                   document.body.appendChild(legoDownloadScript);
                 }, 0);
               }
               if (section === 'AdGuardConfig.html') {
                 setTimeout(() => {
                   const legoDownloadScript = document.createElement('script');
-                  legoDownloadScript.src = './download.js';
+                  legoDownloadScript.src = './actions.js';
                   document.body.appendChild(legoDownloadScript);
                 }, 0);
               }
               if (section === 'OpenListConfig.html') {
                 setTimeout(() => {
                   const legoDownloadScript = document.createElement('script');
-                  legoDownloadScript.src = './download.js';
+                  legoDownloadScript.src = './actions.js';
                   document.body.appendChild(legoDownloadScript);
                 }, 0);
               }
               if (section === 'Caddy2Config.html') {
                 setTimeout(() => {
                   const legoDownloadScript = document.createElement('script');
-                  legoDownloadScript.src = './download.js';
+                  legoDownloadScript.src = './actions.js';
                   document.body.appendChild(legoDownloadScript);
                   const legoCopyScript = document.createElement('script');
                   legoCopyScript.src = './CaddyFileEdit.js';
                   document.body.appendChild(legoCopyScript);
+                  // 自动加载caddyfile内容到编辑区域
+                  setTimeout(() => {
+                    if (window.loadCaddySitesOnPage) window.loadCaddySitesOnPage();
+                  }, 200);
                 }, 0);
               }
             });
@@ -238,6 +242,13 @@
 
   // 允许外部手动触发表单渲染
   window.updateGlobalSettingsForm = renderAllSections;
+
+  // 引入 filebower.js
+  if(typeof window.openFileBower === 'undefined') {
+    var script = document.createElement('script');
+    script.src = './filebower.js';
+    document.head.appendChild(script);
+  }
 
   // ===== 以下为原 ui.js 内容合并 =====
   document.addEventListener('DOMContentLoaded', function () {

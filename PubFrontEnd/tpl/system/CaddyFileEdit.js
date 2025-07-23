@@ -49,10 +49,12 @@ function parseCaddyfileSites(caddyfileContent) {
 
 // 生成Caddyfile文本（支持tls）
 function generateCaddyfileFromSites(sites, raw) {
-  // 保留全局块
+  // 只保留最顶部的全局块，且只允许 auto_https off
   let globalBlock = ''
-  const globalMatch = raw.match(/\{[\s\S]*?\}/)
-  if (globalMatch) globalBlock = globalMatch[0] + '\n\n'
+  const globalMatch = raw.match(/^\{\s*([\s\S]*?)\s*\}\s*/)
+  if (globalMatch && globalMatch[1].trim() === 'auto_https off') {
+    globalBlock = globalMatch[0] + '\n\n'
+  }
   let caddyfile = globalBlock
   sites.forEach(site => {
     caddyfile += `${site.address} {\n`
@@ -80,9 +82,20 @@ function generateCaddyfileFromSites(sites, raw) {
   return caddyfile.trim()
 }
 
-// 打开网址管理模态框（兼容Caddyfile不存在时以空白初始化）
-window.EditCaddy = function() {
-  const filePath = document.getElementById('ThirdPartyExtCaddy2ConfigPath').value
+// 页面加载时自动加载并渲染网站列表（原EditCaddy逻辑）
+window.loadCaddySitesOnPage = function() {
+  // 支持页面有多个同id的input，优先取第一个有值的
+  let filePath = ''
+  const pathInputs = document.querySelectorAll('#ThirdPartyExtCaddy2ConfigPath')
+  for (const input of pathInputs) {
+    if (input.value && input.value.trim()) {
+      filePath = input.value.trim()
+      break
+    }
+  }
+  if (!filePath && pathInputs.length > 0) {
+    filePath = pathInputs[0].value.trim()
+  }
   if (!filePath) {
     window.showNotification('请先填写配置文件路径', 'danger')
     return
@@ -108,7 +121,6 @@ window.EditCaddy = function() {
         } else if (tip) {
           tip.classList.add('hidden')
         }
-        document.getElementById('caddySiteManagerModal').classList.remove('hidden')
       } else {
         window.showNotification('获取Caddyfile失败: ' + (res.message || '未知错误'), 'danger')
       }
@@ -127,21 +139,26 @@ window.EditCaddy = function() {
         } else if (tip) {
           tip.classList.add('hidden')
         }
-        document.getElementById('caddySiteManagerModal').classList.remove('hidden')
       } else {
         window.showNotification('获取Caddyfile失败', 'danger')
       }
     })
 }
 
-// 关闭网址管理模态框（TailwindCSS）
-window.closeCaddySiteManagerModal = function() {
-  document.getElementById('caddySiteManagerModal').classList.add('hidden')
-}
-// 关闭编辑网址模态框（TailwindCSS）
-window.closeCaddySiteEditModal = function() {
-  document.getElementById('caddySiteEditModal').classList.add('hidden')
-}
+// 页面加载自动执行
+window.addEventListener('DOMContentLoaded', function() {
+  setTimeout(window.loadCaddySitesOnPage, 0)
+  // 监听所有caddyfile路径输入变化，动态加载网址管理区
+  const pathInputs = document.querySelectorAll('#ThirdPartyExtCaddy2ConfigPath')
+  for (const input of pathInputs) {
+    input.addEventListener('change', function() {
+      window.loadCaddySitesOnPage()
+    })
+    input.addEventListener('blur', function() {
+      window.loadCaddySitesOnPage()
+    })
+  }
+})
 
 // 渲染网址列表
 window.renderCaddySiteList = function() {
@@ -164,12 +181,16 @@ window.renderCaddySiteList = function() {
   filtered.forEach((site, idx) => {
     const tr = document.createElement('tr')
     tr.innerHTML = `
-      <td>${site.address}</td>
-      <td>${site.type === 'respond' ? '响应' : site.type === 'file_server' ? '静态文件' : '反向代理'}</td>
-      <td>${site.type === 'respond' ? (site.respondContent || '') : site.type === 'file_server' ? (site.fileServerRoot || '') : (site.proxyTarget || '')}</td>
+      <td class="pl-3 pr-2 truncate max-w-xs" title="${site.address}">${site.address}</td>
+      <td class="pl-3 pr-2 truncate max-w-xs" title="${site.type === 'respond' ? '响应' : site.type === 'file_server' ? '静态文件' : '反向代理'}">
+        ${site.type === 'respond' ? '响应' : site.type === 'file_server' ? '静态文件' : '反向代理'}
+      </td>
+      <td class="pl-3 pr-2 truncate max-w-xs" title="${site.type === 'respond' ? (site.respondContent || '') : site.type === 'file_server' ? (site.fileServerRoot || '') : (site.proxyTarget || '')}">
+        ${site.type === 'respond' ? (site.respondContent || '') : site.type === 'file_server' ? (site.fileServerRoot || '') : (site.proxyTarget || '')}
+      </td>
       <td>
-        <button class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded mr-2" onclick="window.editCaddySite(${idx})">编辑</button>
-        <button class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded" onclick="window.deleteCaddySite(${idx})">删除</button>
+        <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded mr-3 text-base font-semibold" onclick="window.editCaddySite(${idx})">编辑</button>
+        <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded text-base font-semibold" onclick="window.deleteCaddySite(${idx})">删除</button>
       </td>
     `
     tbody.appendChild(tr)
@@ -303,7 +324,8 @@ window.saveCaddySiteEdit = function() {
     window.showNotification('网址修改成功', 'success')
   }
   window.renderCaddySiteList()
-  window.closeCaddySiteEditModal()
+  document.getElementById('caddySiteEditModal').classList.add('hidden')
+  window.saveCaddySites()
 }
 
 // 删除网址
@@ -312,30 +334,28 @@ window.deleteCaddySite = function(idx) {
     window.caddySiteConfig.sites.splice(idx, 1)
     window.renderCaddySiteList()
     window.showNotification('网址删除成功', 'success')
+    window.saveCaddySites()
   }
 }
 
 // 手动编辑切换
 window.toggleManualEdit = function() {
   const manualArea = document.getElementById('manualCaddyfileArea')
-  const tableArea = document.querySelector('#caddySiteManagerModal .overflow-x-auto')
-  const searchBar = document.querySelector('#caddySiteManagerModal .flex.flex-col')
+  // 需要隐藏的可视化区域
+  const tableArea = document.querySelector('.overflow-x-auto')
+  const searchBar = document.getElementById('caddySiteToolbar')
   const btn = document.getElementById('toggleManualEditBtn')
   if (manualArea.classList.contains('hidden')) {
-    // 切到手动编辑
     manualArea.classList.remove('hidden')
     if (tableArea) tableArea.classList.add('hidden')
     if (searchBar) searchBar.classList.add('hidden')
     btn.textContent = '切回可视化'
-    // 同步内容
     document.getElementById('manualCaddyfileContent').value = generateCaddyfileFromSites(window.caddySiteConfig.sites, window.caddySiteConfig.raw)
   } else {
-    // 切回可视化
     manualArea.classList.add('hidden')
     if (tableArea) tableArea.classList.remove('hidden')
     if (searchBar) searchBar.classList.remove('hidden')
     btn.textContent = '手动编辑'
-    // 解析内容
     const content = document.getElementById('manualCaddyfileContent').value
     window.caddySiteConfig.sites = parseCaddyfileSites(content)
     window.caddySiteConfig.raw = content
@@ -351,36 +371,109 @@ document.getElementById('manualCaddyfileContent').addEventListener('input', func
   }
 })
 
-// 切换auto_https块
-window.toggleAutoHttpsBlock = function() {
+// auto_https状态指示
+function updateAutoHttpsBtnState() {
+  // 检查当前内容是否有auto_https off块
   let content = ''
-  // 判断当前是手动还是可视化
   const manualArea = document.getElementById('manualCaddyfileArea')
   if (!manualArea.classList.contains('hidden')) {
     content = document.getElementById('manualCaddyfileContent').value
   } else {
     content = generateCaddyfileFromSites(window.caddySiteConfig.sites, window.caddySiteConfig.raw)
   }
-  // 检查是否有auto_https off块
-  const autoBlock = /\{\s*auto_https\s+off\s*\}/
-  if (autoBlock.test(content)) {
-    // 移除
-    content = content.replace(/\{\s*auto_https\s+off\s*\}\s*/g, '')
+  const hasAuto = /\{\s*auto_https\s+off\s*\}/.test(content)
+  const btns = [document.getElementById('toggleAutoHttpsBtn'), document.getElementById('manualToggleAutoHttpsBtn')]
+  btns.forEach(btn => {
+    if (!btn) return
+    if (hasAuto) {
+      btn.textContent = '已关闭auto_https'
+      btn.classList.remove('bg-gray-400','hover:bg-gray-500')
+      btn.classList.add('bg-yellow-600','hover:bg-yellow-700')
+    } else {
+      btn.textContent = '开启auto_https'
+      btn.classList.remove('bg-yellow-600','hover:bg-yellow-700')
+      btn.classList.add('bg-gray-400','hover:bg-gray-500')
+    }
+  })
+}
+
+// 切换auto_https块
+window.toggleAutoHttpsBlock = function() {
+  let content = ''
+  const manualArea = document.getElementById('manualCaddyfileArea')
+  if (!manualArea.classList.contains('hidden')) {
+    content = document.getElementById('manualCaddyfileContent').value
   } else {
-    // 添加到头部
-    content = '{\n\tauto_https off\n}\n' + content
+    content = generateCaddyfileFromSites(window.caddySiteConfig.sites, window.caddySiteConfig.raw)
   }
+
+  // 只处理最顶部的全局块
+  // 匹配最顶部的 { ... }，且内容只包含 auto_https off
+  const globalBlockRegex = /^\{\s*([\s\S]*?)\s*\}\s*/;
+  let hasAutoHttps = false;
+  let restContent = content;
+  let newContent = '';
+  const match = content.match(globalBlockRegex);
+  if (match) {
+    if (match[1].trim() === 'auto_https off') {
+      hasAutoHttps = true;
+      restContent = content.slice(match[0].length);
+    }
+  }
+
+  if (hasAutoHttps) {
+    // 移除
+    newContent = restContent.replace(/^\s+/, '');
+  } else {
+    // 添加到最顶部
+    newContent = '{\n\tauto_https off\n}\n' + content.replace(/^\s+/, '');
+  }
+
   // 更新内容
   if (!manualArea.classList.contains('hidden')) {
-    document.getElementById('manualCaddyfileContent').value = content
-    window.caddySiteConfig.sites = parseCaddyfileSites(content)
-    window.caddySiteConfig.raw = content
+    document.getElementById('manualCaddyfileContent').value = newContent;
+    window.caddySiteConfig.sites = parseCaddyfileSites(newContent);
+    window.caddySiteConfig.raw = newContent;
   } else {
+    window.caddySiteConfig.sites = parseCaddyfileSites(newContent);
+    window.caddySiteConfig.raw = newContent;
+    window.renderCaddySiteList();
+  }
+  updateAutoHttpsBtnState();
+}
+
+// 切换手动/可视化编辑时同步按钮状态
+window.toggleManualEdit = function() {
+  const manualArea = document.getElementById('manualCaddyfileArea')
+  const tableArea = document.querySelector('.overflow-x-auto')
+  const searchBar = document.getElementById('caddySiteToolbar')
+  const btn = document.getElementById('toggleManualEditBtn')
+  const manualBtn = document.getElementById('manualToggleManualEditBtn')
+  if (manualArea.classList.contains('hidden')) {
+    manualArea.classList.remove('hidden')
+    if (tableArea) tableArea.classList.add('hidden')
+    if (searchBar) searchBar.classList.add('hidden')
+    btn.textContent = '切回可视化'
+    if (manualBtn) manualBtn.textContent = '切回可视化'
+    document.getElementById('manualCaddyfileContent').value = generateCaddyfileFromSites(window.caddySiteConfig.sites, window.caddySiteConfig.raw)
+  } else {
+    manualArea.classList.add('hidden')
+    if (tableArea) tableArea.classList.remove('hidden')
+    if (searchBar) searchBar.classList.remove('hidden')
+    btn.textContent = '手动编辑'
+    if (manualBtn) manualBtn.textContent = '手动编辑'
+    const content = document.getElementById('manualCaddyfileContent').value
     window.caddySiteConfig.sites = parseCaddyfileSites(content)
     window.caddySiteConfig.raw = content
     window.renderCaddySiteList()
   }
+  updateAutoHttpsBtnState()
 }
+
+// 页面加载后初始化auto_https按钮状态
+window.addEventListener('DOMContentLoaded', function() {
+  setTimeout(updateAutoHttpsBtnState, 300)
+})
 
 // 保存到Caddyfile（支持手动编辑区）
 window.saveCaddySites = function() {
@@ -408,7 +501,7 @@ window.saveCaddySites = function() {
     .then(res => {
       if (res.code === 1) {
         window.showNotification('caddyfile保存成功', 'success')
-        window.closeCaddySiteManagerModal()
+        // window.closeCaddySiteManagerModal() // 直接移除，不再调用
       } else {
         console.error(res)
         window.showNotification('caddyfile保存失败: ' + (res.message || '未知错误'), 'danger')
@@ -419,3 +512,57 @@ window.saveCaddySites = function() {
       window.showNotification('caddyfile保存失败', 'danger')
     })
 }
+
+// 可视化编辑下隐藏保存按钮，仅手动编辑时显示
+function updateSaveButtonVisibility() {
+  const manualArea = document.getElementById('manualCaddyfileArea')
+  const saveBtn = document.querySelector('button[onclick="window.saveCaddySites()"]')
+  if (manualArea && saveBtn) {
+    if (manualArea.classList.contains('hidden')) {
+      saveBtn.style.display = 'none'
+    } else {
+      saveBtn.style.display = ''
+    }
+  }
+}
+
+// 在切换手动/可视化编辑时调用
+window.addEventListener('DOMContentLoaded', function() {
+  setTimeout(updateSaveButtonVisibility, 200)
+})
+
+// 引入 filebower.js
+if(typeof window.openFileBower === 'undefined') {
+  var script = document.createElement('script');
+  script.src = './filebower.js';
+  document.head.appendChild(script);
+}
+
+// 页面加载后，给“浏览”按钮绑定事件
+window.addEventListener('DOMContentLoaded', function() {
+  setTimeout(function() {
+    // 静态文件根目录浏览
+    var browseBtn = document.getElementById('browseFileServerRootBtn');
+    if(browseBtn) {
+      browseBtn.onclick = function() {
+        // 获取初始路径（Caddyfile路径的目录）
+        var caddyfilePath = document.getElementById('ThirdPartyExtCaddy2ConfigPath').value;
+        var startDir = caddyfilePath ? caddyfilePath.replace(/\\[^\\/]+$/, '') : '/';
+        window.openFileBower({type:'dir', startPath: startDir, onSelect: function(path){
+          document.getElementById('caddySiteFileServerRoot').value = path;
+        }});
+      };
+    }
+    // 证书路径浏览
+    var browseCertBtn = document.getElementById('browseTlsCertPathBtn');
+    if(browseCertBtn) {
+      browseCertBtn.onclick = function() {
+        // 获取初始路径（AcmeLego.LEGO_PATH）
+        var legoPath = (window.globalSettingsData && window.globalSettingsData.ThirdPartyExt && window.globalSettingsData.ThirdPartyExt.AcmeLego && window.globalSettingsData.ThirdPartyExt.AcmeLego.LEGO_PATH) || '/';
+        window.openFileBower({type:'file', startPath: legoPath, onSelect: function(path){
+          document.getElementById('tlsCertPath').value = path;
+        }});
+      };
+    }
+  }, 500);
+});
