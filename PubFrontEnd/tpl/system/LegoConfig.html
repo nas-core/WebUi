@@ -11,10 +11,11 @@
         <input type="number" id="AutoUpdateCheckInterval" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition w-full px-3 py-2" data-bind="ThirdPartyExt.AcmeLego.AutoUpdateCheckInterval">
       </div>
       <div class="col-span-2">
-        <label for="AcmeLegoCommand" class="block text-sm font-medium text-gray-700 dark:text-gray-100">运行命令 (export xx=xx 即便在win下也会被识别为环境变量)</label>
+        <label for="AcmeLegoCommand" class="block text-sm font-medium text-gray-700 dark:text-gray-100">运行命令 (环境变量支持 export 和 set 方式)
+          <button type="button" class="ml-2 bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 text-xs rounded shadow transition align-middle" id="lego-copy-command-btn">复制命令</button>
+        </label>
         <div class="flex flex-col md:flex-row gap-2">
           <textarea id="AcmeLegoCommand" rows="4" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition w-full px-3 py-2" data-bind="ThirdPartyExt.AcmeLego.Command"></textarea>
-          <button type="button" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow transition w-full md:w-auto" id="lego-copy-command-btn">复制命令</button>
         </div>
         <span class="text-xs text-gray-500 dark:text-gray-400">此命令是续签证书的时候要用的，${BinPath} 和 ${LEGO_PATH} 会自动替换。更多命令和说明请参考nascore docs lego。</span>
       </div>
@@ -28,10 +29,11 @@
       </div>
       
       <div>
-        <label for="AcmeLegoBinPath" class="block text-sm font-medium text-gray-700 dark:text-gray-100">LEGO 路径</label>
+        <label for="AcmeLegoBinPath" class="block text-sm font-medium text-gray-700 dark:text-gray-100">LEGO 路径
+          <button type="button" class="ml-2 bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 text-xs rounded shadow transition align-middle" id="lego-download-btn">下载</button>
+        </label>
         <div class="flex flex-col md:flex-row gap-2">
           <input type="text" id="AcmeLegoBinPath" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition w-full px-3 py-2" data-bind="ThirdPartyExt.AcmeLego.BinPath">
-          <button type="button" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow transition w-full md:w-auto" id="lego-download-btn">下载</button>
         </div>
       </div>
     </div>
