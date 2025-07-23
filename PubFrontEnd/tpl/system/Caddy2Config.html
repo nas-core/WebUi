@@ -36,4 +36,107 @@
       <button type="button" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg shadow transition w-full md:w-auto" onclick="saveGlobalSetting()">保存设置</button>
     </div>
   </form>
-</section> 
+</section>
+
+<!-- 网址管理模态框（TailwindCSS版） -->
+<div id="caddySiteManagerModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden">
+  <div class="bg-white dark:bg-zinc-800 rounded-xl shadow-xl w-full max-w-4xl mx-4">
+    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-zinc-700">
+      <h3 class="text-lg font-semibold text-blue-700 dark:text-blue-400">Caddy2 网址管理</h3>
+      <button type="button" class="text-gray-400 hover:text-gray-700 text-2xl" onclick="window.closeCaddySiteManagerModal()">&times;</button>
+    </div>
+    <div class="px-6 py-4">
+      <div id="caddyfile-not-exist-tip" class="hidden mb-4 p-3 rounded bg-yellow-100 text-yellow-800 border border-yellow-300 text-sm">
+        Caddyfile文件不存在，保存时将自动创建。
+      </div>
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-4">
+        <input type="text" id="caddySiteSearchInput" class="w-full md:w-1/2 rounded border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="搜索网址/目标/备注..." oninput="window.caddySiteSearch()">
+        <button type="button" class="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded shadow transition" onclick="window.openCaddySiteAddModal()">添加网址</button>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="min-w-full text-sm text-left border border-gray-200 dark:border-zinc-700 rounded-lg">
+          <thead class="bg-gray-100 dark:bg-zinc-700">
+            <tr>
+              <th class="px-4 py-2">网址</th>
+              <th class="px-4 py-2">类型</th>
+              <th class="px-4 py-2">详情</th>
+              <th class="px-4 py-2">操作</th>
+            </tr>
+          </thead>
+          <tbody id="caddySiteListBody" class="bg-white dark:bg-zinc-800 divide-y divide-gray-100 dark:divide-zinc-700">
+            <!-- 动态渲染 -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="flex justify-end gap-2 px-6 py-4 border-t border-gray-200 dark:border-zinc-700">
+      <button type="button" id="toggleAutoHttpsBtn" class="bg-gray-400 hover:bg-gray-500 text-white font-semibold px-4 py-2 rounded-lg shadow transition" onclick="window.toggleAutoHttpsBlock()">切换auto_https</button>
+      <button type="button" id="toggleManualEditBtn" class="bg-gray-400 hover:bg-gray-500 text-white font-semibold px-4 py-2 rounded-lg shadow transition" onclick="window.toggleManualEdit()">手动编辑</button>
+      <button type="button" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg shadow transition" onclick="window.saveCaddySites()">保存到Caddyfile</button>
+      <button type="button" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold px-6 py-2 rounded-lg shadow transition" onclick="window.closeCaddySiteManagerModal()">关闭</button>
+    </div>
+    <!-- 纯文本编辑区，初始隐藏 -->
+    <div id="manualCaddyfileArea" class="px-6 py-4 hidden">
+      <label class="block text-sm font-medium text-gray-700 dark:text-gray-100 mb-1">Caddyfile内容（手动编辑）</label>
+      <textarea id="manualCaddyfileContent" class="w-full h-64 rounded border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 px-3 py-2 font-mono text-xs"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- 添加/编辑网址模态框（TailwindCSS版） -->
+<div id="caddySiteEditModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden">
+  <div class="bg-white dark:bg-zinc-800 rounded-xl shadow-xl w-full max-w-lg mx-4">
+    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-zinc-700">
+      <h3 class="text-lg font-semibold text-blue-700 dark:text-blue-400" id="caddySiteEditModalLabel">添加/编辑网址</h3>
+      <button type="button" class="text-gray-400 hover:text-gray-700 text-2xl" onclick="window.closeCaddySiteEditModal()">&times;</button>
+    </div>
+    <form id="caddySiteEditForm" class="px-6 py-4">
+      <input type="hidden" id="caddySiteEditIndex">
+      <div class="mb-4">
+        <label for="caddySiteAddress" class="block text-sm font-medium text-gray-700 dark:text-gray-100 mb-1">网址 (如 :8080 或 http://example.com)</label>
+        <input type="text" class="w-full rounded border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" id="caddySiteAddress" required>
+      </div>
+      <div class="mb-4">
+        <label for="caddySiteType" class="block text-sm font-medium text-gray-700 dark:text-gray-100 mb-1">类型</label>
+        <select class="w-full rounded border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 px-3 py-2" id="caddySiteType" onchange="window.caddySiteTypeChange()">
+          <option value="respond">响应文本</option>
+          <option value="file_server">静态文件</option>
+          <option value="reverse_proxy">反向代理</option>
+        </select>
+      </div>
+      <div class="mb-4 site-type-fields" id="caddySiteRespondFields">
+        <label for="caddySiteRespondContent" class="block text-sm font-medium text-gray-700 dark:text-gray-100 mb-1">响应内容</label>
+        <input type="text" class="w-full rounded border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 px-3 py-2" id="caddySiteRespondContent">
+      </div>
+      <div class="mb-4 site-type-fields" id="caddySiteFileServerFields" style="display:none;">
+        <label for="caddySiteFileServerRoot" class="block text-sm font-medium text-gray-700 dark:text-gray-100 mb-1">静态文件根目录</label>
+        <input type="text" class="w-full rounded border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 px-3 py-2" id="caddySiteFileServerRoot">
+      </div>
+      <div class="mb-4 site-type-fields" id="caddySiteReverseProxyFields" style="display:none;">
+        <label for="caddySiteProxyTarget" class="block text-sm font-medium text-gray-700 dark:text-gray-100 mb-1">反向代理目标地址</label>
+        <input type="text" class="w-full rounded border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 px-3 py-2" id="caddySiteProxyTarget">
+        <div class="flex items-center mt-2">
+          <input class="rounded border-gray-300 dark:border-zinc-700" type="checkbox" id="caddySiteTlsInsecureSkipVerify">
+          <label class="ml-2 text-sm text-gray-700 dark:text-gray-100" for="caddySiteTlsInsecureSkipVerify">忽略TLS验证</label>
+        </div>
+      </div>
+      <!-- TLS 相关选项 -->
+      <div class="mb-4">
+        <div class="flex items-center">
+          <input type="checkbox" id="enableTls" class="rounded border-gray-300 dark:border-zinc-700" onchange="window.toggleTlsFields()">
+          <label for="enableTls" class="ml-2 text-sm text-gray-700 dark:text-gray-100">启用TLS</label>
+        </div>
+      </div>
+      <div class="mb-4" id="tlsFields" style="display:none;">
+        <label for="tlsCertPath" class="block text-sm font-medium text-gray-700 dark:text-gray-100 mb-1">证书路径</label>
+        <input type="text" id="tlsCertPath" class="w-full rounded border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 px-3 py-2 mb-2">
+        <label for="tlsKeyPath" class="block text-sm font-medium text-gray-700 dark:text-gray-100 mb-1">密钥路径</label>
+        <input type="text" id="tlsKeyPath" class="w-full rounded border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 px-3 py-2">
+      </div>
+      <div class="flex justify-end gap-2 mt-6">
+        <button type="button" class="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded-lg shadow transition" onclick="window.saveCaddySiteEdit()">保存</button>
+        <button type="button" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold px-6 py-2 rounded-lg shadow transition" onclick="window.closeCaddySiteEditModal()">取消</button>
+      </div>
+    </form>
+  </div>
+</div> 

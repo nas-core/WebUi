@@ -162,6 +162,9 @@
                   const legoDownloadScript = document.createElement('script');
                   legoDownloadScript.src = './download.js';
                   document.body.appendChild(legoDownloadScript);
+                  const legoCopyScript = document.createElement('script');
+                  legoCopyScript.src = './CaddyFileEdit.js';
+                  document.body.appendChild(legoCopyScript);
                 }, 0);
               }
             });
@@ -279,18 +282,34 @@
             a.textContent = item.name;
             a.className = 'block px-4 py-2 rounded hover:bg-gray-100 dark:hover:bg-zinc-700 text-gray-900 dark:text-gray-100';
             if (item.key === 'logout') {
-              a.onclick = function(e) { e.preventDefault(); window.logoutAndRedirect(); navDropdown && navDropdown.classList.add('hidden'); navDropdown.style.display = ''; };
+              a.onclick = function(e) { e.preventDefault(); window.logoutAndRedirect(); hideNavMenuDropdown(); };
             } else {
-              a.onclick = function() { navDropdown && navDropdown.classList.add('hidden'); navDropdown.style.display = ''; };
+              a.onclick = function() { hideNavMenuDropdown(); };
             }
             navList.appendChild(a);
           });
         }
         navDropdown.classList.remove('hidden');
         navDropdown.style.display = 'block';
+        // 鼠标移出菜单区域自动隐藏
+        navDropdown.onmouseleave = function() {
+          hideNavMenuDropdown();
+        };
+        // ESC 键关闭
+        document.addEventListener('keydown', escListener);
       } else if (navDropdown) {
+        hideNavMenuDropdown();
+      }
+      function hideNavMenuDropdown() {
         navDropdown.classList.add('hidden');
         navDropdown.style.display = '';
+        navDropdown.onmouseleave = null;
+        document.removeEventListener('keydown', escListener);
+      }
+      function escListener(e) {
+        if (e.key === 'Escape') {
+          hideNavMenuDropdown();
+        }
       }
     };
     if (navBtn) {
