@@ -94,7 +94,12 @@
           const oldName = oldPath.split('/').pop();
           const newName = prompt('输入新名称', oldName);
           if(newName && newName !== oldName) {
-            // TODO: 调用API重命名
+            const newPath = oldPath.replace(/[^/]+$/, newName);
+            API.request('/@adminapi/admin/renameFileOrDir?old_path=' + encodeURIComponent(oldPath) + '&new_path=' + encodeURIComponent(newPath), {}, {method:'POST', needToken:true})
+              .then(res => {
+                if(res.code === 1) loadDir(pathInput.value);
+                else alert(res.message || '重命名失败');
+              });
           }
         };
       });
@@ -119,14 +124,22 @@
       const dir = pathInput.value;
       const name = prompt('输入新文件名');
       if(name) {
-        // TODO: 调用API新建文件
+        API.request('/@adminapi/admin/createFile?path=' + encodeURIComponent(dir.replace(/\/$/, '') + '/' + name), {}, {method:'POST', needToken:true})
+          .then(res => {
+            if(res.code === 1) loadDir(dir);
+            else alert(res.message || '创建失败');
+          });
       }
     };
     modal.querySelector('#file-bower-newdirbtn').onclick = function() {
       const dir = pathInput.value;
       const name = prompt('输入新目录名');
       if(name) {
-        // TODO: 调用API新建目录
+        API.request('/@adminapi/admin/createDir?path=' + encodeURIComponent(dir.replace(/\/$/, '') + '/' + name), {}, {method:'POST', needToken:true})
+          .then(res => {
+            if(res.code === 1) loadDir(dir);
+            else alert(res.message || '创建失败');
+          });
       }
     };
     modal.classList.remove('hidden');
