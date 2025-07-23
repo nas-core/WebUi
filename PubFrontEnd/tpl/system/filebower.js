@@ -57,16 +57,24 @@
     function loadDir(path) {
       pathInput.value = path;
       listDiv.innerHTML = '<div class="text-center text-gray-400 py-6">加载中...</div>';
+      // 切换目录时清除选中状态和按钮
+      if(type === 'file') {
+        selected = '';
+        if(selectBtn) selectBtn.style.display = 'none';
+      }
       API.request('/@adminapi/admin/getDirectoryContents?path=' + encodeURIComponent(path), {}, {method:'GET', needToken:true})
         .then(res => {
-          if(res.code !== 1 || !Array.isArray(res.data)) {
+          if(res.code !== 1 && res.code !== undefined) {
             listDiv.innerHTML = '<div class="text-center text-red-500 py-6">加载失败</div>';
             return;
           }
-          // type=dir 只显示目录，type=file 只显示文件
-          let items = res.data;
-          if(type === 'dir') items = items.filter(x=>x.is_dir);
-          if(type === 'file') items = items.filter(x=>!x.is_dir);
+          let items = Array.isArray(res.data) ? res.data : (Array.isArray(res) ? res : []);
+          // 排序：目录在前，文件在后，均按名称排序
+          items = items.slice().sort(function(a, b) {
+            if(a.is_dir && !b.is_dir) return -1;
+            if(!a.is_dir && b.is_dir) return 1;
+            return a.name.localeCompare(b.name, 'zh-CN');
+          });
           renderList(items, path);
           // type=file 未选中文件时隐藏选择按钮
           if(type === 'file') {
@@ -80,7 +88,13 @@
         });
     }
     function renderList(items, basePath) {
-      let html = '<ul class="divide-y divide-gray-100 dark:divide-zinc-700">';
+      let html = '';
+      if(items.length === 0) {
+        html = '<div class="text-center text-gray-400 py-6">暂无内容</div>';
+        listDiv.innerHTML = html;
+        return;
+      }
+      html = '<ul class="divide-y divide-gray-100 dark:divide-zinc-700">';
       items.forEach(item => {
         let icon = item.is_dir ? '📁' : '📄';
         html += `<li class="flex items-center px-3 py-2 cursor-pointer hover:bg-blue-50 dark:hover:bg-zinc-700 ${item.is_dir ? 'font-bold' : ''}" data-path="${basePath.replace(/\/$/,'') + '/' + item.name}" data-dir="${item.is_dir}">
@@ -95,23 +109,20 @@
           if(e.target.classList.contains('file-bower-renamebtn')) return; // 避免重命名按钮冒泡
           const p = this.getAttribute('data-path');
           const isDir = this.getAttribute('data-dir') === 'true';
-          if(type === 'dir') {
-            // 只允许选中目录
-            selected = p;
-            listDiv.querySelectorAll('li').forEach(x=>x.classList.remove('bg-blue-100','dark:bg-blue-900'));
-            this.classList.add('bg-blue-100','dark:bg-blue-900');
-            selectBtn.style.display = '';
-          } else if(type === 'file') {
-            selected = p;
-            listDiv.querySelectorAll('li').forEach(x=>x.classList.remove('bg-blue-100','dark:bg-blue-900'));
-            this.classList.add('bg-blue-100','dark:bg-blue-900');
-            selectBtn.style.display = '';
+          if(isDir) {
+            // 目录点击：进入子目录（file/dir模式都允许）
+            loadDir(p);
+            if(type === 'dir') {
+              // 选择目录时，允许选中当前目录（可选：可加一个“选中当前目录”按钮）
+            }
           } else {
-            // 文件/目录都可选
-            selected = p;
-            listDiv.querySelectorAll('li').forEach(x=>x.classList.remove('bg-blue-100','dark:bg-blue-900'));
-            this.classList.add('bg-blue-100','dark:bg-blue-900');
-            selectBtn.style.display = '';
+            // 文件点击：file模式可选中
+            if(type === 'file') {
+              selected = p;
+              listDiv.querySelectorAll('li').forEach(x=>x.classList.remove('bg-blue-100','dark:bg-blue-900'));
+              this.classList.add('bg-blue-100','dark:bg-blue-900');
+              selectBtn.style.display = '';
+            }
           }
         };
       });
