@@ -77,7 +77,24 @@ function downloadLego() {
     onError: (err) => showNotification('LEGO 下载失败: ' + (err.message || err), 'danger'),
   })
 }
-document.getElementById('lego-download-btn').onclick = downloadLego
 
 // 挂到 window 上，方便外部绑定
 window.downloadLego = downloadLego
+
+// rclone 下载按钮逻辑
+function downloadRclone() {
+  const Version = document.getElementById('ThirdPartyExtRcloneVersion').value
+  const BinPath = document.getElementById('RcloneBinPath').value
+  window.downloadThirdParty({
+    url: `/@api/admin/get_ThirdParty_rclone?Version=${encodeURIComponent(Version)}&BinPath=${encodeURIComponent(BinPath)}`,
+    moduleName: 'Rclone',
+    timeoutMs: 60000,
+    onTimeout: () => showNotification('Rclone 下载请求超时，后台可能仍在下载，请稍后刷新或检查文件', 'warning'),
+    onSuccess: () => showNotification('Rclone 下载成功', 'success'),
+    onError: (err) => showNotification('Rclone 下载失败: ' + (err.message || err), 'danger'),
+  })
+}
+
+
+// 挂到 window 上，方便外部绑定
+window.downloadRclone = downloadRclone;
