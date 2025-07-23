@@ -30,9 +30,13 @@ async function downloadRclone() {
 function copyRcloneMountCommand() {
   const rcloneMountCommand = document.getElementById('ThirdPartyExtRcloneAutoMountCommand').value
   const rcloneBinPath = document.getElementById('RcloneBinPath').value
+  const rcloneConfigFilePath = document.getElementById('RcloneConfigFilePath').value
 
   let commandToCopy = rcloneMountCommand.replace(/\${BinPath}/g, rcloneBinPath)
   commandToCopy = commandToCopy.replace(/&nascore/g, '')
+  if (rcloneConfigFilePath) {
+    commandToCopy = commandToCopy.replace(/\${ConfigFilePath}/g, "--config=" + rcloneConfigFilePath)
+  }
 
   navigator.clipboard
     .writeText(commandToCopy)

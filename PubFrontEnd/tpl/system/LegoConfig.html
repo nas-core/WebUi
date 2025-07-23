@@ -14,10 +14,10 @@
       </div>
       <div class="col-span-2">
         <label for="AcmeLegoCommand" class="block text-sm font-medium text-gray-700 dark:text-gray-100">运行命令 (环境变量支持 export 和 set 方式)
-          <button type="button" class="ml-2 bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 text-xs rounded shadow transition align-middle" id="lego-copy-command-btn">复制命令</button>
+          <button type="button" class="ml-2 bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 text-xs rounded shadow transition align-middle" id="lego-copy-command-btn" onclick="copyLegoCommand()">复制命令</button>
         </label>
         <div class="flex flex-col md:flex-row gap-2">
-          <textarea id="AcmeLegoCommand" rows="4" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition w-full px-3 py-2" data-bind="ThirdPartyExt.AcmeLego.Command"></textarea>
+          <textarea id="AcmeLegoCommand" rows="10" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition w-full px-3 py-2" data-bind="ThirdPartyExt.AcmeLego.Command"></textarea>
         </div>
         <span class="text-xs text-gray-500 dark:text-gray-400">此命令是续签证书的时候要用的，${BinPath} 和 ${LEGO_PATH} 会自动替换。更多命令和说明请参考nascore docs lego。</span>
       </div>

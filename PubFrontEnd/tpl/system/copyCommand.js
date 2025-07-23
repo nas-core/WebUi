@@ -11,21 +11,46 @@ function copyLegoCommand() {
       .writeText(commandToCopy)
       .then(() => {
         if (window.showNotification) {
-          window.showNotification('命令已复制到剪贴板 并替换了路径，你可以粘贴到终端中执行', 'success')
-        } else {
-          alert('命令已复制到剪贴板 并替换了路径，你可以粘贴到终端中执行')
+          window.showNotification('命令已复制到剪贴板 并替换了路径，你可能需要编辑后执行', 'success')
+        } 
+      })
+      .catch((err) => {
+        console.error('复制失败:', err)
+        if (window.showNotification) {
+          window.showNotification('复制命令失败，请手动复制。', 'danger')
+        } 
+      })
+  }
+  
+  window.copyLegoCommand = copyLegoCommand
+
+function copyRcloneMountCommand() {
+    const rcloneMountCommand = document.getElementById('ThirdPartyExtRcloneAutoMountCommand').value
+    const rcloneBinPath = document.getElementById('RcloneBinPath').value
+    const rcloneConfigFilePath = document.getElementById('RcloneConfigFilePath').value
+    let commandToCopy = rcloneMountCommand.replace(/\${BinPath}/g, rcloneBinPath)
+
+    if (rcloneConfigFilePath) {
+      commandToCopy = commandToCopy.replace(/\${ConfigFilePath}/g, "--config=" + rcloneConfigFilePath)
+    } else {
+      commandToCopy = commandToCopy.replace(/\${ConfigFilePath}/g, "")
+    }
+    commandToCopy = commandToCopy.replace(/&nascore/g, '')
+
+    navigator.clipboard
+      .writeText(commandToCopy)
+      .then(() => {
+        if (window.showNotification) {
+          window.showNotification('命令已复制到剪贴板 并替换了路径，你可能需要编辑后执行', 'success')
         }
       })
       .catch((err) => {
         console.error('复制失败:', err)
         if (window.showNotification) {
           window.showNotification('复制命令失败，请手动复制。', 'danger')
-        } else {
-          alert('复制命令失败，请手动复制。')
-        }
+        } 
       })
-  }
-  
-  window.copyLegoCommand = copyLegoCommand
+}
 
-document.getElementById('lego-copy-command-btn')?.addEventListener('click', copyLegoCommand)
+window.copyRcloneMountCommand = copyRcloneMountCommand
+

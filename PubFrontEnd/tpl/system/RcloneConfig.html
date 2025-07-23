@@ -1,5 +1,6 @@
 <section id="rclone" class="bg-white dark:bg-zinc-800 rounded-xl shadow-md border border-gray-200 dark:border-zinc-700 p-6 mb-6">
   <h2 class="text-lg font-semibold mb-4 text-blue-700 dark:text-blue-400 tracking-tight">Rclone 云存储配置</h2>
+  <span class="text-xs text-gray-500 dark:text-gray-400">rclone 是一个支持多种云存储的工具,因rclone功能多体量大。nascore并未集成rclone,而是把rclone作为扩展工具,来调用rclone 进程来实现云存储挂载备份等功能。</span>
   <form class="space-y-4">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div class="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-2">
@@ -18,23 +19,27 @@
           <input type="text" id="RcloneBinPath" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition w-full px-3 py-2" data-bind="ThirdPartyExt.Rclone.BinPath">
         </div>
       </div>
+      <div>
+        <label for="RcloneConfigFilePath" class="block text-sm font-medium text-gray-700 dark:text-gray-100">rclone配置文件路径</label>
+        <input type="text" id="RcloneConfigFilePath" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition w-full px-3 py-2" data-bind="ThirdPartyExt.Rclone.ConfigFilePath">
+      </div>
       <div class="col-span-2">
         <label for="ThirdPartyExtRcloneAutoMountCommand" class="block text-sm font-medium text-gray-700 dark:text-gray-100">rclone自动挂载命令
           <button type="button" class="ml-2 bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 text-xs rounded shadow transition align-middle" onclick="copyRcloneMountCommand()" id="rclone-copy-command-btn">复制命令</button>
         </label>
         <div class="flex flex-col md:flex-row gap-2">
-          <textarea id="ThirdPartyExtRcloneAutoMountCommand" rows="2" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition w-full px-3 py-2" data-bind="ThirdPartyExt.Rclone.AutoMountCommand"></textarea>
+          <textarea id="ThirdPartyExtRcloneAutoMountCommand" rows="10" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition w-full px-3 py-2" data-bind="ThirdPartyExt.Rclone.AutoMountCommand"></textarea>
         </div>
-        <span class="text-xs text-gray-500 dark:text-gray-400">（ 如果命令最后结束 是字符 &nascore ，那么会作为后台命令执行）</span>
+        <span class="text-xs text-gray-500 dark:text-gray-400">(如果命令最后结束 是字符 &nascore ，那么会作为后台命令执行)</span>
       </div>
       <div class="col-span-2">
         <label for="ThirdPartyExtRcloneAutoUnMountCommand" class="block text-sm font-medium text-gray-700 dark:text-gray-100">rclone自动卸载命令</label>
-        <textarea id="ThirdPartyExtRcloneAutoUnMountCommand" rows="2" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition w-full px-3 py-2" data-bind="ThirdPartyExt.Rclone.AutoUnMountCommand"></textarea>
+        <textarea id="ThirdPartyExtRcloneAutoUnMountCommand" rows="10" class="mt-1 block w-full rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition w-full px-3 py-2" data-bind="ThirdPartyExt.Rclone.AutoUnMountCommand"></textarea>
       </div>
     </div>
     <div class="mt-2 text-xs text-gray-500 dark:text-gray-400">
-      rclone的目录挂载 在linux 依赖 fuse,频繁挂载卸载可能会出错。请务必测试命令正常后再托管到nascore的跟随启动启动挂载。<br />
-      nascore在挂载之前会先执行 卸载命令，nascore退出的时候也会执行卸载命令。
+      rclone的目录挂载 在linux/macos/freebsd 下依赖 fuse,在windows下依赖 winfsp,频繁挂载卸载可能会出错。请务必测试命令正常后再托管到nascore的跟随启动启动挂载。<br />
+      nascore在挂载之前会先执行 卸载命令,nascore退出的时候也会执行卸载命令。
     </div>
     <div class="mt-6 flex flex-col md:flex-row justify-end gap-2">
       <button type="button" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg shadow transition w-full md:w-auto" onclick="saveGlobalSetting()">保存设置</button>
