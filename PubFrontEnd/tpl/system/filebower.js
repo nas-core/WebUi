@@ -3,16 +3,20 @@
 (function(){
   if(window.openFileBower) return;
   // 创建弹窗DOM
-  function createModal() {
+  function createModal(type) {
     let modal = document.getElementById('file-bower-modal');
     if(modal) return modal;
     modal = document.createElement('div');
     modal.id = 'file-bower-modal';
     modal.className = 'fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden';
+    // 标题根据type变化
+    var title = '选择文件/目录';
+    if(type === 'dir') title = '选择目录';
+    else if(type === 'file') title = '选择文件';
     modal.innerHTML = `
       <div class="bg-white dark:bg-zinc-800 rounded-xl shadow-xl w-full max-w-2xl mx-4">
         <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-zinc-700">
-          <h3 class="text-lg font-semibold text-blue-700 dark:text-blue-400">选择文件/目录</h3>
+          <h3 class="text-lg font-semibold text-blue-700 dark:text-blue-400" id="file-bower-title">${title}</h3>
           <button type="button" class="text-gray-400 hover:text-gray-700 text-2xl" onclick="document.getElementById('file-bower-modal').classList.add('hidden')">&times;</button>
         </div>
         <div class="px-6 pt-4 pb-2 flex flex-row gap-2">
@@ -41,11 +45,15 @@
     const type = opt.type || 'file';
     let curPath = opt.startPath || '/';
     let selected = '';
-    const modal = createModal();
+    const modal = createModal(type);
     const pathInput = modal.querySelector('#file-bower-path');
     const listDiv = modal.querySelector('#file-bower-list');
     const upBtn = modal.querySelector('#file-bower-upbtn');
     const selectBtn = modal.querySelector('#file-bower-selectbtn');
+    const titleEl = modal.querySelector('#file-bower-title');
+    if(type === 'dir') titleEl.textContent = '选择目录';
+    else if(type === 'file') titleEl.textContent = '选择文件';
+    else titleEl.textContent = '选择文件/目录';
     function loadDir(path) {
       pathInput.value = path;
       listDiv.innerHTML = '<div class="text-center text-gray-400 py-6">加载中...</div>';
@@ -55,7 +63,17 @@
             listDiv.innerHTML = '<div class="text-center text-red-500 py-6">加载失败</div>';
             return;
           }
-          renderList(res.data, path);
+          // type=dir 只显示目录，type=file 只显示文件
+          let items = res.data;
+          if(type === 'dir') items = items.filter(x=>x.is_dir);
+          if(type === 'file') items = items.filter(x=>!x.is_dir);
+          renderList(items, path);
+          // type=file 未选中文件时隐藏选择按钮
+          if(type === 'file') {
+            selectBtn.style.display = selected ? '' : 'none';
+          } else {
+            selectBtn.style.display = '';
+          }
         })
         .catch(()=>{
           listDiv.innerHTML = '<div class="text-center text-red-500 py-6">加载失败</div>';
@@ -77,12 +95,23 @@
           if(e.target.classList.contains('file-bower-renamebtn')) return; // 避免重命名按钮冒泡
           const p = this.getAttribute('data-path');
           const isDir = this.getAttribute('data-dir') === 'true';
-          if(isDir) {
-            loadDir(p);
-          } else {
+          if(type === 'dir') {
+            // 只允许选中目录
             selected = p;
             listDiv.querySelectorAll('li').forEach(x=>x.classList.remove('bg-blue-100','dark:bg-blue-900'));
             this.classList.add('bg-blue-100','dark:bg-blue-900');
+            selectBtn.style.display = '';
+          } else if(type === 'file') {
+            selected = p;
+            listDiv.querySelectorAll('li').forEach(x=>x.classList.remove('bg-blue-100','dark:bg-blue-900'));
+            this.classList.add('bg-blue-100','dark:bg-blue-900');
+            selectBtn.style.display = '';
+          } else {
+            // 文件/目录都可选
+            selected = p;
+            listDiv.querySelectorAll('li').forEach(x=>x.classList.remove('bg-blue-100','dark:bg-blue-900'));
+            this.classList.add('bg-blue-100','dark:bg-blue-900');
+            selectBtn.style.display = '';
           }
         };
       });
@@ -114,7 +143,7 @@
     };
     selectBtn.onclick = function() {
       let val = '';
-      if(type === 'dir') val = pathInput.value;
+      if(type === 'dir') val = selected || pathInput.value;
       else val = selected || pathInput.value;
       if(opt.onSelect) opt.onSelect(val);
       modal.classList.add('hidden');
