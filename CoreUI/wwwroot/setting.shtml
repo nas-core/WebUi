@@ -33,13 +33,6 @@
             <i class="bi bi-palette me-1"></i> 主题设置
           </button>
         </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="system-tab" data-bs-toggle="tab" data-bs-target="#system" type="button"
-            role="tab" aria-controls="system" aria-selected="false">
-            <i class="bi bi-gear me-1"></i> 系统设置
-          </button>
-        </li>
-
       </ul>
 
       <div class="tab-content p-3 border border-top-0 rounded-bottom" id="settingsTabContent">
@@ -171,23 +164,6 @@
             </div>
           </div>
         </div>
-        <!-- 系统设置 提示 -->
-        <div class="tab-pane fade" id="system" role="tabtheme_nascorepage" aria-labelledby="system-tab">
-          <div class="row">
-            <div class="col-md-6">
-              <h3 class="mb-4">系统设置</h3>
-
-
-              <a href="./system.shtml" class="btn btn-primary">
-                <i class="bi bi-gear me-2"></i>打开系统设置
-              </a>
-              <p style="height: 1rem;"></p>
-              <p class="mb-1">系统设置功能仅限管理员使用</p>
-
-            </div>
-          </div>
-        </div>
-
       </div>
     </div>
     <!--#include file="include/footer.html" -->

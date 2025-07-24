@@ -14,7 +14,7 @@
 <body class="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-zinc-900">
   <div class="bg-white dark:bg-zinc-900 rounded-2xl shadow-lg p-8 w-full max-w-md border border-gray-200 dark:border-zinc-700 flex flex-col items-center">
     <div class="mb-5 flex flex-col items-center">
-      <img src="/@public/file/logo.webp" alt="nascore-logo" class="w-24 h-24 mb-3" />
+      <img src="/@public/file/logo.webp" alt="nascore-logo" class="w-24  mb-3" />
       <div class="text-3xl font-bold mb-6 text-center text-gray-900 dark:text-gray-100">nascore</div>
     </div>
     <!-- 已保存账号选择区 -->
@@ -42,7 +42,9 @@
       <div class="flex items-center mb-2 w-full">
         <input type="checkbox" id="remember-password" class="mr-2" />
         <label for="remember-password" class="text-gray-500 dark:text-gray-400 cursor-pointer text-base">记住密码</label>
-        <span id="remember-tip" class="text-yellow-500 dark:text-yellow-300 text-sm ml-2 hidden">本地加密保存，仅本机有效</span>
+        <span id="remember-tip" class="text-yellow-500 dark:text-yellow-300 text-sm ml-2 hidden">
+          可能会有安全风险,请谨慎使用
+        </span>
       </div>
       <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white rounded-lg py-3 text-lg font-bold mt-3 transition">登录</button>
       <button id="showSavedAccountsBtn" type="button" class="w-full bg-gray-100 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 text-blue-600 dark:text-blue-400 rounded-lg py-2 cursor-pointer text-base mt-2 hidden">选择已保存用户</button>
