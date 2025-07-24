@@ -59,8 +59,16 @@ document.addEventListener('DOMContentLoaded', () => {
       const canEdit = !isDir && window.isEditableTextFile && window.isEditableTextFile(name) && size <= onlineEditMaxSizeKB * 1024
       const canExtract = !isDir && window.CompressExtractAPI && window.CompressExtractAPI.isSupportedArchive(name)
 
-      // 如果点击的是文件或文件夹
-      if (openButton) openButton.style.display = isDir ? 'flex' : 'none' // 只有文件夹可以"打开"
+      // 动态切换第一个菜单项文本
+      if (openButton) {
+        if (isDir) {
+          openButton.style.display = 'flex'
+          openButton.innerHTML = '<i class="bi bi-folder2-open"></i>打开'
+        } else {
+          openButton.style.display = 'flex'
+          openButton.innerHTML = '<i class="bi bi-info-circle"></i>详细信息'
+        }
+      }
       if (downloadButton) downloadButton.style.display = isDir ? 'none' : 'flex' // 只有文件可以"下载"
       if (uploadButton) uploadButton.style.display = 'flex' // 始终显示上传按钮
       if (editButton) editButton.style.display = canEdit ? 'flex' : 'none' // 只有可编辑文件可以"编辑"
@@ -372,14 +380,13 @@ document.addEventListener('DOMContentLoaded', () => {
         break
       case 'open':
         if (targetItem) {
-          // 使用临时变量 targetItem
           const path = targetItem.dataset.path
           const isDir = targetItem.dataset.isDir === 'true'
-          const name = targetItem.querySelector('.ms-2')?.textContent || ''
-          const size = parseInt(targetItem.dataset.fileSize, 10) || 0 // 获取文件大小
-
-          // 无论文件还是文件夹都弹出 fileDetailModal
-          window.showFileDetailModal(targetItem)
+          if (isDir) {
+            window.location.hash = encodeURI(path)
+          } else {
+            window.showFileDetailModal(targetItem)
+          }
         }
         break
       case 'upload':
