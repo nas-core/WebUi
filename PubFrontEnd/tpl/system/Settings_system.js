@@ -171,6 +171,13 @@
                   }, 200);
                 }, 0);
               }
+              if (section === 'UserManager.html') {
+                setTimeout(() => {
+                  const userManageScript = document.createElement('script');
+                  userManageScript.src = './userManage.js';
+                  document.body.appendChild(userManageScript);
+                }, 0);
+              }
             });
           found = true;
         } else {
