@@ -62,12 +62,11 @@
     <script src="js/breadcrumb.js"></script>
     <script src="js/floating_clipboard.js"></script>
 
-    {{.WebUIPubLicCdn.Dropzone}}
+    <script src="{{.WebUICdnPrefix}}dropzone@5.9.3/dist/min/dropzone.min.js"></script>
 
     <!--#include file="include/upload.html" -->
     <script src="js/upload.js"></script>
-    <!-- 文件操作工具和预览功能 -->
-    {{.WebUIPubLicCdn.Artplayer}}
+    <script src="{{.WebUICdnPrefix}}libs/artplayer.min.js"></script>
     <script src="js/fileUtility.js"></script>
     <script src="js/filePreview.js"></script>
 
