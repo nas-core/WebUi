@@ -22,7 +22,7 @@ func HandlerFileBower(nsCfg *system_config.SysCfg, logger *zap.SugaredLogger, qp
 	return ServeStaticFile(nsCfg, logger, qpsCounter, "tpl/file/", "")
 }
 
-func SystemConfigLoginPage(nsCfg *system_config.SysCfg, logger *zap.SugaredLogger, qpsCounter *uint64) http.HandlerFunc {
+func SystemConfigPage(nsCfg *system_config.SysCfg, logger *zap.SugaredLogger, qpsCounter *uint64) http.HandlerFunc {
 	return ServeStaticFile(nsCfg, logger, qpsCounter, "tpl/system/", "system.html")
 }
 

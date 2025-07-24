@@ -86,7 +86,7 @@
       }
       try {
         const res = await API.request('/@adminapi/admin/users', { username, passwd, home_dir: home, is_admin }, { needToken: true, method: 'POST' });
-        if (res && typeof res.code !== 'undefined' && res.code < 10 && res.data && res.data.id) {
+        if (res && typeof res.code !== 'undefined' && res.code < 10 && res.data && typeof res.data.id !== 'undefined') {
           window.showNotification('添加用户成功', 'success');
           window.closeModal && window.closeModal('addUserModal');
           loadUsers();
@@ -125,6 +125,8 @@
     const tbody = document.getElementById('usersTableBody');
     tbody.innerHTML = '';
     (users || []).forEach((u, idx) => {
+      // 修正 home_dir 路径分隔符，防止 \t 被渲染为 tab
+      const safeHomeDir = (u.home_dir || '').replace(/\\/g, '/');
       const tr = document.createElement('tr');
       tr.className = (idx % 2 === 0)
         ? 'bg-white dark:bg-zinc-800 hover:bg-blue-50 dark:hover:bg-zinc-700 transition'
@@ -133,10 +135,10 @@
         <td class="pl-4 pr-2 text-left">${u.id}</td>
         <td class="pl-4 pr-2 text-left">${u.username}</td>
         <td class="pl-4 pr-2 text-left">******</td>
-        <td class="pl-4 pr-2 text-left">${u.home_dir || ''}</td>
+        <td class="pl-4 pr-2 text-left">${safeHomeDir}</td>
         <td class="pl-4 pr-2 text-left">${u.is_admin ? '是' : '否'}</td>
         <td class="pl-4 pr-2 text-left">
-          <button class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded mr-2" onclick="window.editUser(${u.id}, '${u.username}', '${u.home_dir || ''}', ${u.is_admin})">编辑</button>
+          <button class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded mr-2" onclick="window.editUser(${u.id}, '${u.username}', '${safeHomeDir}', ${u.is_admin})">编辑</button>
           <button class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded" onclick="window.deleteUser(${u.id}, '${u.username}')">删除</button>
         </td>
       `;
@@ -175,7 +177,8 @@
   window.editUser = function (id, username, home, is_admin) {
     document.getElementById('editUsername').value = username;
     document.getElementById('editPasswd').value = '';
-    document.getElementById('editHome').value = home;
+    // 修正 home 路径分隔符，防止 \t 被渲染为 tab
+    document.getElementById('editHome').value = (home || '').replace(/\\/g, '/');
     document.getElementById('editIsAdmin').checked = !!is_admin;
     document.getElementById('updateUserBtn').setAttribute('data-userid', id);
     window.openModal && window.openModal('editUserModal');

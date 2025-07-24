@@ -54,6 +54,24 @@ window.isLoggedIn = function() {
   if (parseInt(expires, 10) < now) return false;
   return true;
 };
+// 新增 IsAdmin 公用函数
+window.IsAdmin = function() {
+  var token = localStorage.getItem('nascore_jwt_refresh_token');
+  if (!token) return false;
+  try {
+    var payload = token.split('.')[1];
+    if (!payload) return false;
+    // base64url 解码
+    payload = payload.replace(/-/g, '+').replace(/_/g, '/');
+    var json = decodeURIComponent(atob(payload).split('').map(function(c) {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+    var obj = JSON.parse(json);
+    return !!obj.IsAdmin;
+  } catch (e) {
+    return false;
+  }
+};
 (function(){
   if(window.GlobalNavMenu) {
     window.GlobalNavMenu.forEach(function(item){
