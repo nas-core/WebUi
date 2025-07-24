@@ -12,10 +12,14 @@ import (
 )
 
 //go:embed tpl/*
-var loginFS embed.FS
+var tplFS embed.FS
 
 func HandlerLoginPage(nsCfg *system_config.SysCfg, logger *zap.SugaredLogger, qpsCounter *uint64) http.HandlerFunc {
 	return ServeStaticFile(nsCfg, logger, qpsCounter, "tpl/login/", "login.html")
+}
+
+func HandlerFileBower(nsCfg *system_config.SysCfg, logger *zap.SugaredLogger, qpsCounter *uint64) http.HandlerFunc {
+	return ServeStaticFile(nsCfg, logger, qpsCounter, "tpl/file/", "")
 }
 
 func SystemConfigLoginPage(nsCfg *system_config.SysCfg, logger *zap.SugaredLogger, qpsCounter *uint64) http.HandlerFunc {
@@ -37,7 +41,7 @@ func ServeStaticFile(nsCfg *system_config.SysCfg, logger *zap.SugaredLogger, qps
 			file = basePath + reqPath
 		}
 
-		data, err := loginFS.ReadFile(file)
+		data, err := tplFS.ReadFile(file)
 		if err != nil {
 			w.WriteHeader(http.StatusNotFound)
 			w.Write([]byte("404 not found"))

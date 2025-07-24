@@ -257,6 +257,15 @@
     document.head.appendChild(script);
   }
 
+  // 精简 navMenuDropdown 逻辑：只切换 hidden 类，不再动态定位
+  if (typeof window.toggleNavMenuDropdown === 'function') {
+    const origToggle = window.toggleNavMenuDropdown;
+    window.toggleNavMenuDropdown = function() {
+      origToggle();
+      // 不再动态设置 top/left/position
+    }
+  }
+
   // ===== 以下为原 ui.js 内容合并 =====
   document.addEventListener('DOMContentLoaded', function () {
     // 下拉菜单显示/隐藏逻辑
