@@ -71,6 +71,9 @@ document.addEventListener('DOMContentLoaded', () => {
       // 压缩和解压选项
       if (compressButton) compressButton.style.display = 'flex' // 所有文件和文件夹都可以压缩
       if (extractButton) extractButton.style.display = canExtract ? 'flex' : 'none' // 只有支持的压缩文件可以解压
+      // 显示重命名按钮
+      const renameButton = contextMenu.querySelector('[data-action="rename"]')
+      if (renameButton) renameButton.style.display = 'flex'
     } else {
       // 如果点击的是文件列表空白处
       if (openButton) openButton.style.display = 'none'
@@ -82,6 +85,9 @@ document.addEventListener('DOMContentLoaded', () => {
       if (deleteButton) deleteButton.style.display = 'none'
       if (compressButton) compressButton.style.display = 'none' // 空白处不能压缩
       if (extractButton) extractButton.style.display = 'none' // 空白处不能解压
+      // 隐藏重命名按钮
+      const renameButton = contextMenu.querySelector('[data-action="rename"]')
+      if (renameButton) renameButton.style.display = 'none'
 
       // 如果是空白区域，只保留创建和上传功能，隐藏其他的分隔线
       const dividers = contextMenu.querySelectorAll('.context-menu-divider')
@@ -372,12 +378,8 @@ document.addEventListener('DOMContentLoaded', () => {
           const name = targetItem.querySelector('.ms-2')?.textContent || ''
           const size = parseInt(targetItem.dataset.fileSize, 10) || 0 // 获取文件大小
 
-          if (isDir) {
-            window.location.hash = encodeURI(path)
-          } else {
-            // 弹出文件详情模态框
-            window.showFileDetailModal(targetItem)
-          }
+          // 无论文件还是文件夹都弹出 fileDetailModal
+          window.showFileDetailModal(targetItem)
         }
         break
       case 'upload':
@@ -457,6 +459,31 @@ document.addEventListener('DOMContentLoaded', () => {
           showSingleItemExtractOptions(path, name)
         }
         break
+      case 'rename':
+        if (targetItem) {
+          const oldPath = targetItem.dataset.path
+          const isDir = targetItem.dataset.isDir === 'true'
+          const oldName = targetItem.querySelector('.ms-2')?.textContent || ''
+          const newName = prompt('请输入新名称：', oldName)
+          if (newName && newName !== oldName) {
+            // 构建新路径
+            const dirPath = oldPath.substring(0, oldPath.lastIndexOf('/') + 1)
+            const newPath = dirPath + newName
+            try {
+              await window.FileOperations.moveItem(oldPath, newPath)
+              window.showNotification('重命名成功', 'success')
+              // 移除原file-item，避免新旧并存
+              const oldItem = document.querySelector(`.file-item[data-path="${CSS.escape(oldPath)}"]`)
+              if (oldItem) oldItem.remove()
+              window.loadFileList(currentPath, false)
+            } catch (err) {
+              window.showNotification('重命名失败: ' + (err.message || '未知错误'), 'error')
+            }
+          }
+        } else {
+          window.showNotification('请先选择要重命名的文件或文件夹', 'warning')
+        }
+        break;
     }
     hideContextMenu() // 操作完成后再隐藏菜单
   })

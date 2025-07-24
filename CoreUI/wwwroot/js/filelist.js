@@ -231,6 +231,7 @@ function renderFileList(items, currentPath, shouldClear = true) {
       <div class="row align-items-center">
         <div class="col-6 col-md-5">
           <div class="d-flex align-items-center">
+            <span class="drag-handle me-2" title="拖拽选择"><i class="bi  bi-three-dots-vertical"></i></span>
             <div class="select-checkbox me-2">
               <input type="checkbox" class="form-check-input" data-select-item>
             </div>
@@ -569,6 +570,7 @@ function addItemToList(item) {
     <div class="row align-items-center">
       <div class="col-6 col-md-5">
         <div class="d-flex align-items-center">
+          <span class="drag-handle me-2" title="拖拽选择"><i class="bi  bi-three-dots-vertical"></i></span>
           <div class="select-checkbox me-2">
             <input type="checkbox" class="form-check-input" data-select-item>
           </div>

@@ -96,6 +96,22 @@
   justify-content: center;
 }
 
+/* 拖拽图标样式 */
+.drag-handle {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  color: var(--text-secondary, #888);
+  font-size: 1.2rem;
+  margin-right: 0.25rem;
+  transition: color 0.2s;
+}
+.drag-handle:hover {
+  cursor: pointer;
+  color: var(--btn-primary-bg, #007bff);
+}
+
 /* 文件详情模态框路径输入框样式 */
 .fileDetailModal-filepath-input {
   max-width: 25rem; /* 调整最大宽度，使其在模态框中更合适 */
@@ -133,10 +149,6 @@
   .content-wrapper {
     margin-left: 4rem;
     width: calc(100% - 4rem);
-  }
-  calc(100% - 240px) .content-wrapper.sidebar-open {
-    margin-left: 15rem;
-    width: calc(100% - 240px);
   }
 }
 

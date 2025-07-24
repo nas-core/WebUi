@@ -212,7 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initMouseSelection()
 
     // 处理批量操作按钮点击
-    bulkToolbar.addEventListener('click', (e) => {
+    bulkToolbar.addEventListener('click', async (e) => {
       const action = e.target.closest('[data-action]')?.dataset.action
       if (!action) return
 
@@ -244,6 +244,30 @@ document.addEventListener('DOMContentLoaded', () => {
         case 'bulk-cancel':
           clearSelection()
           break
+        case 'bulk-rename':
+          if (window.selectedItems.size !== 1) {
+            window.showNotification('请只选择一个文件或文件夹进行重命名', 'warning')
+            break
+          }
+          const oldPath = Array.from(window.selectedItems)[0]
+          const fileItem = fileList.querySelector(`.file-item[data-path="${CSS.escape(oldPath)}"]`)
+          const oldName = fileItem?.querySelector('.ms-2')?.textContent || ''
+          const newName = prompt('请输入新名称：', oldName)
+          if (newName && newName !== oldName) {
+            const dirPath = oldPath.substring(0, oldPath.lastIndexOf('/') + 1)
+            const newPath = dirPath + newName
+            try {
+              await window.FileOperations.moveItem(oldPath, newPath)
+              window.showNotification('重命名成功', 'success')
+              // 移除原file-item，避免新旧并存
+              const oldItem = fileList.querySelector(`.file-item[data-path="${CSS.escape(oldPath)}"]`)
+              if (oldItem) oldItem.remove()
+              window.loadFileList(decodeURI(window.location.hash.replace(/^#/, '')) || '/', false)
+            } catch (err) {
+              window.showNotification('重命名失败: ' + (err.message || '未知错误'), 'error')
+            }
+          }
+          break;
       }
     })
   }
@@ -814,13 +838,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // 只处理左键点击
         if (e.button !== 0) return
 
-        const isClickOnFileItem = e.target.closest('.file-item') !== null
-        if (isClickOnFileItem) {
-          if (e.target.matches('[data-select-item]')) {
-          } else {
-            return
-          }
-        }
+        // 允许在.drag-handle及其子元素上，或空白区域（不在.file-item内）触发框选
+        if (!e.target.closest('.drag-handle') && e.target.closest('.file-item')) return
 
         e.preventDefault()
         startMouseSelection(e)

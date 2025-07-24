@@ -192,6 +192,11 @@
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
+/* 拖拽图标样式 */
+.grid-medium .drag-handle {
+  display: none;
+}
+
 /* 响应式布局 */
 @media (max-width: 1200px) {
   .grid-medium {
