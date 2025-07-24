@@ -124,15 +124,18 @@
   function renderUsersTable(users) {
     const tbody = document.getElementById('usersTableBody');
     tbody.innerHTML = '';
-    (users || []).forEach(u => {
+    (users || []).forEach((u, idx) => {
       const tr = document.createElement('tr');
+      tr.className = (idx % 2 === 0)
+        ? 'bg-white dark:bg-zinc-800 hover:bg-blue-50 dark:hover:bg-zinc-700 transition'
+        : 'bg-gray-50 dark:bg-zinc-900 hover:bg-blue-50 dark:hover:bg-zinc-700 transition';
       tr.innerHTML = `
-        <td>${u.id}</td>
-        <td>${u.username}</td>
-        <td>******</td>
-        <td>${u.home_dir || ''}</td>
-        <td>${u.is_admin ? '是' : '否'}</td>
-        <td>
+        <td class="pl-4 pr-2 text-left">${u.id}</td>
+        <td class="pl-4 pr-2 text-left">${u.username}</td>
+        <td class="pl-4 pr-2 text-left">******</td>
+        <td class="pl-4 pr-2 text-left">${u.home_dir || ''}</td>
+        <td class="pl-4 pr-2 text-left">${u.is_admin ? '是' : '否'}</td>
+        <td class="pl-4 pr-2 text-left">
           <button class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded mr-2" onclick="window.editUser(${u.id}, '${u.username}', '${u.home_dir || ''}', ${u.is_admin})">编辑</button>
           <button class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded" onclick="window.deleteUser(${u.id}, '${u.username}')">删除</button>
         </td>

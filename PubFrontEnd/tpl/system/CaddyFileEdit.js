@@ -180,6 +180,9 @@ window.renderCaddySiteList = function() {
   }
   filtered.forEach((site, idx) => {
     const tr = document.createElement('tr')
+    tr.className = (idx % 2 === 0)
+      ? 'bg-white dark:bg-zinc-800 hover:bg-blue-50 dark:hover:bg-zinc-700 transition'
+      : 'bg-gray-50 dark:bg-zinc-900 hover:bg-blue-50 dark:hover:bg-zinc-700 transition';
     tr.innerHTML = `
       <td class="pl-3 pr-2 truncate max-w-xs" title="${site.address}">${site.address}</td>
       <td class="pl-3 pr-2 truncate max-w-xs" title="${site.type === 'respond' ? '响应' : site.type === 'file_server' ? '静态文件' : '反向代理'}">
