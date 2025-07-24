@@ -14,74 +14,112 @@
     <script src="/@public/nav.js"></script>
 </head>
 
-<body class="min-h-screen bg-gradient-to-br from-blue-900 via-zinc-900 to-gray-800 dark:from-zinc-900 dark:via-blue-900 dark:to-gray-900 text-gray-900 dark:text-gray-100 flex items-center justify-center">
-<div class="flex flex-col items-center justify-center min-h-[60vh] w-full">
-  <div class="relative bg-white/70 dark:bg-zinc-800/70 backdrop-blur-xl rounded-2xl shadow-2xl border border-blue-300/40 dark:border-blue-900/40 p-10 max-w-xl w-full text-center overflow-hidden">
-    <div class="absolute -top-8 -left-8 w-32 h-32 bg-gradient-to-tr from-blue-500/30 via-cyan-400/20 to-transparent rounded-full blur-2xl animate-pulse"></div>
-    <div class="absolute -bottom-8 -right-8 w-32 h-32 bg-gradient-to-br from-purple-500/30 via-pink-400/20 to-transparent rounded-full blur-2xl animate-pulse"></div>
-    <div class="flex flex-col items-center">
-      <svg class="w-16 h-16 mb-4 text-blue-500 drop-shadow-lg" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m0 4a8 8 0 100-16 8 8 0 000 16zm0-6a2 2 0 100-4 2 2 0 000 4z"/></svg>
-      <h2 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-cyan-400 to-purple-500 mb-3 drop-shadow">无权访问</h2>
-      <p class="mb-7 text-gray-700 dark:text-gray-200 text-lg font-medium">您当前账号不是管理员，无法访问此页面。部分功能仅限管理员访问。</p>
+<body
+    class="min-h-screen bg-gradient-to-br from-blue-900 via-zinc-900 to-gray-800 dark:from-zinc-900 dark:via-blue-900 dark:to-gray-900 text-gray-900 dark:text-gray-100 flex items-center justify-center">
+    <div class="flex flex-col items-center justify-center min-h-[60vh] w-full">
+        <div
+            class="relative bg-white/70 dark:bg-zinc-800/70 backdrop-blur-xl rounded-2xl shadow-2xl border border-blue-300/40 dark:border-blue-900/40 p-10 max-w-xl w-full text-center overflow-hidden">
+            <div
+                class="absolute -top-8 -left-8 w-32 h-32 bg-gradient-to-tr from-blue-500/30 via-cyan-400/20 to-transparent rounded-full blur-2xl animate-pulse">
+            </div>
+            <div
+                class="absolute -bottom-8 -right-8 w-32 h-32 bg-gradient-to-br from-purple-500/30 via-pink-400/20 to-transparent rounded-full blur-2xl animate-pulse">
+            </div>
+            <div class="flex flex-col items-center">
+                <svg class="w-16 h-16 mb-4 text-blue-500 drop-shadow-lg" fill="none" stroke="currentColor"
+                    stroke-width="1.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M12 15v2m0 4a8 8 0 100-16 8 8 0 000 16zm0-6a2 2 0 100-4 2 2 0 000 4z" />
+                </svg>
+              <div class="flex flex-col items-center" id="notAdmin-login-tip-block-1"> 
+                <h2
+                class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-cyan-400 to-purple-500 mb-3 drop-shadow">
+                无权访问</h2>
+            <p class="mb-7 text-gray-700 dark:text-gray-200 text-lg font-medium">您当前账号不是管理员，无法访问此页面。部分功能仅限管理员访问。</p>
+              </div>
+            </div>
+            <div class="mb-7">
+                <h3
+                    class="text-lg font-semibold text-blue-700 dark:text-blue-400 mb-2 flex items-center justify-center gap-2" id="notAdmin-allow-list-title">
+                    <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" stroke-width="2"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                    您可以访问的页面：
+                </h3>
+                <div id="notAdmin-allow-list" class="flex flex-row flex-wrap gap-3 justify-center"></div>
+            </div>
+            <div class="mb-7">
+                <h3
+                    class="text-lg font-semibold text-pink-700 dark:text-pink-400 mb-2 flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5 text-pink-400" fill="none" stroke="currentColor" stroke-width="2"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M18.364 5.636l-1.414 1.414M6.343 17.657l-1.414 1.414M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    仅管理员可访问的页面：
+                </h3>
+                <div id="notAdmin-admin-list" class="flex flex-row flex-wrap gap-3 justify-center"></div>
+            </div>
+            <div class="mt-6 flex flex-col items-center gap-2" id="notAdmin-login-tip-block">
+                <span class="text-gray-600 dark:text-gray-300">如需访问管理员页面，请</span>
+                <a id="notAdmin-login-link" href="/@public/login/"
+                    class="inline-block px-6 py-2 rounded-full bg-gradient-to-r from-blue-500 via-cyan-400 to-purple-500 text-white font-bold shadow-lg hover:scale-105 hover:from-blue-600 hover:to-purple-600 transition-transform duration-200">重新登录</a>
+                <span class="text-gray-600 dark:text-gray-300">为管理员账号。</span>
+            </div>
+        </div>
     </div>
-    <div class="mb-7">
-      <h3 class="text-lg font-semibold text-blue-700 dark:text-blue-400 mb-2 flex items-center justify-center gap-2">
-        <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-        您可以访问的页面：
-      </h3>
-      <div id="notAdmin-allow-list" class="flex flex-row flex-wrap gap-3 justify-center"></div>
-    </div>
-    <div class="mb-7">
-      <h3 class="text-lg font-semibold text-pink-700 dark:text-pink-400 mb-2 flex items-center justify-center gap-2">
-        <svg class="w-5 h-5 text-pink-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 5.636l-1.414 1.414M6.343 17.657l-1.414 1.414M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        仅管理员可访问的页面：
-      </h3>
-      <div id="notAdmin-admin-list" class="flex flex-row flex-wrap gap-3 justify-center"></div>
-    </div>
-    <div class="mt-6 flex flex-col items-center gap-2">
-      <span class="text-gray-600 dark:text-gray-300">如需访问管理员页面，请</span>
-      <a id="notAdmin-login-link" href="/@public/login/" class="inline-block px-6 py-2 rounded-full bg-gradient-to-r from-blue-500 via-cyan-400 to-purple-500 text-white font-bold shadow-lg hover:scale-105 hover:from-blue-600 hover:to-purple-600 transition-transform duration-200">重新登录</a>
-      <span class="text-gray-600 dark:text-gray-300">为管理员账号。</span>
-    </div>
-  </div>
-</div>
-<script>
-(function(){
-  // 渲染导航菜单
-  function renderNavMenuLists() {
-    var menu = window.GlobalNavMenu || [];
-    var allowList = document.getElementById('notAdmin-allow-list');
-    var adminList = document.getElementById('notAdmin-admin-list');
-    allowList.innerHTML = '';
-    adminList.innerHTML = '';
-    menu.forEach(function(item){
-      // 只显示有url的菜单项
-      if (!item.url) return;
-      var a = document.createElement('a');
-      a.href = item.url;
-      a.textContent = item.name;
-      a.className = "px-4 py-1 rounded-full bg-gradient-to-r from-blue-800/60 via-blue-500/40 to-cyan-400/30 dark:from-zinc-700/60 dark:via-blue-900/40 dark:to-cyan-700/30 text-blue-200 dark:text-blue-200 font-medium shadow hover:from-blue-500 hover:to-cyan-400 hover:text-white hover:scale-105 transition-all duration-200 border border-blue-400/30 dark:border-blue-700/30 cursor-pointer";
-      if(item.onlyWhenAdmin){
-        adminList.appendChild(a);
-      }else if(!item.OnlyWhenNotLogin){
-        // 非仅未登录可见的都显示
-        allowList.appendChild(a);
-      }
-    });
-    // 设置登录链接
-    var loginLink = document.getElementById('notAdmin-login-link');
-    if(loginLink){
-      loginLink.href = "/@public/login/?redirect=" + encodeURIComponent(location.href);
-    }
-  }
-  if(window.GlobalNavMenu){
-    renderNavMenuLists();
-  }else{
-    // 兼容异步加载
-    window.addEventListener('DOMContentLoaded', renderNavMenuLists);
-  }
-})();
-</script>
+    <script>
+        (function () {
+            // 渲染导航菜单
+            function renderNavMenuLists() {
+                var menu = window.GlobalNavMenu || [];
+                var allowList = document.getElementById('notAdmin-allow-list');
+                var adminList = document.getElementById('notAdmin-admin-list');
+                allowList.innerHTML = '';
+                adminList.innerHTML = '';
+                menu.forEach(function (item) {
+                    // 只显示有url的菜单项
+                    if (!item.url) return;
+                    var a = document.createElement('a');
+                    a.href = item.url;
+                    a.textContent = item.name;
+                    if (!/^javascript:/i.test(item.url)) {
+                        a.target = "_blank";
+                        a.rel = "noopener noreferrer";
+                    }
+                    a.className = "px-4 py-1 rounded-full bg-gradient-to-r from-blue-800/60 via-blue-500/40 to-cyan-400/30 dark:from-zinc-700/60 dark:via-blue-900/40 dark:to-cyan-700/30 text-blue-200 dark:text-blue-200 font-medium shadow hover:from-blue-500 hover:to-cyan-400 hover:text-white hover:scale-105 transition-all duration-200 border border-blue-400/30 dark:border-blue-700/30 cursor-pointer";
+                    if (item.onlyWhenAdmin) {
+                        adminList.appendChild(a);
+                    } else if (!item.OnlyWhenNotLogin) {
+                        // 非仅未登录可见的都显示
+                        allowList.appendChild(a);
+                    }
+                });
+                // 设置登录链接
+                var loginLink = document.getElementById('notAdmin-login-link');
+                if (loginLink) {
+                    loginLink.href = "/@public/login/?redirect=" + encodeURIComponent(location.href);
+                }
+            }
+            if (window.GlobalNavMenu) {
+                renderNavMenuLists();
+            } else {
+                // 兼容异步加载
+                window.addEventListener('DOMContentLoaded', renderNavMenuLists);
+            }
+            // 新增：如果是管理员则隐藏登录提示
+            console.log("window.IsAdmin ", window.IsAdmin );
+            if (window.IsAdmin ) {
+                var tipBlock = document.getElementById('notAdmin-login-tip-block');
+                var tipBlock1 = document.getElementById('notAdmin-login-tip-block-1');
+                var allowListTitle = document.getElementById('notAdmin-allow-list-title');
+                if (tipBlock) tipBlock.style.display = 'none';
+                if (tipBlock1) tipBlock1.style.display = 'none';
+                if (allowListTitle) allowListTitle.style.display = 'none';
+            }
+        })();
+    </script>
 
 </body>
 

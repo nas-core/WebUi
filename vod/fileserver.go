@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/nas-core/WebUi/pkgs/replacetemplateplaceholders"
 	"github.com/nas-core/nascore/nascore_util/system_config"
 	"go.uber.org/zap"
 )
@@ -65,19 +66,10 @@ func FileServerEmbed(w http.ResponseWriter, r *http.Request, nsCfg *system_confi
 			return
 		}
 		content := string(buf)
-		content = ReplaceTemplatePlaceholders(content, nsCfg.WebUICdnPrefix, "")
+		content = replacetemplateplaceholders.ReplaceTemplatePlaceholders(content, nsCfg.WebUICdnPrefix, "")
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		w.Write([]byte(content))
 		return
 	}
 	http.FileServer(http.FS(subFS)).ServeHTTP(w, r)
-}
-
-// replaceTemplatePlaceholders 替换模板中的占位符
-func ReplaceTemplatePlaceholders(content string, webuiCdnPrefix string, ServerUrl string) string {
-	content = strings.ReplaceAll(content, "{{.ServerUrl}}", ServerUrl)
-	content = strings.ReplaceAll(content, "{{.WebUICdnPrefix}}", webuiCdnPrefix)
-	content = strings.ReplaceAll(content, "{{.PrefixDdnsGo}}", system_config.PrefixDdnsGo)
-	content = strings.ReplaceAll(content, "{{.PrefixAdguardhome}}", system_config.PrefixAdguardhome)
-	return content
 }

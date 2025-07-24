@@ -3,7 +3,7 @@ module github.com/nas-core/WebUi/vod
 go 1.24.5
 
 require (
-	github.com/nas-core/nascore/nascore_util v0.0.0-20250719194637-4a5ece1b3587
+	github.com/nas-core/nascore/nascore_util v0.0.0-20250724121857-d772349bafb7
 	go.uber.org/zap v1.27.0
 )
 
@@ -11,6 +11,7 @@ require (
 	github.com/fsnotify/fsnotify v1.8.0 // indirect
 	github.com/go-viper/mapstructure/v2 v2.2.1 // indirect
 	github.com/joyanhui/golang-pkgs/pkgs/exePath v0.0.0-20250712102146-8780ed189b72 // indirect
+	github.com/nas-core/WebUi/pkgs/replacetemplateplaceholders v0.0.0-20250724145305-583285898de9 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.3 // indirect
 	github.com/sagikazarmark/locafero v0.7.0 // indirect
 	github.com/sourcegraph/conc v0.3.0 // indirect

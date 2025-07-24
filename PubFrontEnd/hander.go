@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/nas-core/WebUi/pkgs/replacetemplateplaceholders"
 	"github.com/nas-core/nascore/nascore_util/system_config"
 	"go.uber.org/zap"
 )
@@ -57,20 +58,11 @@ func ServeStaticFile(nsCfg *system_config.SysCfg, logger *zap.SugaredLogger, qps
 			w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		}
 		if ext == ".js" || ext == ".css" || ext == ".html" || ext == ".shtml" {
-			parsedContent := ReplaceTemplatePlaceholders(string(data), nsCfg.WebUICdnPrefix, "")
+			parsedContent := replacetemplateplaceholders.ReplaceTemplatePlaceholders(string(data), nsCfg.WebUICdnPrefix, "")
 			w.Write([]byte(parsedContent))
 			return
 		}
 		// 其它类型直接用ServeContent
 		http.ServeContent(w, r, file, time.Now(), strings.NewReader(string(data)))
 	}
-}
-
-// replaceTemplatePlaceholders 替换模板中的占位符
-func ReplaceTemplatePlaceholders(content string, webuiCdnPrefix string, ServerUrl string) string {
-	content = strings.ReplaceAll(content, "{{.ServerUrl}}", ServerUrl)
-	content = strings.ReplaceAll(content, "{{.WebUICdnPrefix}}", webuiCdnPrefix)
-	content = strings.ReplaceAll(content, "{{.PrefixDdnsGo}}", system_config.PrefixDdnsGo)
-	content = strings.ReplaceAll(content, "{{.PrefixAdguardhome}}", system_config.PrefixAdguardhome)
-	return content
 }
