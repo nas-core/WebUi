@@ -6,7 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>文件预览</title>
-  {{.WebUIPubLicCdn.header}}
+  <link href="{{.WebUICdnPrefix}}bootstrap@5.1.2/dist/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
+  <link href="{{.WebUICdnPrefix}}bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" type="text/css"
+    rel="stylesheet" />
+  <script src="{{.WebUICdnPrefix}}axios@0.26.0/dist/axios.min.js" type="application/javascript"></script>
   <link rel="stylesheet" href="css/file_preview.css">
   <style>
     body {
@@ -95,8 +98,9 @@
   <div class="preview-container" id="previewContainer">
     <div class="preview-loading"></div>
   </div>
-  {{.WebUIPubLicCdn.footer}}
-  {{.WebUIPubLicCdn.Artplayer}}
+  <script src="{{.WebUICdnPrefix}}bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js" type="application/javascript"></script>
+  <script src="js/public.js"></script>
+    <script src="{{.WebUICdnPrefix}}libs/artplayer.min.js"></script>
 
   <script>
     // 支持预览的文件类型
