@@ -145,12 +145,12 @@
       // 使用FileUtility从后端读取文件内容
       const result = await window.FileUtility.getFileContent(filePath, true)
 
-      if (result.success && result.content) {
+      if (result.success && typeof result.content === "string") {
         originalFileContent = result.content
         fileEditorContentEl.value = originalFileContent
         fileEditorModal.show()
       } else {
-        window.showNotification(result.message || '获取文件内容失败或内容为空', 'error')
+        window.showNotification(result.message || '获取文件内容失败', 'error')
       }
     } catch (err) {
       window.showNotification(`读取文件失败: ${err.message || '未知错误'}`, 'error')
