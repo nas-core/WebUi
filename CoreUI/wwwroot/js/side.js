@@ -25,7 +25,7 @@ function bindSidebarActions() {
     newFolderButton.addEventListener('click', async function (e) {
       e.preventDefault()
       console.log('新建文件夹 按钮被点击')
-      const currentPath = decodeURI(window.location.hash.replace(/^#/, '')) || '/'
+      const currentPath = window.normalizePath(decodeURI(window.location.hash.replace(/^#/, '')) || '/')
       console.log('当前路径:', currentPath)
       console.log('FileOperations可用性:', typeof window.FileOperations, window.FileOperations)
       const folderName = prompt('请输入新文件夹的名称:', 'new_folder')
@@ -57,7 +57,7 @@ function bindSidebarActions() {
     newFileButton.addEventListener('click', async function (e) {
       e.preventDefault()
       console.log('新建文件 按钮被点击')
-      const currentPath = decodeURI(window.location.hash.replace(/^#/, '')) || '/'
+      const currentPath = window.normalizePath(decodeURI(window.location.hash.replace(/^#/, '')) || '/')
       console.log('当前路径:', currentPath)
       let fileName = prompt('请输入新文件的名称 (默认后缀.md):', 'new_file.md')
       if (fileName) {

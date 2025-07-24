@@ -14,9 +14,7 @@
      */
     async createFolder(parentPath, folderName) {
       // 确保路径以/开头
-      let cleanParentPath = parentPath.startsWith('/') ? parentPath : '/' + parentPath
-      // 规范化路径
-      cleanParentPath = cleanParentPath.replace(/\/+/g, '/')
+      let cleanParentPath = window.normalizePath(parentPath.startsWith('/') ? parentPath : '/' + parentPath)
 
       return API.request(
         `{{.ServerUrl}}/@api/file/createFolder`,
@@ -36,9 +34,7 @@
      */
     async createFile(parentPath, fileName) {
       // 确保路径以/开头
-      let cleanParentPath = parentPath.startsWith('/') ? parentPath : '/' + parentPath
-      // 规范化路径
-      cleanParentPath = cleanParentPath.replace(/\/+/g, '/')
+      let cleanParentPath = window.normalizePath(parentPath.startsWith('/') ? parentPath : '/' + parentPath)
 
       return API.request(
         `{{.ServerUrl}}/@api/file/createFile`,
@@ -57,9 +53,7 @@
      */
     async deleteItem(itemPath) {
       // 确保路径以/开头
-      let cleanItemPath = itemPath.startsWith('/') ? itemPath : '/' + itemPath
-      // 规范化路径
-      cleanItemPath = cleanItemPath.replace(/\/+/g, '/')
+      let cleanItemPath = window.normalizePath(itemPath.startsWith('/') ? itemPath : '/' + itemPath)
 
       return API.request(`{{.ServerUrl}}/@api/file/delete?path=${encodeURIComponent(cleanItemPath)}`, {}, { needToken: true })
     },
@@ -72,11 +66,8 @@
      */
     async moveItem(sourcePath, destinationPath) {
       // 确保路径以/开头
-      let cleanSourcePath = sourcePath.startsWith('/') ? sourcePath : '/' + sourcePath
-      let cleanDestinationPath = destinationPath.startsWith('/') ? destinationPath : '/' + destinationPath
-      // 规范化路径
-      cleanSourcePath = cleanSourcePath.replace(/\/+/g, '/')
-      cleanDestinationPath = cleanDestinationPath.replace(/\/+/g, '/')
+      let cleanSourcePath = window.normalizePath(sourcePath.startsWith('/') ? sourcePath : '/' + sourcePath)
+      let cleanDestinationPath = window.normalizePath(destinationPath.startsWith('/') ? destinationPath : '/' + destinationPath)
 
       // 发送请求
       const result = await API.request(
@@ -106,11 +97,8 @@
      */
     async copyItem(sourcePath, destinationPath) {
       // 确保路径以/开头
-      let cleanSourcePath = sourcePath.startsWith('/') ? sourcePath : '/' + sourcePath
-      let cleanDestinationPath = destinationPath.startsWith('/') ? destinationPath : '/' + destinationPath
-      // 规范化路径
-      cleanSourcePath = cleanSourcePath.replace(/\/+/g, '/')
-      cleanDestinationPath = cleanDestinationPath.replace(/\/+/g, '/')
+      let cleanSourcePath = window.normalizePath(sourcePath.startsWith('/') ? sourcePath : '/' + sourcePath)
+      let cleanDestinationPath = window.normalizePath(destinationPath.startsWith('/') ? destinationPath : '/' + destinationPath)
 
       return API.request(
         `{{.ServerUrl}}/@api/file/copy`,

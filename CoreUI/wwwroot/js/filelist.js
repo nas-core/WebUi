@@ -21,7 +21,7 @@ window.thumbnailDirectoryCache = thumbnailDirectoryCache
  * 路由变化时加载对应目录
  */
 function onRouteChange() {
-  let path = decodeURI(window.location.hash.replace(/^#/, ''))
+  let path = window.normalizePath(decodeURI(window.location.hash.replace(/^#/, '')))
   if (!path) path = '/'
   if (window.loadFileList) {
     // 再次确认 window.loadFileList 存在
@@ -56,7 +56,7 @@ async function loadFileList(path, shouldClear = true) {
   }
 
   try {
-    const res = await window.API.request(`{{.ServerUrl}}/@api/file/list?path=${encodeURIComponent(path)}`, {}, { needToken: true })
+    const res = await window.API.request(`{{.ServerUrl}}/@api/file/list?path=${encodeURIComponent(window.normalizePath(path))}`, {}, { needToken: true })
     if (!res.data || !Array.isArray(res.data.items)) throw new Error('数据格式错误')
 
     // 检查用户设置，是否启用了仅使用缩略图
@@ -435,7 +435,7 @@ async function loadThumbnailDirectory(currentPath, items) {
 
     try {
       // 请求缩略图目录
-      const res = await window.API.request(`{{.ServerUrl}}/@api/file/list?path=${encodeURIComponent(thumbnailDirPath)}`, {}, { needToken: true })
+      const res = await window.API.request(`{{.ServerUrl}}/@api/file/list?path=${encodeURIComponent(window.normalizePath(thumbnailDirPath))}`, {}, { needToken: true })
 
       if (res.data && Array.isArray(res.data.items)) {
         // 缩略图目录存在
@@ -613,7 +613,7 @@ window.addItemToList = addItemToList
  */
 window.addNewItemToList = async function (path, name, isDir) {
   // 构建完整路径
-  const fullPath = path.endsWith('/') ? path + name : path + '/' + name
+  const fullPath = window.normalizePath(path.endsWith('/') ? path + name : path + '/' + name)
 
   // 构造项目对象
   const newItem = {
@@ -670,8 +670,8 @@ document.addEventListener('DOMContentLoaded', function () {
       const size = parseInt(fileItem.dataset.fileSize, 10) // 获取文件大小
 
       if (isDir) {
-        // 跳转到新目录
-        window.location.hash = encodeURI(path)
+        // 跳转到新目录，hash路径强制规范化
+        window.location.hash = encodeURI(window.normalizePath(path))
       } else {
         // 无论是否是可编辑文件，都显示文件详情对话框
         showFileDetailModal(fileItem)
@@ -717,8 +717,8 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
       if (isDir) {
-        // 导航到新目录
-        window.location.hash = encodeURI(path)
+        // 导航到新目录，hash路径强制规范化
+        window.location.hash = encodeURI(window.normalizePath(path))
       } else {
         // 弹出文件详情
         showFileDetailModal(fileItem)

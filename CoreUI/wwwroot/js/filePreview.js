@@ -171,7 +171,7 @@ function initDraggableModal(modalEl) {
 
 // 打开预览
 function openPreview(filePath, fileName) {
-  // 获取文件扩展名
+  filePath = window.normalizePath(filePath)
   const extension = fileName.substring(fileName.lastIndexOf('.')).toLowerCase()
 
   // 获取模态框元素
@@ -369,7 +369,7 @@ function closePreview() {
 function openPreviewInNewWindow(filePath, fileName) {
   // 创建URL参数
   const params = new URLSearchParams()
-  params.append('path', filePath)
+  params.append('path', window.normalizePath(filePath))
   params.append('name', fileName)
   params.append('token', window.API.TokenManager.getAccessToken())
 

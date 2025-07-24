@@ -14,11 +14,8 @@
      */
     async compressItem(sourcePath, targetPath) {
       // 确保路径以/开头
-      let cleanSourcePath = sourcePath.startsWith('/') ? sourcePath : '/' + sourcePath
-      let cleanTargetPath = targetPath.startsWith('/') ? targetPath : '/' + targetPath
-      // 规范化路径
-      cleanSourcePath = cleanSourcePath.replace(/\/+/g, '/')
-      cleanTargetPath = cleanTargetPath.replace(/\/+/g, '/')
+      let cleanSourcePath = window.normalizePath(sourcePath.startsWith('/') ? sourcePath : '/' + sourcePath)
+      let cleanTargetPath = window.normalizePath(targetPath.startsWith('/') ? targetPath : '/' + targetPath)
 
       return API.request(
         `{{.ServerUrl}}/@api/file/compress`,
@@ -38,11 +35,8 @@
      */
     async extractItem(sourcePath, targetPath) {
       // 确保路径以/开头
-      let cleanSourcePath = sourcePath.startsWith('/') ? sourcePath : '/' + sourcePath
-      let cleanTargetPath = targetPath.startsWith('/') ? targetPath : '/' + targetPath
-      // 规范化路径
-      cleanSourcePath = cleanSourcePath.replace(/\/+/g, '/')
-      cleanTargetPath = cleanTargetPath.replace(/\/+/g, '/')
+      let cleanSourcePath = window.normalizePath(sourcePath.startsWith('/') ? sourcePath : '/' + sourcePath)
+      let cleanTargetPath = window.normalizePath(targetPath.startsWith('/') ? targetPath : '/' + targetPath)
 
       return API.request(
         `{{.ServerUrl}}/@api/file/extract`,

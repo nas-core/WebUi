@@ -551,14 +551,14 @@
      * 获取当前路径
      */
     getCurrentPath() {
-      return decodeURI(window.location.hash.replace(/^#/, '')) || '/'
+      return window.normalizePath(decodeURI(window.location.hash.replace(/^#/, '')) || '/')
     }
 
     /**
      * 构建目标路径
      */
     buildDestinationPath(currentPath, itemName) {
-      return (currentPath === '/' ? '' : currentPath) + '/' + itemName
+      return window.normalizePath((currentPath === '/' ? '' : currentPath) + '/' + itemName)
     }
 
     /**

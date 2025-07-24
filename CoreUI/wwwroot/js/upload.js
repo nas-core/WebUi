@@ -32,7 +32,7 @@
       // 添加显示上传模态框的方法
       this.showUploadModal = function () {
         // 自动获取当前路径
-        const currentPath = decodeURI(window.location.hash.replace(/^#/, '')) || '/'
+        const currentPath = window.normalizePath(decodeURI(window.location.hash.replace(/^#/, '')) || '/')
         this.openUploadModal(currentPath)
       }
 

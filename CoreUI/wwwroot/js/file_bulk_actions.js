@@ -426,7 +426,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return
     }
 
-    const currentPath = decodeURI(window.location.hash.replace(/^#/, '')) || '/'
+    const currentPath = window.normalizePath(decodeURI(window.location.hash.replace(/^#/, '')) || '/')
     const totalItems = cutGroups.reduce((total, group) => total + group.items.length, 0)
 
     let successCount = 0

@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!defaultBreadcrumb) return
 
     // 获取当前路径
-    let path = decodeURI(window.location.hash.replace(/^#/, '')) || '/'
+    let path = window.normalizePath(decodeURI(window.location.hash.replace(/^#/, '')) || '/')
 
     // 分割路径
     const segments = path.split('/').filter(Boolean)
@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
       editPathBtn?.classList.add('active')
       // 设置当前路径到输入框
       if (pathInput) {
-        const currentPath = decodeURI(window.location.hash.replace(/^#/, '')) || '/'
+        const currentPath = window.normalizePath(decodeURI(window.location.hash.replace(/^#/, '')) || '/')
         pathInput.value = currentPath
         pathInput.focus()
         pathInput.select()
@@ -106,15 +106,13 @@ document.addEventListener('DOMContentLoaded', () => {
   function confirmPath() {
     if (!pathInput) return
 
-    let path = pathInput.value.trim()
+    let path = window.normalizePath(pathInput.value.trim())
 
     // 确保路径以/开头
     if (!path.startsWith('/')) {
       path = '/' + path
     }
-
-    // 规范化路径（移除多余的斜杠等）
-    path = path.replace(/\/+/g, '/')
+    path = window.normalizePath(path)
 
     // 更新URL并触发路由变化
     window.location.hash = path
@@ -129,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function cancelPathEdit() {
     // 恢复原始路径
     if (pathInput) {
-      const currentPath = decodeURI(window.location.hash.replace(/^#/, '')) || '/'
+      const currentPath = window.normalizePath(decodeURI(window.location.hash.replace(/^#/, '')) || '/')
       pathInput.value = currentPath
     }
 

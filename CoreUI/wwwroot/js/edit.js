@@ -134,8 +134,8 @@
       return
     }
 
-    currentEditingPath = filePath
-    currentEditFilePathEl.textContent = filePath
+    currentEditingPath = window.normalizePath(filePath)
+    currentEditFilePathEl.textContent = currentEditingPath
 
     // 显示文件大小和类型
     editorFileSizeEl.textContent = formatSize(fileSize)
@@ -143,7 +143,7 @@
 
     try {
       // 使用FileUtility从后端读取文件内容
-      const result = await window.FileUtility.getFileContent(filePath, true)
+      const result = await window.FileUtility.getFileContent(window.normalizePath(filePath), true)
 
       if (result.success && typeof result.content === "string") {
         originalFileContent = result.content
@@ -172,7 +172,7 @@
 
     try {
       // 使用FileUtility保存文件内容
-      const result = await window.FileUtility.saveFileContent(currentEditingPath, newContent)
+      const result = await window.FileUtility.saveFileContent(window.normalizePath(currentEditingPath), newContent)
 
       if (result.success) {
         window.showNotification(result.message, 'success')

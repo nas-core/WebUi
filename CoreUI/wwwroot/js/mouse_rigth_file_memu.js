@@ -169,7 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 将 currentTarget 临时保存起来，在操作完成后再隐藏菜单和清空 currentTarget
     const targetItem = currentTarget
 
-    const currentPath = decodeURI(window.location.hash.replace(/^#/, '')) || '/'
+    const currentPath = window.normalizePath(decodeURI(window.location.hash.replace(/^#/, '')) || '/')
 
     switch (action) {
       case 'new-folder': {
@@ -358,7 +358,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       case 'edit':
         if (targetItem) {
-          const path = targetItem.dataset.path
+          const path = window.normalizePath(targetItem.dataset.path)
           const isDir = targetItem.dataset.isDir === 'true'
           const name = targetItem.querySelector('.ms-2')?.textContent || ''
           const size = parseInt(targetItem.dataset.fileSize, 10) || 0
@@ -380,12 +380,14 @@ document.addEventListener('DOMContentLoaded', () => {
         break
       case 'open':
         if (targetItem) {
-          const path = targetItem.dataset.path
+          const path = window.normalizePath(targetItem.dataset.path)
           const isDir = targetItem.dataset.isDir === 'true'
           if (isDir) {
-            window.location.hash = encodeURI(path)
-          } else {
-            window.showFileDetailModal(targetItem)
+            window.showNotification('暂不支持打开文件夹', 'warning')
+            return
+          }
+          if (window.openFilePreview) {
+            window.openFilePreview(path, targetItem.querySelector('.ms-2')?.textContent || '')
           }
         }
         break
@@ -418,7 +420,7 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'download':
         if (targetItem) {
           // 使用临时变量 targetItem
-          const path = targetItem.dataset.path
+          const path = window.normalizePath(targetItem.dataset.path)
           const isDir = targetItem.dataset.isDir === 'true'
           if (isDir) {
             window.showNotification('暂不支持下载文件夹', 'warning')
@@ -436,7 +438,7 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'delete':
         if (targetItem) {
           // 使用临时变量 targetItem
-          const path = targetItem.dataset.path
+          const path = window.normalizePath(targetItem.dataset.path)
           const itemName = targetItem.querySelector('.ms-2')?.textContent || ''
           window.confirmDialog(`确定要删除 "${itemName}" 吗？此操作不可撤销！`, async () => {
             try {
@@ -454,14 +456,14 @@ document.addEventListener('DOMContentLoaded', () => {
         break
       case 'compress':
         if (targetItem) {
-          const path = targetItem.dataset.path
+          const path = window.normalizePath(targetItem.dataset.path)
           const name = targetItem.querySelector('.ms-2')?.textContent || ''
           showSingleItemCompressOptions(path, name)
         }
         break
       case 'extract':
         if (targetItem) {
-          const path = targetItem.dataset.path
+          const path = window.normalizePath(targetItem.dataset.path)
           const name = targetItem.querySelector('.ms-2')?.textContent || ''
           showSingleItemExtractOptions(path, name)
         }
@@ -475,7 +477,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (newName && newName !== oldName) {
             // 构建新路径
             const dirPath = oldPath.substring(0, oldPath.lastIndexOf('/') + 1)
-            const newPath = dirPath + newName
+            const newPath = window.normalizePath(dirPath + newName)
             try {
               await window.FileOperations.moveItem(oldPath, newPath)
               window.showNotification('重命名成功', 'success')

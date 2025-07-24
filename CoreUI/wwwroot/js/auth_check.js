@@ -63,7 +63,7 @@
     // 清除所有token
     TokenManager.clear()
     // 保存当前页面URL，以便登录后返回
-    const currentPath = window.location.pathname
+    const currentPath = window.normalizePath(window.location.pathname)
     if (!currentPath.endsWith('login.shtml')) {
       try {
         localStorage.setItem('redirect_after_login', currentPath)
@@ -72,7 +72,7 @@
       }
     }
     // 重定向到登录页面
-    const currentUrl = window.location.pathname + window.location.search
+    const currentUrl = window.normalizePath(window.location.pathname) + window.location.search
     const loginUrl =  '/@public/login/?redirect=' + encodeURIComponent(currentUrl)
     window.location.href = loginUrl
     }

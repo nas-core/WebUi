@@ -2,6 +2,8 @@
  * 文件操作工具集
  * 包含读取文件内容、获取文件URL等通用功能
  * 依赖：api.js
+ *
+ * normalizePath: 统一将所有路径中的反斜杠（\）替换为正斜杠（/），并合并多余的斜杠，适配windows和unix路径，防止前端路径异常。
  */
 
 ;(function () {
@@ -128,6 +130,27 @@
     return `{{.ServerUrl}}/@api/file/download?path=${encodeURIComponent(filePath)}&token=${accessToken}`
   }
 
+  /**
+   * 路径规范化函数
+   * 统一将所有路径中的反斜杠（\\）替换为正斜杠（/），并合并多余的斜杠
+   * @param {string} path - 原始路径
+   * @returns {string} 规范化后的路径
+   */
+  function normalizePath(path) {
+    if (!path) return '/';
+    // 先全部替换为正斜杠
+    let newPath = path.replace(/\\+/g, '/');
+    // 合并多余的正斜杠
+    newPath = newPath.replace(/\/+/g, '/');
+    // 去除多余的开头斜杠（只保留一个）
+    newPath = newPath.replace(/^\/+/, '/');
+    // 结尾多余斜杠（根目录除外）
+    if (newPath.length > 1) {
+      newPath = newPath.replace(/\/+$/, '');
+    }
+    return newPath;
+  }
+
   // 将功能暴露给全局
   window.FileUtility = {
     getFileContent,
@@ -137,4 +160,7 @@
     saveFileContent,
     getMediaFileUrl,
   }
+
+  // 导出到全局
+  window.normalizePath = normalizePath;
 })()

@@ -119,7 +119,7 @@ function showFileDetailModal(fileItem) {
           </div>
           <div class="modal-body text-center">
             ${previewHtml}
-            <input type="text" class="form-control text-center fileDetailModal-filepath-input" value="${escapeHtml(path)}" readonly>
+            <input type="text" class="form-control text-center fileDetailModal-filepath-input" value="${escapeHtml(window.normalizePath(path))}" readonly>
             <div class="mb-2">大小: ${formatSize(fileSize)}</div>
             <div class="d-flex justify-content-center gap-2 flex-wrap">
               ${editButtonHtml}
@@ -138,7 +138,7 @@ function showFileDetailModal(fileItem) {
   const modalEl = document.getElementById('fileDetailModal')
 
   // 设置文件路径和文件名属性，供预览功能使用
-  modalEl.setAttribute('data-file-path', path)
+  modalEl.setAttribute('data-file-path', window.normalizePath(path))
   modalEl.setAttribute('data-file-name', name)
 
   const modal = new bootstrap.Modal(modalEl)
@@ -155,7 +155,7 @@ function showFileDetailModal(fileItem) {
   if (editBtn) {
     editBtn.addEventListener('click', () => {
       modal.hide() // 关闭详情模态框
-      window.openFileEditor(path, fileSize) // 打开文件编辑器
+      window.openFileEditor(window.normalizePath(path), fileSize) // 打开文件编辑器
     })
   } else {
     //console.log('DEBUG: 详情模态框中没有编辑按钮。')
@@ -169,7 +169,7 @@ function showFileDetailModal(fileItem) {
 
       // 检查是否已加载预览功能
       if (typeof window.openFilePreview === 'function') {
-        window.openFilePreview(path, name)
+        window.openFilePreview(window.normalizePath(path), name)
       } else {
         // 先检查是否已加载FileUtility
         const needLoadFileUtility = typeof window.FileUtility === 'undefined'
@@ -214,7 +214,7 @@ function showFileDetailModal(fileItem) {
         Promise.all(loadDependencies)
           .then(() => {
             if (typeof window.openFilePreview === 'function') {
-              setTimeout(() => window.openFilePreview(path, name), 300)
+              setTimeout(() => window.openFilePreview(window.normalizePath(path), name), 300)
             } else {
               window.showNotification('无法加载预览功能', 'error')
             }
@@ -233,7 +233,7 @@ function showFileDetailModal(fileItem) {
       if (!isDir) {
         const accessToken = window.API.TokenManager.getAccessToken() // 获取 access token
         if (accessToken) {
-          window.location.href = `{{.ServerUrl}}/@api/file/download?path=${encodeURIComponent(path)}&token=${accessToken}` // 附加 token
+          window.location.href = `{{.ServerUrl}}/@api/file/download?path=${encodeURIComponent(window.normalizePath(path))}&token=${accessToken}` // 附加 token
           window.showNotification(`正在下载 "${name}"`, 'info')
           modal.hide()
         } else {
@@ -254,8 +254,8 @@ function showFileDetailModal(fileItem) {
       if (newName && newName.trim() !== '' && newName !== name) {
         try {
           const currentDir = path.substring(0, path.lastIndexOf('/')) || '/'
-          const newPath = (currentDir === '/' ? currentDir : currentDir + '/') + newName
-          await window.FileOperations.moveItem(path, newPath)
+          const newPath = window.normalizePath((currentDir === '/' ? currentDir : currentDir + '/') + newName)
+          await window.FileOperations.moveItem(window.normalizePath(path), newPath)
           window.showNotification(`"${name}" 已成功重命名为 "${newName}"`, 'success')
           modal.hide()
 
