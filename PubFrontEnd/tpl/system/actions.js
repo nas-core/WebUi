@@ -251,3 +251,55 @@ function resetOpenListPassword() {
   });
 }
 window.resetOpenListPassword = resetOpenListPassword;
+
+function restartOpenList() {
+  const binPath = document.getElementById('OpenlistBinPath').value;
+  const dataPath = document.getElementById('ThirdPartyExtOpenlistDataPath').value;
+  // 假定pid文件路径和后端一致
+  const pidFile = '/tmp/openlist.pid';
+  if (!binPath || !dataPath) {
+    showNotification('请填写OpenList路径和数据目录', 'danger');
+    return;
+  }
+  showNotification('正在重启OpenList...', 'info');
+  window.API.request(
+    `/@adminapi/admin/SpecialOPT?opt=openlist_restart&binPath=${encodeURIComponent(binPath)}&dataPath=${encodeURIComponent(dataPath)}&pidFile=${encodeURIComponent(pidFile)}`,
+    {},
+    { needToken: true, method: 'GET' }
+  ).then(res => {
+    if (res.code < 10) {
+      showNotification('重启结果：' + (res.data || '无返回'), 'success');
+    } else {
+      showNotification('重启失败: ' + (res.message || ''), 'danger');
+    }
+  }).catch(err => {
+    showNotification('重启失败: ' + (err.message || err), 'danger');
+  });
+}
+window.restartOpenList = restartOpenList;
+
+function restartCaddy2() {
+  const binPath = document.getElementById('Caddy2BinPath').value;
+  const configPath = document.getElementById('ThirdPartyExtCaddy2ConfigPath').value;
+  // 假定pid文件路径和后端一致
+  const pidFile = '/tmp/caddy2.pid';
+  if (!binPath || !configPath) {
+    showNotification('请填写Caddy2路径和配置文件路径', 'danger');
+    return;
+  }
+  showNotification('正在重启Caddy2...', 'info');
+  window.API.request(
+    `/@adminapi/admin/SpecialOPT?opt=caddy2_restart&binPath=${encodeURIComponent(binPath)}&configPath=${encodeURIComponent(configPath)}&pidFile=${encodeURIComponent(pidFile)}`,
+    {},
+    { needToken: true, method: 'GET' }
+  ).then(res => {
+    if (res.code < 10) {
+      showNotification('重启结果：' + (res.data || '无返回'), 'success');
+    } else {
+      showNotification('重启失败: ' + (res.message || ''), 'danger');
+    }
+  }).catch(err => {
+    showNotification('重启失败: ' + (err.message || err), 'danger');
+  });
+}
+window.restartCaddy2 = restartCaddy2;

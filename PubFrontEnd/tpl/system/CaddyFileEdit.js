@@ -284,24 +284,27 @@ window.saveCaddySiteEdit = function() {
   }
   const site = { address, type }
   if (type === 'respond') {
-    site.respondContent = document.getElementById('caddySiteRespondContent').value.trim()
-    if (!site.respondContent) {
+    const respondContent = document.getElementById('caddySiteRespondContent').value.trim()
+    if (!respondContent) {
       window.showNotification('响应内容不能为空', 'danger')
       return
     }
+    site.respondContent = respondContent
   } else if (type === 'file_server') {
-    site.fileServerRoot = document.getElementById('caddySiteFileServerRoot').value.trim()
-    if (!site.fileServerRoot) {
+    const fileServerRoot = document.getElementById('caddySiteFileServerRoot').value.trim()
+    if (!fileServerRoot) {
       window.showNotification('静态文件根目录不能为空', 'danger')
       return
     }
+    site.fileServerRoot = fileServerRoot
   } else if (type === 'reverse_proxy') {
-    site.proxyTarget = document.getElementById('caddySiteProxyTarget').value.trim()
+    const proxyTarget = document.getElementById('caddySiteProxyTarget').value.trim()
     site.tlsInsecureSkipVerify = document.getElementById('caddySiteTlsInsecureSkipVerify').checked
-    if (!site.proxyTarget) {
+    if (!proxyTarget) {
       window.showNotification('反向代理目标地址不能为空', 'danger')
       return
     }
+    site.proxyTarget = proxyTarget
   }
   // TLS
   if (document.getElementById('enableTls').checked) {
@@ -312,8 +315,8 @@ window.saveCaddySiteEdit = function() {
       return
     }
     site.tls = {
-      certPath: certPath,
-      keyPath: keyPath,
+      certPath,
+      keyPath,
     }
   }
   if (idx === '') {
@@ -325,7 +328,7 @@ window.saveCaddySiteEdit = function() {
   }
   window.renderCaddySiteList()
   document.getElementById('caddySiteEditModal').classList.add('hidden')
-  window.saveCaddySites()
+  window.saveCaddyfileWithFmt()
 }
 
 // 删除网址
@@ -334,7 +337,7 @@ window.deleteCaddySite = function(idx) {
     window.caddySiteConfig.sites.splice(idx, 1)
     window.renderCaddySiteList()
     window.showNotification('网址删除成功', 'success')
-    window.saveCaddySites()
+    window.saveCaddyfileWithFmt()
   }
 }
 
@@ -386,7 +389,7 @@ function updateAutoHttpsBtnState() {
   btns.forEach(btn => {
     if (!btn) return
     if (hasAuto) {
-      btn.textContent = '已关闭auto_https'
+      btn.textContent = '关闭auto_https'
       btn.classList.remove('bg-gray-400','hover:bg-gray-500')
       btn.classList.add('bg-yellow-600','hover:bg-yellow-700')
     } else {
@@ -475,55 +478,44 @@ window.addEventListener('DOMContentLoaded', function() {
   setTimeout(updateAutoHttpsBtnState, 300)
 })
 
-// 保存到Caddyfile（支持手动编辑区）
-window.saveCaddySites = function() {
-  const filePath = document.getElementById('ThirdPartyExtCaddy2ConfigPath').value
-  if (!filePath) {
-    window.showNotification('请先填写配置文件路径', 'danger')
-    return
-  }
-  let caddyfile = ''
-  const manualArea = document.getElementById('manualCaddyfileArea')
+// 保存Caddyfile（支持fmt+reload+错误回滚）
+window.saveCaddyfileWithFmt = function() {
+  const filePath = document.getElementById('ThirdPartyExtCaddy2ConfigPath').value;
+  let content = '';
+  const manualArea = document.getElementById('manualCaddyfileArea');
   if (!manualArea.classList.contains('hidden')) {
-    caddyfile = document.getElementById('manualCaddyfileContent').value
+    content = document.getElementById('manualCaddyfileContent').value;
   } else {
-    caddyfile = generateCaddyfileFromSites(window.caddySiteConfig.sites, window.caddySiteConfig.raw)
+    content = generateCaddyfileFromSites(window.caddySiteConfig.sites, window.caddySiteConfig.raw);
   }
-  // 判断是否需要isCreatFile参数
-  let isCreatFile = false
-  const tip = document.getElementById('caddyfile-not-exist-tip')
-  if (tip && !tip.classList.contains('hidden')) {
-    isCreatFile = true
-  }
-  let url = '/@adminapi/admin/saveServerFile?path=' + encodeURIComponent(filePath)
-  if (isCreatFile) url += '&isCreatFile=true'
-  API.request(url, { content: caddyfile }, { method: 'POST', needToken: true })
+  const oldContent = content;
+  API.request('/@adminapi/admin/SpecialOPT?opt=admin_save_caddyfile&filePath=' + encodeURIComponent(filePath), { content }, { method: 'POST', needToken: true })
     .then(res => {
-      if (res.code === 1) {
-        window.showNotification('caddyfile保存成功', 'success')
-        // window.closeCaddySiteManagerModal() // 直接移除，不再调用
+      if (res.data && res.data.fmtContent) {
+        document.getElementById('manualCaddyfileContent').value = res.data.fmtContent;
+        window.caddySiteConfig.sites = parseCaddyfileSites(res.data.fmtContent);
+        window.caddySiteConfig.raw = res.data.fmtContent;
+        window.renderCaddySiteList();
+        window.showNotification('Caddyfile保存并格式化成功', 'success');
       } else {
-        console.error(res)
-        window.showNotification('caddyfile保存失败: ' + (res.message || '未知错误'), 'danger')
+        window.showNotification('Caddyfile已经恢复,因为保存失败: 未返回格式化内容', 'danger');
+        document.getElementById('manualCaddyfileContent').value = oldContent;
+        window.caddySiteConfig.site=parseCaddyfileSites(oldContent)
+        window.caddySiteConfig.raw=oldContent
       }
     })
     .catch(err => {
-      console.error('[caddy] caddyfile保存失败', err)
-      window.showNotification('caddyfile保存失败', 'danger')
-    })
+      window.showNotification('Caddyfile已经恢复,因为保存失败: ' + (err.message || err), 'danger');
+      document.getElementById('manualCaddyfileContent').value = oldContent;
+      window.caddySiteConfig.site=parseCaddyfileSites(oldContent)
+      window.caddySiteConfig.raw=oldContent
+    });
 }
 
 // 可视化编辑下隐藏保存按钮，仅手动编辑时显示
 function updateSaveButtonVisibility() {
   const manualArea = document.getElementById('manualCaddyfileArea')
-  const saveBtn = document.querySelector('button[onclick="window.saveCaddySites()"]')
-  if (manualArea && saveBtn) {
-    if (manualArea.classList.contains('hidden')) {
-      saveBtn.style.display = 'none'
-    } else {
-      saveBtn.style.display = ''
-    }
-  }
+  // 已移除 saveCaddySites 相关按钮
 }
 
 // 在切换手动/可视化编辑时调用
