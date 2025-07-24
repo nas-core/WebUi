@@ -380,14 +380,15 @@ document.addEventListener('DOMContentLoaded', () => {
         break
       case 'open':
         if (targetItem) {
-          const path = window.normalizePath(targetItem.dataset.path)
           const isDir = targetItem.dataset.isDir === 'true'
           if (isDir) {
             window.showNotification('暂不支持打开文件夹', 'warning')
             return
           }
-          if (window.openFilePreview) {
-            window.openFilePreview(path, targetItem.querySelector('.ms-2')?.textContent || '')
+          if (window.showFileDetailModal) {
+            window.showFileDetailModal(targetItem)
+          } else {
+            window.showNotification('无法加载详细信息弹窗', 'error')
           }
         }
         break
