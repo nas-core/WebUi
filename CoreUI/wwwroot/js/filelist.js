@@ -218,7 +218,20 @@ function renderFileList(items, currentPath, shouldClear = true) {
     }
 
     // 名称
-    const nameHtml = `<span class="ms-2">${escapeHtml(item.name)}</span>`
+    // 如果是软链接，加链环图标
+    let symlinkHtml = ''
+    if (item.is_symlink) {
+      if (item.link_type === 'junction') {
+        symlinkHtml = '<i class="bi bi-link-45deg text-warning ms-1" title="Junction 挂载点"></i>'
+      } else if (item.link_type === 'mountpoint') {
+        symlinkHtml = '<i class="bi bi-link-45deg text-success ms-1" title="卷挂载点"></i>'
+      } else if (item.link_type === 'symlink') {
+        symlinkHtml = '<i class="bi bi-link-45deg text-info ms-1" title="符号链接"></i>'
+      } else {
+        symlinkHtml = '<i class="bi bi-link-45deg text-secondary ms-1" title="软链接/快捷方式"></i>'
+      }
+    }
+    const nameHtml = `${symlinkHtml}<span class="ms-2">${escapeHtml(item.name)}</span>`
 
     // 大小
     const sizeHtml = item.is_dir ? '—' : formatSize(item.size)
@@ -557,7 +570,20 @@ function addItemToList(item) {
   }
 
   // 名称
-  const nameHtml = `<span class="ms-2">${escapeHtml(item.name)}</span>`
+  // 如果是软链接，加链环图标
+  let symlinkHtml = ''
+  if (item.is_symlink) {
+    if (item.link_type === 'junction') {
+      symlinkHtml = '<i class="bi bi-link-45deg text-warning ms-1" title="Junction 挂载点"></i>'
+    } else if (item.link_type === 'mountpoint') {
+      symlinkHtml = '<i class="bi bi-link-45deg text-success ms-1" title="卷挂载点"></i>'
+    } else if (item.link_type === 'symlink') {
+      symlinkHtml = '<i class="bi bi-link-45deg text-info ms-1" title="符号链接"></i>'
+    } else {
+      symlinkHtml = '<i class="bi bi-link-45deg text-secondary ms-1" title="软链接/快捷方式"></i>'
+    }
+  }
+  const nameHtml = `${symlinkHtml}<span class="ms-2">${escapeHtml(item.name)}</span>`
 
   // 大小
   const sizeHtml = item.is_dir ? '—' : formatSize(item.size)
