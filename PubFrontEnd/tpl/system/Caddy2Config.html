@@ -13,7 +13,7 @@
 
       <button type="button" class="bg-green-600 hover:bg-green-700 text-white font-semibold px-5 py-2 rounded shadow text-base" onclick="window.openCaddySiteAddModal()">添加网址</button>
     </div>
-    <input type="text" id="caddySiteSearchInput" class="w-full md:w-1/2 rounded border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 px-3 py-2 text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="搜索网址/目标/备注..." oninput="window.caddySiteSearch()">
+    <input type="text" id="caddySiteSearchInput" class="w-full md:w-1/2 rounded border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100 px-3 py-2 text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="搜索网址/目标/响应文本..." oninput="window.caddySiteSearch()">
   </div>
   <div class="overflow-x-auto">
     <table class="min-w-full text-base text-left border border-gray-200 dark:border-zinc-700 rounded-lg divide-y divide-gray-100 dark:divide-zinc-700">
@@ -69,7 +69,8 @@
       </div>
     </div>
     <div class="mt-2 text-xs text-gray-500 dark:text-gray-400">
-      编辑功能 仅支持Caddyfile格式的配置文件,不支持json格式。如需要json格式,请使用Caddy2的命令行工具转换。
+      编辑功能 仅支持Caddyfile格式的配置文件,不支持json格式。如需要json格式,请使用Caddy2的命令行工具转换。<br/>
+      一般情况建议 在caddyfile文件开始定义auto_https off 避免自动https证书申请(用lego负责证书申请)。
     </div>
     <div class="mt-4 flex flex-row justify-end gap-2">
       <button type="button" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg shadow transition w-full md:w-auto" onclick="saveGlobalSetting()">保存设置</button>
