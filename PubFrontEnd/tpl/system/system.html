@@ -91,10 +91,19 @@
   <script src="api.js"></script>
   <script src="/@public/nav.js"></script>
   <script>
-    // 如果不是管理员，跳转到首页
-    if (typeof window.IsAdmin === 'function' && !window.IsAdmin()) {
-      window.location.href = '/@public/file/notAdmin.html';
+    function checkAdmin() {
+      var token = localStorage.getItem('nascore_jwt_refresh_token');
+      if (typeof window.IsAdmin === 'function') {
+        console.log('IsAdmin() 返回:', window.IsAdmin());
+        if (!window.IsAdmin()) {
+          alert('您没有权限访问此页面');
+          window.location.href = '/@public/file/notAdmin.html';
+        }
+      } else {
+        setTimeout(checkAdmin, 50); // 递归等待
+      }
     }
+    checkAdmin();
   </script>
   <script src="Settings_system.js"></script>
 </head>
@@ -162,8 +171,9 @@
         <a href="#user" data-section="UserManager.html" class="block px-3 py-2 rounded-md sidebar-link">用户管理</a>
         <a href="#nascoreext" data-section="NascoreExt.html"
           class="block px-3 py-2 rounded-md sidebar-link">NasCore扩展</a>
-        <a href="#vod" data-section="NascoreVod.html" class="block px-3 py-2 rounded-md sidebar-link">NasCore_vod</a>
-        <div class="pt-3 border-t border-gray-200 dark:border-zinc-700 text-xs text-gray-400 dark:text-gray-500">第三方扩展
+          <a href="#link" data-section="NascoreLinks.html" class="block px-3 py-2 rounded-md sidebar-link">扩展 link</a>
+          <a href="#vod" data-section="NascoreVod.html" class="block px-3 py-2 rounded-md sidebar-link">扩展 vod</a>
+          <div class="pt-3 border-t border-gray-200 dark:border-zinc-700 text-xs text-gray-400 dark:text-gray-500">第三方扩展
         </div>
         <a href="#rclone" data-section="RcloneConfig.html" class="block px-3 py-2 rounded-md sidebar-link">Rclone云存储</a>
         <a href="#ddnsgo" data-section="DDNSGoConfig.html" class="block px-3 py-2 rounded-md sidebar-link">DDNS-GO</a>
@@ -191,7 +201,7 @@
         <div class="grid grid-cols-1 gap-6" id="system-sections">
           <div id="welcome-info" class="text-center py-12">
             <h2 class="text-xl font-semibold mb-2 text-blue-700 dark:text-blue-400">欢迎使用系统配置中心</h2>
-            <p class="text-gray-500 dark:text-gray-400">请选择左侧的功能进行系统配置管理。</p>
+            <p class="text-gray-500 dark:text-gray-400">welcome to system config center</p>
           </div>
         </div>
       </div>
