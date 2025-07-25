@@ -24,7 +24,7 @@ func HandlerFileBower(nsCfg *system_config.SysCfg, logger *zap.SugaredLogger, qp
 }
 
 func SystemConfigPage(nsCfg *system_config.SysCfg, logger *zap.SugaredLogger, qpsCounter *uint64) http.HandlerFunc {
-	return ServeStaticFile(nsCfg, logger, qpsCounter, "tpl/system/", "system.html")
+	return ServeStaticFile(nsCfg, logger, qpsCounter, "tpl/system/", "System.html")
 }
 
 func ThemeJsPaget(nsCfg *system_config.SysCfg, logger *zap.SugaredLogger, qpsCounter *uint64) http.HandlerFunc {

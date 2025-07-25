@@ -164,25 +164,59 @@
     <aside id="sidebar"
       class="hidden md:flex flex-col w-56 bg-white dark:bg-zinc-800 shadow-md border-r border-gray-200 dark:border-zinc-700">
       <nav class="flex-1 p-2 space-y-px">
-        <a href="#server" data-section="ServerConfig.html" class="block px-3 py-2 rounded-md sidebar-link">服务器设置</a>
-        <a href="#jwt" data-section="JWTConfig.html" class="block px-3 py-2 rounded-md sidebar-link">JWT设置</a>
-        <a href="#limit" data-section="LimitConfig.html" class="block px-3 py-2 rounded-md sidebar-link">限制配置</a>
-        <a href="#secret" data-section="SecretConfig.html" class="block px-3 py-2 rounded-md sidebar-link">密钥配置</a>
-        <a href="#user" data-section="UserManager.html" class="block px-3 py-2 rounded-md sidebar-link">用户管理</a>
-        <a href="#nascoreext" data-section="NascoreExt.html"
-          class="block px-3 py-2 rounded-md sidebar-link">NasCore扩展</a>
-          <a href="#link" data-section="NascoreLinks.html" class="block px-3 py-2 rounded-md sidebar-link">扩展 link</a>
-          <a href="#vod" data-section="NascoreVod.html" class="block px-3 py-2 rounded-md sidebar-link">扩展 vod</a>
-          <div class="pt-3 border-t border-gray-200 dark:border-zinc-700 text-xs text-gray-400 dark:text-gray-500">第三方扩展
+        <button type="button" id="toggle-basic-config"
+          class="w-full flex items-center justify-between px-0 py-2 text-left font-bold text-xs text-gray-600 dark:text-gray-300 bg-transparent">
+          <span>基本配置</span>
+          <svg id="icon-basic-config" class="transition-transform" width="16" height="16" viewBox="0 0 24 24">
+            <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" fill="none" />
+          </svg>
+        </button>
+        <div id="basic-config-links">
+          <a href="#server" data-section="ServerConfig.html" class="block px-3 py-2 rounded-md sidebar-link">服务器设置</a>
+          <a href="#jwt" data-section="JWTConfig.html" class="block px-3 py-2 rounded-md sidebar-link">JWT设置</a>
+          <a href="#limit" data-section="LimitConfig.html" class="block px-3 py-2 rounded-md sidebar-link">限制配置</a>
+          <a href="#secret" data-section="SecretConfig.html" class="block px-3 py-2 rounded-md sidebar-link">密钥配置</a>
+          <a href="#user" data-section="UserManager.html" class="block px-3 py-2 rounded-md sidebar-link">用户管理</a>
         </div>
-        <a href="#rclone" data-section="RcloneConfig.html" class="block px-3 py-2 rounded-md sidebar-link">Rclone云存储</a>
-        <a href="#ddnsgo" data-section="DDNSGoConfig.html" class="block px-3 py-2 rounded-md sidebar-link">DDNS-GO</a>
-        <a href="#adguard" data-section="AdGuardConfig.html" class="block px-3 py-2 rounded-md sidebar-link">AdGuard
-          DNS</a>
-        <a href="#lego" data-section="LegoConfig.html" class="block px-3 py-2 rounded-md sidebar-link">Lego证书</a>
-        <a href="#openlist" data-section="OpenListConfig.html"
-          class="block px-3 py-2 rounded-md sidebar-link">OpenList云盘</a>
-        <a href="#caddy2" data-section="Caddy2Config.html" class="block px-3 py-2 rounded-md sidebar-link">Caddy2服务</a>
+        <!-- NasCore扩展折叠区 -->
+        <div>
+          <button type="button" id="toggle-nascore-ext"
+            class="w-full flex items-center justify-between px-0 py-2 text-left font-bold text-xs text-gray-600 dark:text-gray-300 bg-transparent">
+            <span>NasCore扩展</span>
+            <svg id="icon-nascore-ext" class="transition-transform" width="16" height="16" viewBox="0 0 24 24">
+              <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" fill="none" />
+            </svg>
+          </button>
+          <div id="nascore-ext-links" class="hidden">
+            <a href="#nascoreext" data-section="NascoreExt.html"
+              class="block px-3 py-2 rounded-md sidebar-link">扩展配置</a>
+            <a href="#link" data-section="NascoreLinks.html" class="block px-3 py-2 rounded-md sidebar-link">扩展 link</a>
+            <a href="#vod" data-section="NascoreVod.html" class="block px-3 py-2 rounded-md sidebar-link">扩展 vod</a>
+          </div>
+        </div>
+        <!-- 第三方扩展折叠区 -->
+        <div class="pt-3 border-t border-gray-200 dark:border-zinc-700 text-xs text-gray-400 dark:text-gray-500">
+          <button type="button" id="toggle-thirdparty-ext"
+            class="w-full flex items-center justify-between px-0 py-2 text-left font-bold text-xs text-gray-600 dark:text-gray-300 bg-transparent">
+            <span>第三方扩展</span>
+            <svg id="icon-thirdparty-ext" class="transition-transform" width="14" height="14" viewBox="0 0 24 24">
+              <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" fill="none" />
+            </svg>
+          </button>
+        </div>
+        <div id="thirdparty-ext-links" class="hidden">
+          <a href="#caddy2" data-section="Caddy2Config.html"
+            class="block px-3 py-2 rounded-md sidebar-link">Caddy2服务</a>
+          <a href="#lego" data-section="LegoConfig.html" class="block px-3 py-2 rounded-md sidebar-link">Lego证书</a>
+          <a href="#ddnsgo" data-section="DDNSGoConfig.html" class="block px-3 py-2 rounded-md sidebar-link">DDNS-GO</a>
+          <a href="#adguard" data-section="AdGuardConfig.html" class="block px-3 py-2 rounded-md sidebar-link">AdGuard
+            DNS</a>
+
+          <a href="#rclone" data-section="RcloneConfig.html"
+            class="block px-3 py-2 rounded-md sidebar-link">Rclone云存储</a>
+          <a href="#openlist" data-section="OpenListConfig.html"
+            class="block px-3 py-2 rounded-md sidebar-link">OpenList云盘</a>
+        </div>
       </nav>
       <div class="p-2 text-xs text-gray-400 dark:text-gray-500 border-t border-gray-200 dark:border-zinc-700"> © NasCore
         <span id="year"></span>
@@ -208,5 +242,28 @@
     </main>
   </div>
 </body>
+<script>
+  // 基本配置折叠
+  document.getElementById('toggle-basic-config').addEventListener('click', function () {
+    var links = document.getElementById('basic-config-links');
+    var icon = document.getElementById('icon-basic-config');
+    links.classList.toggle('hidden');
+    icon.style.transform = links.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
+  });
+  // NasCore扩展折叠
+  document.getElementById('toggle-nascore-ext').addEventListener('click', function () {
+    var links = document.getElementById('nascore-ext-links');
+    var icon = document.getElementById('icon-nascore-ext');
+    links.classList.toggle('hidden');
+    icon.style.transform = links.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
+  });
+  // 第三方扩展折叠
+  document.getElementById('toggle-thirdparty-ext').addEventListener('click', function () {
+    var links = document.getElementById('thirdparty-ext-links');
+    var icon = document.getElementById('icon-thirdparty-ext');
+    links.classList.toggle('hidden');
+    icon.style.transform = links.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
+  });
+</script>
 
 </html>
